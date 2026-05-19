@@ -1,0 +1,45 @@
+.register-content {
+
+  --background: #f4fdfc;
+
+}
+
+.register-container {
+
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+
+}
+
+ion-card {
+
+  width: 100%;
+  max-width: 500px;
+  border-radius: 24px;
+
+}
+
+h2 {
+
+  text-align: center;
+  color: #0f766e;
+  margin-bottom: 25px;
+
+}
+
+ion-item {
+
+  margin-bottom: 15px;
+
+}
+
+ion-button {
+
+  --background: #14b8a6;
+  margin-top: 20px;
+  height: 50px;
+
+}

@@ -1,0 +1,59 @@
+<!-- =============================
+LOGIN PAGE - login.page.html
+============================= -->
+
+<ion-content class="login-content">
+
+  <div class="login-container">
+
+    <div class="logo-section">
+      <img src="assets/icon/logo.png" alt="Dental Premium">
+      <h1>Dental Premium</h1>
+      <p>Tu sonrisa en las mejores manos</p>
+    </div>
+
+    <ion-card>
+
+      <ion-card-content>
+
+        <h2>Iniciar Sesión</h2>
+
+        <ion-item>
+          <ion-input
+            label="Correo"
+            labelPlacement="floating"
+            type="email"
+            [(ngModel)]="email">
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input
+            label="Contraseña"
+            labelPlacement="floating"
+            type="password"
+            [(ngModel)]="password">
+          </ion-input>
+        </ion-item>
+
+        <ion-button expand="block" (click)="login()">
+          Ingresar
+        </ion-button>
+
+        <div class="register-link">
+          <p>¿No tienes cuenta?</p>
+
+          <ion-button
+            fill="clear"
+            routerLink="/register.page.html">
+            Crear Cuenta
+          </ion-button>
+        </div>
+
+      </ion-card-content>
+
+    </ion-card>
+
+  </div>
+
+</ion-content>

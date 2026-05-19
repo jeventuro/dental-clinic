@@ -1,0 +1,89 @@
+/* =============================
+LOGIN PAGE - login.page.scss
+============================= */
+
+.login-content {
+
+  --background: linear-gradient(
+    180deg,
+    #0f766e,
+    #14b8a6
+  );
+
+}
+
+.login-container {
+
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px;
+
+}
+
+.logo-section {
+
+  text-align: center;
+  margin-bottom: 30px;
+  color: white;
+
+}
+
+.logo-section img {
+
+  width: 110px;
+  margin-bottom: 10px;
+
+}
+
+.logo-section h1 {
+
+  font-size: 32px;
+  font-weight: bold;
+
+}
+
+.logo-section p {
+
+  opacity: 0.9;
+
+}
+
+ion-card {
+
+  border-radius: 24px;
+  padding: 10px;
+
+}
+
+h2 {
+
+  text-align: center;
+  margin-bottom: 25px;
+  color: #0f766e;
+
+}
+
+ion-item {
+
+  margin-bottom: 15px;
+  border-radius: 12px;
+
+}
+
+ion-button {
+
+  margin-top: 20px;
+  --background: #0f766e;
+  height: 50px;
+  font-weight: bold;
+
+}
+
+.register-link {
+
+  text-align: center;
+  margin-top: 15px;
+
+}
