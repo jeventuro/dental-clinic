@@ -1,0 +1,7 @@
+{
+  "name": "dental-frontend",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
