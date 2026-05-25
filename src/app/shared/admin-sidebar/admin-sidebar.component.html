@@ -1,0 +1,102 @@
+<div
+  class="sidebar"
+  [class.collapsed]="collapsed">
+
+  <!-- LOGO -->
+  <div class="sidebar-top">
+
+    <div class="logo-section">
+
+      <img
+        src="assets/icon/logo+clinica.png"
+        alt="Dental Premium"
+      />
+
+    </div>
+
+    <!-- MENU -->
+    <div class="menu-list">
+
+      <ng-container *ngFor="let item of menuItems">
+
+        <div *ngIf="hasAccess(item)">
+
+          <!-- ITEM -->
+          <div
+            class="menu-item"
+            routerLinkActive="active"
+            [routerLink]="item.route"
+            (click)="item.children ? toggleMenu(item.title) : null">
+
+            <div class="menu-left">
+
+              <ion-icon [name]="item.icon"></ion-icon>
+
+              <span *ngIf="!collapsed">
+                {{ item.title }}
+              </span>
+
+            </div>
+
+            <div class="menu-right">
+
+              <span
+                *ngIf="item.badge"
+                class="badge">
+
+                {{ item.badge }}
+
+              </span>
+
+              <ion-icon
+                *ngIf="item.children"
+                [name]="isMenuOpen(item.title)
+                  ? 'chevron-down-outline'
+                  : 'chevron-forward-outline'">
+              </ion-icon>
+
+            </div>
+
+          </div>
+
+          <!-- SUBMENU -->
+          <div
+            *ngIf="item.children && isMenuOpen(item.title)"
+            class="submenu">
+
+            <a
+              *ngFor="let child of item.children"
+              [routerLink]="child.route"
+              routerLinkActive="active-submenu"
+              class="submenu-item">
+
+              {{ child.title }}
+
+            </a>
+
+          </div>
+
+        </div>
+
+      </ng-container>
+
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="sidebar-footer">
+
+    <div class="logout-button">
+
+      <ion-icon name="log-out-outline"></ion-icon>
+
+      <span *ngIf="!collapsed">
+        Cerrar sesión
+      </span>
+
+    </div>
+
+  </div>
+
+</div>

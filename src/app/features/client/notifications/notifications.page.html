@@ -1,0 +1,134 @@
+
+
+<div class="notifications-container">
+
+  <!-- HEADER -->
+  <div class="page-header">
+
+    <div>
+      <h1>Notificaciones</h1>
+
+      <p>
+        Gestiona tus alertas y novedades del sistema
+      </p>
+    </div>
+
+    <div class="notification-counter">
+
+      <span>
+        {{ notifications.length }}
+      </span>
+
+    </div>
+
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filters-card">
+
+    <ion-segment
+      [(ngModel)]="segmentValue">
+
+      <ion-segment-button value="all">
+        <ion-label>Todas</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button value="unread">
+        <ion-label>No leídas</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button value="saved">
+        <ion-label>Guardadas</ion-label>
+      </ion-segment-button>
+
+    </ion-segment>
+
+  </div>
+
+  <!-- NOTIFICATIONS -->
+  <div class="notifications-list">
+
+    <div
+      class="notification-card"
+      *ngFor="let notification of filteredNotifications"
+      [class.unread]="!notification.read">
+
+      <!-- LEFT -->
+      <div class="notification-left">
+
+        <div class="icon-box">
+
+          <ion-icon
+            [name]="notification.icon">
+          </ion-icon>
+
+        </div>
+
+      </div>
+
+      <!-- CENTER -->
+      <div class="notification-center">
+
+        <div class="notification-top">
+
+          <h2>
+            {{ notification.title }}
+          </h2>
+
+          <span>
+            {{ notification.time }}
+          </span>
+
+        </div>
+
+        <p>
+          {{ notification.message }}
+        </p>
+
+      </div>
+
+      <!-- RIGHT -->
+      <div class="notification-actions">
+
+        <ion-button
+          fill="clear"
+          color="success"
+          *ngIf="!notification.read"
+          (click)="markAsRead(notification)">
+
+          <ion-icon
+            name="checkmark-done-outline">
+          </ion-icon>
+
+        </ion-button>
+
+        <ion-button
+          fill="clear"
+          color="warning"
+          (click)="toggleSave(notification)">
+
+          <ion-icon
+            [name]="notification.saved ? 'bookmark' : 'bookmark-outline'">
+          </ion-icon>
+
+        </ion-button>
+
+        <ion-button
+          fill="clear"
+          color="danger"
+          (click)="deleteNotification(notification.id)">
+
+          <ion-icon
+            name="trash-outline">
+          </ion-icon>
+
+        </ion-button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+

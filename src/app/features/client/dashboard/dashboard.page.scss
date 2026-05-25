@@ -1,0 +1,45 @@
+.dashboard-content {
+
+  --background: #f4fffd;
+
+}
+
+.dashboard-layout {
+
+  display: flex;
+
+  min-height: 100vh;
+
+}
+
+.dashboard-main {
+
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  height: 100vh;
+  padding: 30px;
+
+  overflow-y: auto;
+
+}
+
+.dashboard-router {
+
+  flex: 1;
+
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 992px) {
+
+  .dashboard-layout {
+
+    flex-direction: column;
+
+  }
+
+}

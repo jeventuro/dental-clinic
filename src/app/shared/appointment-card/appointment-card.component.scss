@@ -1,0 +1,91 @@
+.appointment-card {
+
+  background: white;
+
+  border-radius: 28px;
+
+  padding: 24px;
+
+  box-shadow:
+    0 10px 30px rgba(15,118,110,0.08);
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+}
+
+.appointment-header {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+}
+
+.appointment-header h3 {
+
+  font-size: 20px;
+  font-weight: 700;
+
+  color: #0f172a;
+
+}
+
+.appointment-header p {
+
+  color: #64748b;
+
+}
+
+.status {
+
+  background: #dcfce7;
+
+  color: #15803d;
+
+  padding: 8px 14px;
+
+  border-radius: 14px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+}
+
+.appointment-info {
+
+  display: flex;
+  gap: 20px;
+
+}
+
+.info-item {
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #475569;
+
+}
+
+.info-item ion-icon {
+
+  color: #14b8a6;
+
+}
+
+.details-btn {
+
+  --background: linear-gradient(
+    135deg,
+    #14b8a6,
+    #0f766e
+  );
+
+  height: 50px;
+
+  --border-radius: 16px;
+
+}

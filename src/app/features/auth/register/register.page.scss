@@ -1,45 +1,266 @@
-.register-content {
-
-  --background: #f4fdfc;
+*{
+  font-family: 'Poppins', sans-serif;
 
 }
 
-.register-container {
 
-  padding: 24px;
+.register-content {
+
+  --background: #f7fffd;
+
+  position: relative;
+
+}
+
+.overlay {
+
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  background:
+    radial-gradient(circle at top right,
+      rgba(20,184,166,0.12),
+      transparent 30%),
+
+    radial-gradient(circle at bottom left,
+      rgba(45,212,191,0.12),
+      transparent 30%);
+}
+
+.register-wrapper {
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  min-height: 100vh;
+
+  position: relative;
+
+}
+
+/* =========================================
+   LEFT
+========================================= */
+
+.branding-section {
+
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100%;
+
+  padding: 60px;
 
 }
 
-ion-card {
+.branding-content {
+  //cuadro de la izquierda con datos de texto e info
+  max-width: 520px;
+
+}
+
+.logo {
+
+  width: 110px;
+  margin-bottom: 20px;
+
+}
+
+.branding-content h1 {
+//titulo del cuadro de la izquierda
+  font-size: 48px;
+  font-weight: 800;
+  color: #0f766e;
+  margin-bottom: 20px;
+}
+
+.branding-content p {
+// contenido de texto debajo del titulo del cuadro de la izquierda
+  color: #4b5563;
+  line-height: 1.8;
+  margin-bottom: 30px;
+  font-size: 18px;
+}
+
+/* FEATURES */
+
+.feature-list {
+  //lista de caracteristicas debajo del texto del cuadro de la izquierda
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.feature-item {
+//cada item de la lista de caracteristicas debajo del texto del cuadro de la izquierda
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: white;
+  padding: 18px;
+  border-radius: 18px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+}
+
+.feature-item ion-icon {
+  color: #14b8a6;
+  font-size: 26px;
+}
+
+.feature-item span {
+  //aqui colocamos el texto de cada item de la lista de caracteristicas debajo del texto del cuadro de la izquierda
+  font-size: 16px;
+  color: #4b5563;
+}
+
+/* =========================================
+   RIGHT
+========================================= */
+
+.form-section {
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+//padding para el registro
+  padding: 30px;
+  
+}
+
+.register-card {
 
   width: 100%;
-  max-width: 500px;
-  border-radius: 24px;
+  max-width: 540px;
+  border-radius: 30px;
+  padding: 30px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(10px);
+  //aqui se cambia el color del fondo del cuadro registro
+  box-shadow:
+    0 10px 40px rgba(14, 185, 197, 0.507)
 
 }
 
-h2 {
-
+.header {
   text-align: center;
+  margin-bottom: 30px;
+}
+
+.header h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 34px;
+  font-weight: 740;
+
   color: #0f766e;
-  margin-bottom: 25px;
 
 }
 
-ion-item {
+.header p {
+// color para el parrafo abajo de "Crear cuenta"
+  color: #181f2e;
 
+}
+
+/* INPUT */
+
+.custom-input {
+
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color : #2f3741;
+  background: #f9fafb;
+  border: 1px solid #d1fae5;
+  border-radius: 16px;
+  padding: 4px 16px;
   margin-bottom: 15px;
 
 }
 
-ion-button {
+// container para compartir 2 apartados de la misma linea, en este caso el dni y el telefono
+.custom-input-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color : #2f3741;
+  padding: auto, 16px;
+  margin-bottom: 0px;
+} 
 
-  --background: #14b8a6;
-  margin-top: 20px;
+.custom-input ion-icon {
+  font-size: 30px;
+  color: #14b8a6;
+}
+
+/* BUTTON */
+
+.register-button {
+
+  --background:
+    linear-gradient(
+      135deg,
+      #14b8a6,
+      #0f766e
+    );
+
   height: 50px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 16px;
+  margin-top: 10px;
+  color : white;
+}
+
+
+
+/* LOGIN SECTION RETURN */
+
+.login-section {
+
+  margin-top: 25px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+}
+
+.login-link {
+
+  border: none;
+  background: transparent;
+
+  color: #0f766e;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 992px) {
+
+  .register-wrapper {
+
+    grid-template-columns: 1fr;
+
+  }
+
+  .branding-section {
+
+    display: none;
+
+  }
+
+  .register-card {
+
+    max-width: 100%;
+
+  }
 
 }

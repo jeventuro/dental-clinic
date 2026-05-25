@@ -4,55 +4,139 @@ LOGIN PAGE - login.page.html
 
 <ion-content class="login-content">
 
-  <div class="login-container">
+  <div class="overlay"></div>
 
-    <div class="logo-section">
-      <img src="assets/icon/logo.png" alt="Dental Premium">
-      <h1>Dental Premium</h1>
-      <p>Tu sonrisa en las mejores manos</p>
-    </div>
+  <div class="login-wrapper">
 
-    <ion-card>
+    <!-- PANEL IZQUIERDO -->
+    <div class="branding-section">
 
-      <ion-card-content>
+      <div class="branding-content">
 
-        <h2>Iniciar Sesión</h2>
+        <img
+          src="assets/icon/logo+clinica.png"
+          alt="Dental Premium"
+          class="logo"
+        />
 
-        <ion-item>
-          <ion-input
-            label="Correo"
-            labelPlacement="floating"
-            type="email"
-            [(ngModel)]="email">
-          </ion-input>
-        </ion-item>
+        <!-- <h1>Dent System</h1>-->
 
-        <ion-item>
-          <ion-input
-            label="Contraseña"
-            labelPlacement="floating"
-            type="password"
-            [(ngModel)]="password">
-          </ion-input>
-        </ion-item>
+        <p>
+          Especialistas en sonrisas saludables y estética dental avanzada.
+        </p>
 
-        <ion-button expand="block" (click)="login()">
-          Ingresar
-        </ion-button>
+        <div class="features">
 
-        <div class="register-link">
-          <p>¿No tienes cuenta?</p>
+          <div class="feature-item">
+            <ion-icon name="shield-checkmark-outline"></ion-icon>
+            <span>Atención segura y profesional</span>
+          </div>
 
-          <ion-button
-            fill="clear"
-            routerLink="/register.page.html">
-            Crear Cuenta
-          </ion-button>
+          <div class="feature-item">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span>Agenda tus citas fácilmente</span>
+          </div>
+
+          <div class="feature-item">
+            <ion-icon name="notifications-outline"></ion-icon>
+            <span>Recordatorios automáticos</span>
+          </div>
+
         </div>
 
-      </ion-card-content>
+      </div>
 
-    </ion-card>
+    </div>
+
+    <!-- PANEL DERECHO -->
+    <div class="form-section">
+
+      <ion-card class="login-card">
+
+        <ion-card-content>
+
+          <div class="header">
+
+            <h2>Bienvenido</h2>
+
+            <p>
+              Inicia sesión para continuar
+            </p>
+
+          </div>
+
+          <!-- EMAIL -->
+          <div class="custom-input">
+
+            <ion-icon name="mail-outline"></ion-icon>
+
+            <ion-input
+              type="email"
+              placeholder="Correo electrónico"
+              [(ngModel)]="email">
+            </ion-input>
+
+          </div>
+
+          <!-- PASSWORD -->
+          <div class="custom-input">
+
+            <ion-icon name="lock-closed-outline"></ion-icon>
+
+            <ion-input
+              type="password"
+              placeholder="Contraseña"
+              [(ngModel)]="password">
+            </ion-input>
+
+          </div>
+
+          <!-- OPCIONES -->
+          <div class="options">
+
+            <ion-item lines="none">
+              <ion-checkbox slot="start"></ion-checkbox>
+              <ion-label>Recordarme</ion-label>
+            </ion-item>
+
+            <a href="#">
+              ¿Olvidaste tu contraseña?
+            </a>
+
+          </div>
+
+          <!-- BOTON LOGIN -->
+          <ion-button
+            expand="block"
+            class="login-button"
+            (click)="login()">
+
+            Ingresar
+
+          </ion-button>
+
+          <!-- REGISTER -->
+          <div class="register-section">
+
+            <span>
+              ¿No tienes cuenta?
+            </span>
+
+            <button
+              class="register-button"
+              routerLink="/register">
+
+              Crear cuenta
+
+            </button>
+
+          </div>
+
+        </ion-card-content>
+
+      </ion-card>
+
+    </div>
 
   </div>
 

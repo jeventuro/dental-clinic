@@ -1,0 +1,326 @@
+
+
+<div class="settings-container">
+
+  <!-- HEADER -->
+  <div class="page-header">
+
+    <div>
+
+      <h1>Configuración</h1>
+
+      <p>
+        Personaliza tu experiencia y seguridad dentro de la aplicación
+      </p>
+
+    </div>
+
+    <ion-button
+      class="save-button"
+      (click)="saveSettings()">
+
+      Guardar cambios
+
+    </ion-button>
+
+  </div>
+
+  <!-- SECURITY -->
+  <div class="settings-card">
+
+    <div class="card-header">
+
+      <h2>Seguridad</h2>
+
+      <p>
+        Controla el acceso y protección de tu cuenta
+      </p>
+
+    </div>
+
+    <div class="setting-item">
+
+      <div>
+
+        <h3>Acceso biométrico</h3>
+
+        <span>
+          Permitir huella digital o Face ID
+        </span>
+
+      </div>
+
+      <ion-toggle
+        [(ngModel)]="biometricAccess">
+      </ion-toggle>
+
+    </div>
+
+    <div class="setting-item">
+
+      <div>
+
+        <h3>Recordar sesión</h3>
+
+        <span>
+          Mantener sesión iniciada automáticamente
+        </span>
+
+      </div>
+
+      <ion-toggle
+        [(ngModel)]="rememberSession">
+      </ion-toggle>
+
+    </div>
+
+    <div class="setting-item">
+
+      <div>
+
+        <h3>Cierre automático</h3>
+
+        <span>
+          Tiempo máximo de inactividad
+        </span>
+
+      </div>
+
+      <ion-select
+        [(ngModel)]="autoLogout">
+
+        <ion-select-option value="5">
+          5 minutos
+        </ion-select-option>
+
+        <ion-select-option value="15">
+          15 minutos
+        </ion-select-option>
+
+        <ion-select-option value="30">
+          30 minutos
+        </ion-select-option>
+
+      </ion-select>
+
+    </div>
+
+  </div>
+
+  <!-- NOTIFICATIONS -->
+  <div class="settings-card">
+
+    <div class="card-header">
+
+      <h2>Notificaciones</h2>
+
+      <p>
+        Administra alertas y recordatorios
+      </p>
+
+    </div>
+
+    <div class="setting-item">
+
+      <div>
+
+        <h3>Notificaciones generales</h3>
+
+        <span>
+          Activar todas las alertas
+        </span>
+
+      </div>
+
+      <ion-toggle
+        [(ngModel)]="notificationsEnabled">
+      </ion-toggle>
+
+    </div>
+
+    <div class="setting-item">
+
+      <div>
+
+        <h3>Correo electrónico</h3>
+
+        <span>
+          Recibir alertas vía email
+        </span>
+
+      </div>
+
+      <ion-toggle
+        [(ngModel)]="emailNotifications">
+      </ion-toggle>
+
+    </div>
+
+    <div class="setting-item">
+
+      <div>
+
+        <h3>Citas médicas</h3>
+
+        <span>
+          Recordatorios automáticos
+        </span>
+
+      </div>
+
+      <ion-toggle
+        [(ngModel)]="appointmentNotifications">
+      </ion-toggle>
+
+    </div>
+
+    <div class="setting-item">
+
+      <div>
+
+        <h3>Pagos</h3>
+
+        <span>
+          Alertas de pagos pendientes
+        </span>
+
+      </div>
+
+      <ion-toggle
+        [(ngModel)]="paymentNotifications">
+      </ion-toggle>
+
+    </div>
+
+  </div>
+
+  <!-- APP -->
+  <div class="settings-card">
+
+    <div class="card-header">
+
+      <h2>Aplicación</h2>
+
+      <p>
+        Personalización visual y accesibilidad
+      </p>
+
+    </div>
+
+    <div class="setting-item">
+
+      <div>
+
+        <h3>Modo oscuro</h3>
+
+        <span>
+          Cambiar apariencia de la aplicación
+        </span>
+
+      </div>
+
+      <ion-toggle
+        [(ngModel)]="darkMode">
+      </ion-toggle>
+
+    </div>
+
+    <div class="setting-item">
+
+      <div>
+
+        <h3>Idioma</h3>
+
+        <span>
+          Selecciona el idioma principal
+        </span>
+
+      </div>
+
+      <ion-select
+        [(ngModel)]="language">
+
+        <ion-select-option value="es">
+          Español
+        </ion-select-option>
+
+        <ion-select-option value="en">
+          English
+        </ion-select-option>
+
+      </ion-select>
+
+    </div>
+
+    <div class="setting-item">
+
+      <div>
+
+        <h3>Tamaño de fuente</h3>
+
+        <span>
+          Accesibilidad visual
+        </span>
+
+      </div>
+
+      <ion-select
+        [(ngModel)]="fontSize">
+
+        <ion-select-option value="small">
+          Pequeña
+        </ion-select-option>
+
+        <ion-select-option value="medium">
+          Mediana
+        </ion-select-option>
+
+        <ion-select-option value="large">
+          Grande
+        </ion-select-option>
+
+      </ion-select>
+
+    </div>
+
+  </div>
+
+  <!-- STORAGE -->
+  <div class="settings-card">
+
+    <div class="card-header">
+
+      <h2>Almacenamiento</h2>
+
+      <p>
+        Gestiona datos temporales de la aplicación
+      </p>
+
+    </div>
+
+    <div class="action-buttons">
+
+      <ion-button
+        color="warning"
+        fill="outline"
+        (click)="clearCache()">
+
+        Limpiar caché
+
+      </ion-button>
+
+      <ion-button
+        color="danger"
+        (click)="logout()">
+
+        Cerrar sesión
+
+      </ion-button>
+
+    </div>
+
+  </div>
+
+</div>
+
+

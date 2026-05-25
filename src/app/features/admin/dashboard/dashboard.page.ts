@@ -1,20 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonicModule } from '@ionic/angular';
+import { RouterOutlet } from '@angular/router';
+import { AdminSidebarComponent } from 'src/app/shared/admin-sidebar/admin-sidebar.component';
+import { addIcons } from 'ionicons';
+import {  searchOutline  } from 'ionicons/icons';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, RouterOutlet, AdminSidebarComponent]
 })
-export class DashboardPage implements OnInit {
+export class DashboardPage {
+  
+  constructor() {
 
-  constructor() { }
+    addIcons({
+      searchOutline
+    });
 
-  ngOnInit() {
   }
-
+  
 }

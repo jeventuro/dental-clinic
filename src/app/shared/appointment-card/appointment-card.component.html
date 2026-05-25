@@ -1,0 +1,47 @@
+<div class="appointment-card">
+
+  <div class="appointment-header">
+
+    <div>
+
+      <h3>{{ doctor }}</h3>
+
+      <p>{{ specialty }}</p>
+
+    </div>
+
+    <div class="status">
+      {{ status }}
+    </div>
+
+  </div>
+
+  <div class="appointment-info">
+
+    <div class="info-item">
+
+      <ion-icon name="calendar-outline"></ion-icon>
+
+      <span>{{ date }}</span>
+
+    </div>
+
+    <div class="info-item">
+
+      <ion-icon name="time-outline"></ion-icon>
+
+      <span>{{ hour }}</span>
+
+    </div>
+
+  </div>
+
+  <ion-button
+    expand="block"
+    class="details-btn">
+
+    Ver detalles
+
+  </ion-button>
+
+</div>

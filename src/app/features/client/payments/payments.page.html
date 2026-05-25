@@ -1,0 +1,164 @@
+<div class="payments-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+
+    <div>
+      <h2>Pagos</h2>
+      <p>
+        Gestiona tus pagos, métodos y comprobantes
+      </p>
+    </div>
+
+    <ion-button class="pay-button">
+      Realizar pago
+    </ion-button>
+
+  </div>
+
+  <!-- RESUMEN -->
+  <div class="payments-summary">
+
+    <div class="summary-card pending">
+
+      <div>
+        <span>Pagos pendientes</span>
+        <h3>S/ 400</h3>
+      </div>
+
+      <ion-icon name="alert-circle-outline"></ion-icon>
+
+    </div>
+
+    <div class="summary-card paid">
+
+      <div>
+        <span>Total pagado</span>
+        <h3>S/ 1,520</h3>
+      </div>
+
+      <ion-icon name="checkmark-done-outline"></ion-icon>
+
+    </div>
+
+  </div>
+
+  <!-- GRID -->
+  <div class="payments-grid">
+
+    <!-- PAGOS PENDIENTES -->
+    <div class="section-card">
+
+      <div class="section-header">
+        <h3>Pagos pendientes</h3>
+      </div>
+
+      <div
+        class="payment-item"
+        *ngFor="let payment of pendingPayments">
+
+        <div>
+
+          <h4>{{ payment.treatment }}</h4>
+
+          <p>
+            Vence:
+            {{ payment.dueDate }}
+          </p>
+
+        </div>
+
+        <div class="payment-right">
+
+          <span class="amount">
+            {{ payment.amount }}
+          </span>
+
+          <span class="status pending-status">
+            {{ payment.status }}
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- METODOS -->
+    <div class="section-card">
+
+      <div class="section-header">
+        <h3>Métodos de pago</h3>
+      </div>
+
+      <div
+        class="method-card"
+        *ngFor="let method of paymentMethods">
+
+        <div class="method-icon">
+
+          <ion-icon name="card-outline"></ion-icon>
+
+        </div>
+
+        <div>
+
+          <h4>{{ method.type }}</h4>
+
+          <p>{{ method.number }}</p>
+
+        </div>
+
+      </div>
+
+      <ion-button
+        expand="block"
+        fill="outline"
+        class="add-method-btn">
+
+        Agregar método
+
+      </ion-button>
+
+    </div>
+
+  </div>
+
+  <!-- HISTORIAL -->
+  <div class="history-section">
+
+    <div class="section-header">
+      <h3>Historial de pagos</h3>
+    </div>
+
+    <div
+      class="history-item"
+      *ngFor="let history of paymentHistory">
+
+      <div>
+
+        <h4>{{ history.treatment }}</h4>
+
+        <p>
+          {{ history.date }}
+        </p>
+
+      </div>
+
+      <div class="history-right">
+
+        <span class="method">
+          {{ history.method }}
+        </span>
+
+        <span class="amount">
+          {{ history.amount }}
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

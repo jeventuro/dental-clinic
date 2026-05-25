@@ -1,13 +1,61 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>dashboard</ion-title>
-  </ion-toolbar>
-</ion-header>
+<!-- ADMIN LAYOUT -->
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">dashboard</ion-title>
-    </ion-toolbar>
-  </ion-header>
-</ion-content>
+<ion-content class="admin-content">
+  <div class="admin-layout">
+
+    <!-- SIDEBAR -->
+     <app-admin-sidebar> </app-admin-sidebar>
+
+    <!-- MAIN -->
+    <div class="admin-main">
+
+      <!-- TOPBAR -->
+      <div class="admin-topbar">
+
+        <div class="topbar-left">
+
+          <h1>Administrador</h1>
+
+          <p>
+            Gestiona toda la clínica multisede
+          </p>
+
+        </div>
+
+        <div class="topbar-right">
+
+          <div class="search-box">
+
+            <ion-icon name="search-outline"></ion-icon>
+
+            <input
+              type="text"
+              placeholder="Buscar..."
+            />
+
+          </div>
+
+          <div class="admin-user">
+
+            <img
+              src="assets/icon/favicon.png"
+              alt="Admin"
+            />
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- CONTENIDO DINÁMICO -->
+      <div class="admin-router-container">
+
+        <router-outlet></router-outlet>
+
+      </div>
+
+    </div>
+
+  </div>
+</ion-content>  

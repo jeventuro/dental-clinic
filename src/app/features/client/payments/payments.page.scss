@@ -1,0 +1,433 @@
+.payments-page {
+
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.page-header {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  flex-wrap: wrap;
+  gap: 20px;
+
+}
+
+.page-header h2 {
+
+  font-size: 38px;
+  font-weight: 800;
+
+  color: #0f766e;
+
+}
+
+.page-header p {
+
+  color: #6b7280;
+  margin-top: 6px;
+
+}
+
+.pay-button {
+
+  --background: linear-gradient(
+    135deg,
+    #14b8a6,
+    #0f766e
+  );
+
+  --border-radius: 16px;
+
+  height: 52px;
+
+  font-weight: 700;
+
+}
+
+/* =========================
+   SUMMARY
+========================= */
+
+.payments-summary {
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 24px;
+
+}
+
+.summary-card {
+
+  background: white;
+
+  border-radius: 28px;
+
+  padding: 28px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  box-shadow:
+    0 10px 30px rgba(15,118,110,0.08);
+
+}
+
+.summary-card span {
+
+  color: #6b7280;
+  font-size: 15px;
+
+}
+
+.summary-card h3 {
+
+  font-size: 34px;
+  font-weight: 800;
+
+  margin-top: 8px;
+
+  color: #111827;
+
+}
+
+.summary-card ion-icon {
+
+  font-size: 42px;
+
+}
+
+.pending ion-icon {
+
+  color: #f59e0b;
+
+}
+
+.paid ion-icon {
+
+  color: #14b8a6;
+
+}
+
+/* =========================
+   GRID
+========================= */
+
+.payments-grid {
+
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+
+  gap: 24px;
+
+}
+
+.section-card {
+
+  background: white;
+
+  border-radius: 28px;
+
+  padding: 28px;
+
+  box-shadow:
+    0 10px 30px rgba(15,118,110,0.08);
+
+}
+
+.section-header {
+
+  margin-bottom: 24px;
+
+}
+
+.section-header h3 {
+
+  font-size: 24px;
+  font-weight: 700;
+
+  color: #111827;
+
+}
+
+/* =========================
+   PENDING PAYMENTS
+========================= */
+
+.payment-item {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 18px 0;
+
+  border-bottom: 1px solid #f3f4f6;
+
+}
+
+.payment-item:last-child {
+
+  border-bottom: none;
+
+}
+
+.payment-item h4 {
+
+  font-size: 17px;
+  font-weight: 700;
+
+  color: #111827;
+
+}
+
+.payment-item p {
+
+  color: #6b7280;
+  margin-top: 6px;
+
+}
+
+.payment-right {
+
+  text-align: right;
+
+}
+
+.amount {
+
+  display: block;
+
+  font-size: 20px;
+  font-weight: 800;
+
+  color: #0f766e;
+
+}
+
+.status {
+
+  display: inline-block;
+
+  margin-top: 8px;
+
+  padding: 6px 14px;
+
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+}
+
+.pending-status {
+
+  background: #fef3c7;
+  color: #b45309;
+
+}
+
+/* =========================
+   METHODS
+========================= */
+
+.method-card {
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  background: #f9fafb;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 18px;
+
+  padding: 18px;
+
+  margin-bottom: 18px;
+
+}
+
+.method-icon {
+
+  width: 52px;
+  height: 52px;
+
+  border-radius: 16px;
+
+  background: #ecfeff;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.method-icon ion-icon {
+
+  font-size: 24px;
+  color: #14b8a6;
+
+}
+
+.method-card h4 {
+
+  font-size: 16px;
+  font-weight: 700;
+
+  color: #111827;
+
+}
+
+.method-card p {
+
+  color: #6b7280;
+  margin-top: 4px;
+
+}
+
+.add-method-btn {
+
+  margin-top: 14px;
+
+  --border-color: #14b8a6;
+  --color: #14b8a6;
+
+  --border-radius: 14px;
+
+  height: 48px;
+
+}
+
+/* =========================
+   HISTORY
+========================= */
+
+.history-section {
+
+  background: white;
+
+  border-radius: 28px;
+
+  padding: 28px;
+
+  box-shadow:
+    0 10px 30px rgba(15,118,110,0.08);
+
+}
+
+.history-item {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 18px 0;
+
+  border-bottom: 1px solid #f3f4f6;
+
+}
+
+.history-item:last-child {
+
+  border-bottom: none;
+
+}
+
+.history-item h4 {
+
+  font-size: 17px;
+  font-weight: 700;
+
+  color: #111827;
+
+}
+
+.history-item p {
+
+  color: #6b7280;
+  margin-top: 6px;
+
+}
+
+.history-right {
+
+  text-align: right;
+
+}
+
+.method {
+
+  display: block;
+
+  color: #6b7280;
+
+  margin-bottom: 6px;
+
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 992px) {
+
+  .payments-summary {
+
+    grid-template-columns: 1fr;
+
+  }
+
+  .payments-grid {
+
+    grid-template-columns: 1fr;
+
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .page-header {
+
+    flex-direction: column;
+    align-items: flex-start;
+
+  }
+
+  .summary-card {
+
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+
+  }
+
+  .payment-item,
+  .history-item {
+
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+
+  }
+
+  .payment-right,
+  .history-right {
+
+    text-align: left;
+
+  }
+
+}

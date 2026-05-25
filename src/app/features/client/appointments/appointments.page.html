@@ -1,0 +1,35 @@
+<div class="appointments-header">
+
+  <div>
+
+    <h2>Mis citas</h2>
+
+    <p>
+      Gestiona tus consultas odontológicas
+    </p>
+
+  </div>
+
+  <ion-button class="new-btn">
+
+    Nueva cita
+
+  </ion-button>
+
+</div>
+
+<div class="appointments-grid">
+
+  <app-appointment-card
+
+    *ngFor="let item of appointments"
+
+    [doctor]="item.doctor"
+    [specialty]="item.specialty"
+    [date]="item.date"
+    [hour]="item.hour"
+    [status]="item.status">
+
+  </app-appointment-card>
+
+</div>

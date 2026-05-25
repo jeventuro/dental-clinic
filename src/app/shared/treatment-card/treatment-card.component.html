@@ -1,0 +1,54 @@
+<div class="treatment-card">
+
+  <div class="treatment-header">
+
+    <div>
+
+      <h3>{{ title }}</h3>
+
+      <p>{{ doctor }}</p>
+
+    </div>
+
+    <div class="status">
+      {{ status }}
+    </div>
+
+  </div>
+
+  <div class="progress-section">
+
+    <div class="progress-info">
+
+      <span>Progreso</span>
+
+      <span>{{ progress }}%</span>
+
+    </div>
+
+    <ion-progress-bar
+      [value]="progress / 100">
+    </ion-progress-bar>
+
+  </div>
+
+  <div class="session-box">
+
+    <ion-icon name="calendar-outline"></ion-icon>
+
+    <span>
+      Próxima sesión:
+      {{ nextSession }}
+    </span>
+
+  </div>
+
+  <ion-button
+    expand="block"
+    class="details-btn">
+
+    Ver historial clínico
+
+  </ion-button>
+
+</div>
