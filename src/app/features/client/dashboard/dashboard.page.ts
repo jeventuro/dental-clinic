@@ -2,12 +2,10 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { IonicModule } from '@ionic/angular';
-
 import { RouterOutlet } from '@angular/router';
 
-import { SidebarComponent } from 'src/app/shared/sidebar/sidebar.component';
-import { TopbarComponent } from 'src/app/shared/topbar/topbar.component';
-
+import { StatsCardComponent } from 'src/app/shared/stats-card/stats-card.component';
+import { AppShellComponent } from 'src/app/shared/layout/app-shell.component';
 
 @Component({
   selector: 'app-client-dashboard',
@@ -17,9 +15,11 @@ import { TopbarComponent } from 'src/app/shared/topbar/topbar.component';
   imports: [
     CommonModule,
     IonicModule,
-    SidebarComponent,
-    TopbarComponent,
-    RouterOutlet
+    RouterOutlet,
+
+    
+    AppShellComponent,
+   
   ]
 })
 export class DashboardPage {

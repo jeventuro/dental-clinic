@@ -1,38 +1,39 @@
 .sidebar {
-
-  width: 270px;
-  height: 100vh;
-
-  background: white;
-
-  padding: 24px;
-
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  padding: 24px 16px;
   border-right: 1px solid #e5e7eb;
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-sizing: border-box;
 
 }
 
-.logo-section {
+.navigation-group {
+  display: flex;
+  flex-direction: column;
+  /* Controla directamente la separación máxima de los bloques superiores */
+}
 
+.logo-section {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 36px;
 
 }
 
 .logo-section img {
-
-  width: 180px;
-
+  width: 160px;
+  height: auto;
 }
 
 .menu {
 
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 8px;
 
 }
 
@@ -41,18 +42,13 @@
   display: flex;
   align-items: center;
   gap: 14px;
-
-  padding: 16px;
-
-  border-radius: 18px;
-
+  padding: 14px 16px;
+  border-radius: 14px;
   cursor: pointer;
-
   color: #4b5563;
-
   text-decoration: none;
-
-  transition: 0.3s;
+  font-weight: 500;
+  transition: 0.25s;
 
 }
 
@@ -63,27 +59,31 @@
 }
 
 .menu-item:hover {
-
   background: #ecfeff;
-
   color: #0f766e;
-
 }
 
 .active {
-
-  background: linear-gradient(
-    135deg,
-    #14b8a6,
-    #0f766e
-  );
-
+  background: linear-gradient(135deg, #14b8a6, #0f766e);
   color: white;
+  font-weight: 600;
+}
 
+
+/* GRUPO INFERIOR: Se empuja automáticamente al fondo mediante flex growth */
+.bottom-menu {
+  margin-top: auto; /* Esta propiedad empuja este bloque abajo de forma limpia */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 24px;
+  border-top: 1px solid #f1f5f9; /* Línea divisoria muy elegante antes del logout */
 }
 
 .logout {
-
   color: #ef4444;
-
+}
+.logout:hover {
+  background: #fef2f2;
+  color: #dc2626;
 }

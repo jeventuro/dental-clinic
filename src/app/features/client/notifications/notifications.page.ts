@@ -23,7 +23,7 @@ export class NotificationsPage{
       type: 'appointment',
       read: false,
       saved: true,
-      icon: 'calendar-outline'
+      icon: 'calendar-outline',
     },
     {
       id: 2,
@@ -60,6 +60,7 @@ export class NotificationsPage{
   constructor(
     private toastController: ToastController
   ) {}
+  
 
   get filteredNotifications() {
 
@@ -79,9 +80,7 @@ export class NotificationsPage{
   }
 
   async markAsRead(notification: any) {
-
     notification.read = true;
-
     const toast = await this.toastController.create({
       message: 'Notificación marcada como leída',
       duration: 1500,
@@ -92,9 +91,7 @@ export class NotificationsPage{
   }
 
   async toggleSave(notification: any) {
-
     notification.saved = !notification.saved;
-
     const toast = await this.toastController.create({
       message: notification.saved
         ? 'Notificación guardada'
@@ -107,10 +104,8 @@ export class NotificationsPage{
   }
 
   async deleteNotification(id: number) {
-
     this.notifications =
       this.notifications.filter(n => n.id !== id);
-
     const toast = await this.toastController.create({
       message: 'Notificación eliminada',
       duration: 1500,

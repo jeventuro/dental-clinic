@@ -1,335 +1,242 @@
-.profile-page {
-
+/* ==========================================================================
+   CONTENEDOR DE ARQUITECTURA FLUIDA (Consistencia de Suite)
+   ========================================================================== */
+.page-wrapper {
+  padding: 40px 48px 60px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 28px;
-
+  gap: 32px;
 }
 
-/* =========================
-   HEADER
-========================= */
-
+/* ==========================================================================
+   ENCABEZADO Y BOTÓN SUPERIOR
+   ========================================================================== */
 .page-header {
-
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  flex-wrap: wrap;
+  width: 100%;
   gap: 20px;
+}
 
+.header-title-block {
+  flex: 1;
 }
 
 .page-header h2 {
-
-  font-size: 38px;
+  font-size: 34px;
   font-weight: 800;
-
   color: #0f766e;
-
+  letter-spacing: -0.5px;
+  margin: 0;
 }
 
 .page-header p {
-
-  color: #6b7280;
-  margin-top: 6px;
-
+  color: #64748b;
+  margin: 6px 0 0 0;
+  font-size: 15px;
 }
 
 .save-button {
-
-  --background: linear-gradient(
-    135deg,
-    #14b8a6,
-    #0f766e
-  );
-
-  --border-radius: 16px;
-
-  height: 52px;
-
-  font-weight: 700;
-
+  --background: linear-gradient(135deg, #14b8a6, #0f766e);
+  --background-hover: linear-gradient(135deg, #0f766e, #0d5c56);
+  height: 48px;
+  --border-radius: 14px;
+  --box-shadow: 0 4px 14px rgba(15, 118, 110, 0.25);
+  font-weight: 600;
+  font-size: 15px;
+  margin: 0;
+  flex-shrink: 0;
 }
 
-/* =========================
-   PROFILE TOP
-========================= */
-
+/* ==========================================================================
+   TARJETA TOP - AVATAR
+   ========================================================================== */
 .profile-top-card {
-
-  background: white;
-
-  border-radius: 30px;
-
+  background: #ffffff;
+  border-radius: 24px;
   padding: 30px;
-
   display: flex;
   align-items: center;
-  gap: 24px;
-
-  box-shadow:
-    0 10px 30px rgba(15,118,110,0.08);
-
+  gap: 28px;
+  box-shadow: 0 10px 25px rgba(15, 118, 110, 0.04);
+  border: 1px solid rgba(15, 118, 110, 0.05);
 }
 
 .profile-avatar img {
-
-  width: 110px;
-  height: 110px;
-
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
-
   object-fit: cover;
-
-  border: 4px solid #d1fae5;
-
+  border: 4px solid #ccfbf1;
 }
 
 .profile-info h3 {
-
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 800;
-
   color: #111827;
-
+  margin: 0;
 }
 
 .profile-info p {
-
   color: #6b7280;
-
-  margin: 8px 0 14px;
-
+  margin: 6px 0 14px 0;
+  font-size: 15px;
 }
 
 .patient-badge {
-
   background: #ecfeff;
-
   color: #0f766e;
-
-  padding: 8px 18px;
-
+  padding: 6px 16px;
   border-radius: 999px;
-
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
-
 }
 
-/* =========================
-   GRID
-========================= */
-
+/* ==========================================================================
+   REJILLA DE SECCIONES (GRID GENERAL)
+   ========================================================================== */
 .profile-grid {
-
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-
-  gap: 24px;
-
+  gap: 28px;
 }
 
-.section-card,
-.settings-card,
-.security-card {
-
-  background: white;
-
-  border-radius: 28px;
-
+.section-card, .security-card {
+  background: #ffffff;
+  border-radius: 24px;
   padding: 28px;
-
-  box-shadow:
-    0 10px 30px rgba(15,118,110,0.08);
-
+  box-shadow: 0 10px 25px rgba(15, 118, 110, 0.04);
+  border: 1px solid rgba(15, 118, 110, 0.05);
 }
 
 .section-header {
-
   margin-bottom: 24px;
-
 }
 
 .section-header h3 {
-
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
-
   color: #111827;
-
+  margin: 0;
 }
 
-/* =========================
-   FORM
-========================= */
-
+/* ==========================================================================
+   FORMULARIOS (CONTROLES INTERNOS DE CONTROL)
+   ========================================================================== */
 .form-grid {
-
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-
   gap: 20px;
-
 }
 
 .full-width {
-
   grid-column: span 2;
-
 }
 
 .custom-input {
-
   display: flex;
   flex-direction: column;
-  gap: 10px;
-
+  gap: 8px;
 }
 
 .custom-input label {
-
-  font-size: 14px;
-  font-weight: 700;
-
-  color: #374151;
-
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
 }
 
-// ion-input y ion-textarea tienen estilos similares, por eso los agrupamos
+/* Estilos de inputs unificados e impecables */
 .custom-input ion-input,
 .custom-input ion-textarea {
-
-  --background: #f9fafb;
-
-  border: 1px solid #d1fae5;
-
-  color: #374151;
-
-  border-radius: 16px;
-
-  padding: 10px 16px;
-
-}
-
-/* =========================
-   SETTINGS
-========================= */
-
-.settings-item {
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  padding: 18px 0;
-
-  border-bottom: 1px solid #f3f4f6;
-
-}
-
-.settings-item:last-child {
-
-  border-bottom: none;
-
-}
-
-.settings-item h4 {
-
-  font-size: 17px;
-  font-weight: 700;
-
+  --background: #f8fafc;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  border: 1px solid #e2e8f0;
   color: #111827;
-
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 15px;
+  transition: all 0.2s ease-in-out;
 }
 
-.settings-item p {
-
-  color: #6b7280;
-
-  margin-top: 6px;
-
+/* Cambio estético en foco simulando interacción premium */
+.custom-input ion-input:focus-within,
+.custom-input ion-textarea:focus-within {
+  border-color: #14b8a6;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
 }
 
-ion-toggle {
-
-  --handle-background: white;
-
-  --background-checked: #14b8a6;
-
-}
-
-/* =========================
-   SECURITY
-========================= */
-
+/* ==========================================================================
+   MEDIDAS DE SEGURIDAD
+   ========================================================================== */
 .security-actions {
-
   display: flex;
-  gap: 16px;
-
+  gap: 14px;
   flex-wrap: wrap;
-
 }
 
 .security-btn {
-
-  --border-radius: 14px;
-
-  height: 48px;
-
+  --border-radius: 12px;
+  height: 46px;
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 992px) {
-
-  .profile-grid {
-
+/* ==========================================================================
+   MEDIA QUERIES (PANTALLAS MEDIANAS Y MÓVILES)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  /* En laptops de pantalla compacta, evitamos que los inputs se deformen */
+  .form-grid {
     grid-template-columns: 1fr;
+  }
+  .full-width {
+    grid-column: span 1;
+  }
+}
 
+@media (max-width: 991px) {
+  .page-wrapper {
+    padding: 24px 20px 40px 20px;
+    gap: 24px;
   }
 
+  .page-header h2 {
+    font-size: 28px;
+  }
+
+  .profile-grid {
+    grid-template-columns: 1fr; /* Colapsa las tarjetas grandes una abajo de la otra */
+    gap: 24px;
+  }
 }
 
 @media (max-width: 768px) {
-
   .page-header {
-
-    flex-direction: column;
-    align-items: flex-start;
-
-  }
-
-  .profile-top-card {
-
-    flex-direction: column;
-    text-align: center;
-
-  }
-
-  .form-grid {
-
-    grid-template-columns: 1fr;
-
-  }
-
-  .full-width {
-
-    grid-column: span 1;
-
-  }
-
-  .settings-item {
-
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
-
   }
 
+  .save-button {
+    width: 100%; /* Botón de guardado a ancho completo */
+  }
+
+  .profile-top-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 24px;
+    gap: 16px;
+  }
+
+  .security-btn {
+    width: 100%; /* Botones de seguridad verticales para fácil pulsación */
+  }
 }

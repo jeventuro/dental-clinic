@@ -1,319 +1,276 @@
-.notifications-content {
-
-  --background: #f4fffd;
-
+/* ==========================================================================
+   CONTENEDOR DE ARQUITECTURA FLUIDA
+   ========================================================================== */
+.page-wrapper {
+  padding: 40px 48px 60px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
 }
 
-.notifications-container {
-
-  padding: 30px;
-
-}
-
-/* =========================================
-HEADER
-========================================= */
-
+/* ==========================================================================
+   ENCABEZADO
+   ========================================================================== */
 .page-header {
-
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  margin-bottom: 30px;
-
+  width: 100%;
+  gap: 20px;
 }
 
-.page-header h1 {
+.header-title-block {
+  flex: 1;
+}
 
+.page-header h2 {
   font-size: 34px;
   font-weight: 800;
-
   color: #0f766e;
-
-  margin-bottom: 8px;
-
+  letter-spacing: -0.5px;
+  margin: 0;
 }
 
 .page-header p {
-
-  color: #6b7280;
-
+  color: #64748b;
+  margin: 6px 0 0 0;
   font-size: 15px;
-
 }
 
 .notification-counter {
-
-  width: 70px;
-  height: 70px;
-
-  border-radius: 24px;
-
-  background: linear-gradient(
-    135deg,
-    #14b8a6,
-    #0f766e
-  );
-
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #14b8a6, #0f766e);
   display: flex;
   justify-content: center;
   align-items: center;
-
-  box-shadow:
-    0 10px 30px rgba(15,118,110,0.18);
-
+  box-shadow: 0 8px 20px rgba(15, 118, 110, 0.15);
+  flex-shrink: 0;
 }
 
 .notification-counter span {
-
-  color: white;
-
-  font-size: 24px;
+  color: #ffffff;
+  font-size: 18px;
   font-weight: 800;
-
 }
 
-/* =========================================
-FILTERS
-========================================= */
-
+/* ==========================================================================
+   BARRA DE FILTROS (ION-SEGMENT) - MARCACIÓN DE CASILLERO COMPLETO
+   ========================================================================== */
 .filters-card {
-
-  background: white;
-
-  border-radius: 24px;
-
-  padding: 14px;
-
-  margin-bottom: 28px;
-
-  box-shadow:
-    0 10px 30px rgba(15,118,110,0.08);
-
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 8px;
+  box-shadow: 0 10px 25px rgba(15, 118, 110, 0.04);
+  border: 1px solid rgba(15, 118, 110, 0.05);
 }
 
 ion-segment {
-
-  --background: #ecfeff;
-
-  border-radius: 16px;
-
-  padding: 6px;
-
+  --background: #f0fdfa; /* Fondo menta suave para inactivos */
+  border-radius: 14px;
+  padding: 4px;
 }
 
 ion-segment-button {
-
-  --color: #0f766e;
-  --color-checked: white;
-
-  --indicator-color: #14b8a6;
-
-  min-height: 50px;
-
+  --color: #0f766e; /* Texto inactivo verde corporativo */
   font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.3px;
+  min-height: 46px;
+  border-radius: 10px;
+  margin: 0 2px;
+  transition: all 0.25s ease-in-out;
 
-  border-radius: 14px;
-
+  /* Estilizamos el indicador interno para que abarque todo el casillero */
+  &::part(indicator) {
+    --indicator-color: #0f766e; /* Texto activo */
+    background: linear-gradient(135deg, #14b8a6, #0f766e); 
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(15, 118, 110, 0.15);
+  }
 }
 
-/* =========================================
-NOTIFICATIONS
-========================================= */
+/* Forzado de color blanco al hacer click / estar activo */
+ion-segment-button.segment-button-checked {
+  --color-checked: #ffffff !important;
+  color: #ffffff !important;
+}
 
+/* ==========================================================================
+   TARJETAS DE NOTIFICACIÓN
+   ========================================================================== */
 .notifications-list {
-
   display: flex;
   flex-direction: column;
-
-  gap: 20px;
-
+  gap: 16px;
 }
 
 .notification-card {
-
-  background: white;
-
-  border-radius: 28px;
-
-  padding: 22px;
-
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 20px;
   display: flex;
-
   gap: 20px;
-
   align-items: center;
-
-  box-shadow:
-    0 10px 30px rgba(15,118,110,0.08);
-
+  box-shadow: 0 10px 25px rgba(15, 118, 110, 0.03);
+  border: 1px solid rgba(15, 118, 110, 0.05);
   border-left: 6px solid transparent;
-
-  transition: 0.3s;
-
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .notification-card:hover {
-
-  transform: translateY(-3px);
-
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(15, 118, 110, 0.06);
 }
 
 .notification-card.unread {
-
-  border-left: 6px solid #14b8a6;
-
+  border-left-color: #14b8a6;
+  background: #fbfdfd;
 }
 
-/* =========================================
-LEFT
-========================================= */
-
+/* ICONO IZQUIERDO */
 .notification-left {
-
   display: flex;
   align-items: center;
-
+  flex-shrink: 0;
 }
 
 .icon-box {
-
-  width: 64px;
-  height: 64px;
-
-  border-radius: 20px;
-
-  background: linear-gradient(
-    135deg,
-    #14b8a6,
-    #0f766e
-  );
-
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #2dd4bf, #14b8a6);
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 
 .icon-box ion-icon {
-
-  font-size: 30px;
-
-  color: white;
-
+  font-size: 24px;
+  color: #ffffff;
 }
 
-/* =========================================
-CENTER
-========================================= */
-
+/* TEXTOS CENTRALES */
 .notification-center {
-
   flex: 1;
-
+  min-width: 0;
 }
 
 .notification-top {
-
   display: flex;
   justify-content: space-between;
-  align-items: center;
-
-  margin-bottom: 10px;
-
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 6px;
 }
 
-.notification-top h2 {
-
-  font-size: 18px;
+.notification-top h3 {
+  font-size: 16px;
   font-weight: 700;
-
   color: #111827;
-
+  margin: 0;
 }
 
-.notification-top span {
-
-  font-size: 13px;
-
-  color: #6b7280;
-
+.time-stamp {
+  font-size: 12px;
+  color: #94a3b8;
+  white-space: nowrap;
+  font-weight: 500;
 }
 
-.notification-center p {
-
-  color: #4b5563;
-
-  line-height: 1.6;
-
+.notification-message {
+  color: #475569;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
 }
 
-/* =========================================
-ACTIONS
-========================================= */
-
+/* ==========================================================================
+   SOLUCIÓN AL ENMASCARAMIENTO DE BOTONES DE ACCIÓN
+   ========================================================================== */
 .notification-actions {
-
   display: flex;
   align-items: center;
-
-  gap: 4px;
-
+  gap: 8px;
+  flex-shrink: 0;
+  margin-left: 12px;
 }
 
-.notification-actions ion-button {
+/* Forzamos el tamaño físico y visibilidad de los botones */
+.notification-actions .btn-action {
+  margin: 0;
+  width: 38px;
+  height: 38px;
+  --background: transparent;
+  --box-shadow: none;
+  --padding-start: 0;
+  --padding-end: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.2s ease;
 
-  --border-radius: 14px;
-
-  width: 46px;
-  height: 46px;
-
+  &:hover {
+    transform: scale(1.12);
+  }
 }
 
-/* =========================================
-RESPONSIVE
-========================================= */
+/* Inyección explícita de colores para saltarse el bloqueo de Ionic */
+.btn-action ion-icon {
+  font-size: 24px !important;
+  display: block;
+}
 
-@media (max-width: 992px) {
+.btn-read ion-icon {
+  color: #10b981 !important; /* Esmeralda / Éxito */
+}
 
-  .notifications-container {
+.btn-save ion-icon {
+  color: #f59e0b !important; /* Ámbar / Guardado */
+}
 
-    padding: 18px;
+.btn-delete ion-icon {
+  color: #ef4444 !important; /* Rojo / Eliminar */
+}
 
+/* ==========================================================================
+   RESPONSIVO CONTROLADO (MÓVILES Y TABLETS)
+   ========================================================================== */
+@media (max-width: 991px) {
+  .page-wrapper {
+    padding: 24px 20px 40px 20px;
+    gap: 24px;
   }
-
-  .page-header {
-
-    flex-direction: column;
-    align-items: flex-start;
-
-    gap: 18px;
-
+  .page-header h2 {
+    font-size: 28px;
   }
+}
 
+@media (max-width: 768px) {
   .notification-card {
-
-    flex-direction: column;
     align-items: flex-start;
-
-  }
-
-  .notification-actions {
-
-    width: 100%;
-
-    justify-content: flex-end;
-
+    gap: 16px;
+    padding: 16px;
+    flex-wrap: wrap;
   }
 
   .notification-top {
-
     flex-direction: column;
     align-items: flex-start;
-
-    gap: 8px;
-
+    gap: 4px;
   }
 
+  .notification-actions {
+    width: 100%;
+    justify-content: flex-end;
+    border-top: 1px solid #3470ac;
+    padding-top: 10px;
+    margin-top: 4px;
+    margin-left: 0;
+  }
 }

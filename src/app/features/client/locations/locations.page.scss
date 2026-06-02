@@ -1,0 +1,168 @@
+.page-wrapper {
+  padding: 40px 48px 60px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 36px;
+
+  h1 {
+    font-size: 34px;
+    font-weight: 800;
+    color: #0f766e;
+    letter-spacing: -0.5px;
+  }
+
+  p {
+    color: #6b7280;
+    margin-top: 6px;
+    font-size: 15px;
+  }
+}
+
+.header-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: #f0fdfa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  ion-icon {
+    font-size: 26px;
+    color: #0f766e;
+  }
+}
+
+/* CARDS GRID SYSTEM */
+.branches-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.branch-card {
+  background: #ffffff;
+  border-radius: 24px;
+  border: 1px solid rgba(15, 118, 110, 0.06);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 30px rgba(15, 118, 110, 0.08);
+  }
+}
+
+.card-body {
+  padding: 28px;
+
+  h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 8px 0;
+  }
+}
+
+.district-badge {
+  display: inline-block;
+  background: #e0f2fe;
+  color: #0369a1;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.divider {
+  border: 0;
+  height: 1px;
+  background: #f1f5f9;
+  margin-bottom: 16px;
+}
+
+.info-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  ion-icon {
+    font-size: 18px;
+    color: #0f766e;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    color: #4b5563;
+    line-height: 1.4;
+  }
+}
+
+/* TRATAMIENTO DE DISEÑO AVANZADO PARA PRE-APERTURA */
+.branch-card.upcoming-card {
+  filter: grayscale(0.3);
+  opacity: 0.85;
+  border: 1px dashed #cbd5e1;
+  background: #f8fafc;
+
+  &:hover {
+    transform: none;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+  }
+
+  .district-badge {
+    background: #f1f5f9;
+    color: #64748b;
+  }
+
+  .info-row ion-icon {
+    color: #94a3b8;
+  }
+}
+
+.status-ribbon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #f59e0b;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-bottom-left-radius: 14px;
+  font-size: 12px;
+  font-weight: 700;
+
+  ion-icon {
+    font-size: 14px;
+  }
+}
+
+/* RESPONSIVO */
+@media (max-width: 768px) {
+  .branches-grid {
+    grid-template-columns: 1fr;
+  }
+  .page-wrapper {
+    padding: 24px 20px;
+  }
+}

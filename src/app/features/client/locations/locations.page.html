@@ -1,0 +1,49 @@
+<div class="page-wrapper">
+  
+  <header class="page-header">
+    <div>
+      <h1>Nuestras Sedes</h1>
+      <p>Conoce nuestras clínicas disponibles y sus horarios de atención</p>
+    </div>
+    <div class="header-icon">
+      <ion-icon name="business-outline"></ion-icon>
+    </div>
+  </header>
+
+  <main class="branches-grid">
+    <div 
+      *ngFor="let branch of branches" 
+      class="branch-card"
+      [class.upcoming-card]="branch.status === 'upcoming'">
+      
+      <div class="status-ribbon" *ngIf="branch.status === 'upcoming'">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <span>Próxima Apertura</span>
+      </div>
+
+      <div class="card-body">
+        <h2>{{ branch.name }}</h2>
+        <span class="district-badge">{{ branch.district }}</span>
+
+        <hr class="divider" />
+
+        <div class="info-row">
+          <ion-icon name="pin-outline"></ion-icon>
+          <p>{{ branch.address }}</p>
+        </div>
+
+        <div class="info-row" *ngIf="branch.status === 'active'">
+          <ion-icon name="call-outline"></ion-icon>
+          <p>{{ branch.phone }}</p>
+        </div>
+
+        <div class="info-row" *ngIf="branch.status === 'active'">
+          <ion-icon name="time-outline"></ion-icon>
+          <p>{{ branch.hours }}</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</div>

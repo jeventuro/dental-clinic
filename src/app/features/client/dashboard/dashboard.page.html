@@ -1,21 +1,14 @@
-<ion-content class="dashboard-content">
+<app-shell role="client">
 
-  <div class="dashboard-layout">
+  <div class="stats-grid">
 
-    <!-- SIDEBAR -->
-    <app-sidebar></app-sidebar>
+    
 
-    <!-- MAIN -->
-    <div class="dashboard-main">
+    <section class="dashboard-router-container">
 
-      <!-- TOPBAR -->
-      <app-topbar></app-topbar>
-
-      <!-- CONTENIDO DINÁMICO -->
       <router-outlet></router-outlet>
 
-    </div>
-
+    </section>
   </div>
 
-</ion-content>
+</app-shell>

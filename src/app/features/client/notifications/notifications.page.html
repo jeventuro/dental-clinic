@@ -1,34 +1,17 @@
+<div class="page-wrapper">
 
-
-<div class="notifications-container">
-
-  <!-- HEADER -->
-  <div class="page-header">
-
-    <div>
-      <h1>Notificaciones</h1>
-
-      <p>
-        Gestiona tus alertas y novedades del sistema
-      </p>
+  <header class="page-header">
+    <div class="header-title-block">
+      <h2>Notificaciones</h2>
+      <p>Gestiona tus alertas y novedades del sistema</p>
     </div>
-
     <div class="notification-counter">
-
-      <span>
-        {{ notifications.length }}
-      </span>
-
+      <span>{{ notifications.length }}</span>
     </div>
+  </header>
 
-  </div>
-
-  <!-- FILTERS -->
-  <div class="filters-card">
-
-    <ion-segment
-      [(ngModel)]="segmentValue">
-
+  <section class="filters-card">
+    <ion-segment [(ngModel)]="segmentValue" mode="ios">
       <ion-segment-button value="all">
         <ion-label>Todas</ion-label>
       </ion-segment-button>
@@ -40,95 +23,60 @@
       <ion-segment-button value="saved">
         <ion-label>Guardadas</ion-label>
       </ion-segment-button>
-
     </ion-segment>
+  </section>
 
-  </div>
-
-  <!-- NOTIFICATIONS -->
-  <div class="notifications-list">
-
-    <div
-      class="notification-card"
+  <main class="notifications-list">
+    <div 
+      class="notification-card" 
       *ngFor="let notification of filteredNotifications"
       [class.unread]="!notification.read">
-
-      <!-- LEFT -->
+      
       <div class="notification-left">
-
         <div class="icon-box">
-
-          <ion-icon
-            [name]="notification.icon">
-          </ion-icon>
-
+          <ion-icon [name]="notification.icon"></ion-icon>
         </div>
-
       </div>
 
-      <!-- CENTER -->
       <div class="notification-center">
-
         <div class="notification-top">
-
-          <h2>
-            {{ notification.title }}
-          </h2>
-
-          <span>
-            {{ notification.time }}
-          </span>
-
+          <h3>{{ notification.title }}</h3>
+          <span class="time-stamp">{{ notification.time }}</span>
         </div>
-
-        <p>
-          {{ notification.message }}
-        </p>
-
+        <p class="notification-message">{{ notification.message }}</p>
       </div>
 
-      <!-- RIGHT -->
       <div class="notification-actions">
-
-        <ion-button
-          fill="clear"
-          color="success"
+        <ion-button 
           *ngIf="!notification.read"
-          (click)="markAsRead(notification)">
-
-          <ion-icon
-            name="checkmark-done-outline">
-          </ion-icon>
-
+          fill="clear" 
+          class="btn-action btn-read"
+          [style.--color]="'#10b981'"
+          (click)="markAsRead(notification)" 
+          mode="md">
+          <ion-icon [name]="'checkmark-done-outline'"></ion-icon>
         </ion-button>
 
-        <ion-button
-          fill="clear"
-          color="warning"
-          (click)="toggleSave(notification)">
-
-          <ion-icon
-            [name]="notification.saved ? 'bookmark' : 'bookmark-outline'">
-          </ion-icon>
-
+        <ion-button 
+          fill="clear" 
+          class="btn-action "
+          (click)="toggleSave(notification)" 
+          [style.--color]="'#f59e0b'"
+          mode="md">
+          <ion-icon [name]="notification.saved ? 'bookmark' : 'bookmark-outline'"></ion-icon>
         </ion-button>
 
-        <ion-button
-          fill="clear"
-          color="danger"
-          (click)="deleteNotification(notification.id)">
-
-          <ion-icon
-            name="trash-outline">
-          </ion-icon>
-
+        <ion-button 
+          fill="clear" 
+          class="btn-action"
+          (click)="deleteNotification(notification.id)" 
+          [style.--color]="'#ef4444'"
+          mode="md">
+          <ion-icon [name]="'trash-outline'"></ion-icon>
         </ion-button>
-
       </div>
 
     </div>
-
-  </div>
+  </main>
 
 </div>
-

@@ -1,63 +1,72 @@
-.treatments-content {
-
-  --background: #f4fffd;
-
+/* ==========================================================================
+   CONTENEDOR DE ARQUITECTURA FLUIDA (Consistencia con toda la App)
+   ========================================================================== */
+.page-wrapper {
+  padding: 40px 48px 60px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.treatments-layout {
-
-  display: flex;
-
-}
-
-.treatments-main {
-
-  flex: 1;
-
-  padding: 30px;
-
-}
-
+/* ==========================================================================
+   ESTRUCTURACIÓN DEL ENCABEZADO
+   ========================================================================== */
 .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 36px;
+  gap: 20px;
+}
 
-  margin-bottom: 30px;
-
+.header-title-block {
+  flex: 1;
 }
 
 .page-header h2 {
-
   font-size: 34px;
   font-weight: 800;
-
-  color: #0f766e;
-
+  color: #0f766e; /* Color corporativo de tu clínica */
+  letter-spacing: -0.5px;
+  margin: 0;
 }
 
 .page-header p {
-
   color: #64748b;
-
-  margin-top: 8px;
-
+  margin: 6px 0 0 0;
+  font-size: 15px;
 }
 
+/* ==========================================================================
+   REJILLA AUTO-ADAPTATIVA DE TARJETAS DE TRATAMIENTO
+   ========================================================================== */
 .treatments-grid {
-
   display: grid;
-
-  grid-template-columns:
-    repeat(auto-fit,minmax(340px,1fr));
-
-  gap: 24px;
-
+  /* Distribuye horizontalmente de manera automática las tarjetas según el ancho de pantalla */
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 28px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-@media (max-width: 992px) {
-
-  .treatments-layout {
-
-    flex-direction: column;
-
+/* ==========================================================================
+   MEDIA QUERIES (ADAPTACIÓN AUTOMÁTICA MÓVIL Y TABLET)
+   ========================================================================== */
+@media (max-width: 991px) {
+  .page-wrapper {
+    /* Reducción de márgenes idéntica a tus otros módulos */
+    padding: 24px 20px 40px 20px; 
   }
 
+  .page-header h2 {
+    font-size: 28px; /* Reducción tipográfica sutil para móviles */
+  }
+
+  .treatments-grid {
+    /* Fuerza una sola columna al 100% en pantallas pequeñas */
+    grid-template-columns: minmax(0, 1fr); 
+    gap: 20px;
+  }
 }

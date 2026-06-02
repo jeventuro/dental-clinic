@@ -1,0 +1,100 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.app-shell {
+  height: 100%;
+  background: #eef7f6;
+}
+
+/* Reemplazamos .desktop-sidebar por la configuración nativa del ion-menu */
+.main-sidebar {
+  --width: 270px; /* Ancho profesional para tu sidebar */
+  min-width: 270px;
+  max-width: 270px;
+}
+
+.main-sidebar ion-content {
+  --background: #ffffff; /* Fondo transparente para el contenido del menú */
+  background: #ffffff;
+}
+
+.shell-main{
+  --background: #eef7f6;
+  background: #eef7f6;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  overflow: hidden; /* Evita que el contenido se desborde del contenedor principal */
+
+}
+
+.shell-router-content {
+  flex: 1;                /* Absorbe todo el espacio restante debajo del header */
+  overflow-y: auto;       /* ¡AQUÍ ACTIVAMOS EL SCROLL VERTICAL! */
+  background: #eef7f6;
+  -webkit-overflow-scrolling: touch; /* Hace que el scroll sea ultra suave en dispositivos iOS */
+  transition: all 0.3s ease;
+}
+
+.shell-page {
+  --background: #eef7f6;
+  background: #eef7f6;
+}
+
+.page-content {
+  --background: #eef7f6;
+  padding: 40px 48px 60px 48px; 
+  background: #eef7f6;
+  max-width: 1400px; /* Evita que el contenido se estire infinitamente en monitores gigantes */
+  margin: 0 auto;    /* Centra el bloque de contenido si la pantalla es muy ancha */
+  box-sizing: border-box;
+}
+
+.mobile-page {
+  height: 100%;
+  --background: #eef7f6;
+  background: #eef7f6;
+}
+
+.mobile-content {
+  --background: #eef7f6;
+  background: #eef7f6;
+}
+
+.mobile-content-wrapper {
+  min-height: 100%;
+  padding: 20px;
+  padding-top: 76px;
+}
+
+ion-toolbar {
+  --background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid #e7eceb;
+}
+
+ion-title {
+  color: #0f766e;
+  font-weight: 700;
+}
+
+ion-menu-button {
+  --color: #0f766e;
+}
+
+@media (max-width: 991px) {
+  .page-content {
+    padding: 24px 20px 40px 20px;
+  }
+  
+  /* Ocultar el header de móvil en pantallas grandes si fuera necesario, 
+     aunque Ionic maneja el ion-menu-button automáticamente */
+}
+
+@media (min-width: 992px) {
+  .mobile-page {
+    display: none;
+  }
+}

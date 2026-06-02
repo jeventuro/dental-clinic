@@ -61,8 +61,15 @@ export const routes: Routes = [
 
         {
           path: '',
-          redirectTo: 'appointments',
+          redirectTo: 'dash-view',
           pathMatch: 'full'
+        },
+
+        {
+          path: 'dash-view',
+          loadComponent: () => 
+            import('./features/client/dash-view/dash-view.page')
+              .then( m => m.DashViewPage)
         },
 
         {
@@ -107,9 +114,11 @@ export const routes: Routes = [
               .then( m => m.SettingsPage)
         },
 
+        {
+          path: 'locations',
+          loadComponent: () => import('./features/client/locations/locations.page').then( m => m.LocationsPage)
+        },
       ]
-
-
-  },
-  
+  }, 
+    
 ];

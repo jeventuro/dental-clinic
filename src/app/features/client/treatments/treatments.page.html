@@ -1,29 +1,23 @@
-<div class="page-header">
+<div class="page-wrapper">
+  <header class="page-header">
+    <div class="header-title-block">
+      <h2>Mis tratamientos</h2>
+      <p>
+        Visualiza tu progreso clínico y sesiones programadas
+      </p>
+    </div>
+  </header>
 
-  <div>
 
-    <h2>Mis tratamientos</h2>
-
-    <p>
-      Visualiza tu progreso clínico y sesiones programadas
-    </p>
-
-  </div>
-
-</div>
-
-<div class="treatments-grid">
-
-  <app-treatment-card
-
-    *ngFor="let item of treatments"
-
-    [title]="item.title"
-    [doctor]="item.doctor"
-    [progress]="item.progress"
-    [nextSession]="item.nextSession"
-    [status]="item.status">
-
-  </app-treatment-card>
+  <main class="treatments-grid">
+    <app-treatment-card
+      *ngFor="let item of treatments"
+      [title]="item.title"
+      [doctor]="item.doctor"
+      [progress]="item.progress"
+      [nextSession]="item.nextSession"
+      [status]="item.status">
+    </app-treatment-card>
+  </main>
 
 </div>

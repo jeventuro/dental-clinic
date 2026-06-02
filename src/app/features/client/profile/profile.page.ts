@@ -39,16 +39,11 @@ export class ProfilePage {
   };
 
   saveProfile() {
-
-    console.log('Perfil actualizado');
-
+    console.log('Perfil actualizado', this.patient);
   }
 
   logout() {
-
     console.log('Cerrar sesión');
-
   }
-
 
 }

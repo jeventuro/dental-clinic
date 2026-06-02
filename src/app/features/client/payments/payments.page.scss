@@ -1,433 +1,491 @@
-.payments-page {
-
+/* ==========================================================================
+   CONTENEDOR DE ARQUITECTURA FLUIDA (Consistencia de Suite)
+   ========================================================================== */
+.page-wrapper {
+  padding: 40px 48px 60px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 28px;
-
+  gap: 32px; /* Espaciado uniforme vertical entre secciones */
 }
 
-/* =========================
-   HEADER
-========================= */
-
+/* ==========================================================================
+   ENCABEZADO DE PAGOS
+   ========================================================================== */
 .page-header {
-
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  flex-wrap: wrap;
+  width: 100%;
   gap: 20px;
+}
 
+.header-title-block {
+  flex: 1;
 }
 
 .page-header h2 {
-
-  font-size: 38px;
+  font-size: 34px;
   font-weight: 800;
-
   color: #0f766e;
-
+  letter-spacing: -0.5px;
+  margin: 0;
 }
 
 .page-header p {
-
-  color: #6b7280;
-  margin-top: 6px;
-
+  color: #64748b;
+  margin: 6px 0 0 0;
+  font-size: 15px;
 }
 
 .pay-button {
-
-  --background: linear-gradient(
-    135deg,
-    #14b8a6,
-    #0f766e
-  );
-
-  --border-radius: 16px;
-
-  height: 52px;
-
-  font-weight: 700;
-
+  --background: linear-gradient(135deg, #14b8a6, #0f766e);
+  --background-hover: linear-gradient(135deg, #0f766e, #0d5c56);
+  height: 48px;
+  --border-radius: 14px;
+  --box-shadow: 0 4px 14px rgba(15, 118, 110, 0.25);
+  font-weight: 600;
+  font-size: 15px;
+  margin: 0;
+  flex-shrink: 0;
+  color : white;
 }
 
-/* =========================
-   SUMMARY
-========================= */
-
+/* ==========================================================================
+   RESUMEN MONETARIO (SUMMARY METRICS)
+   ========================================================================== */
 .payments-summary {
-
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-
   gap: 24px;
-
 }
 
 .summary-card {
-
-  background: white;
-
-  border-radius: 28px;
-
+  background: #ffffff;
+  border-radius: 24px;
   padding: 28px;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  box-shadow:
-    0 10px 30px rgba(15,118,110,0.08);
-
+  box-shadow: 0 10px 25px rgba(15, 118, 110, 0.04);
+  border: 1px solid rgba(15, 118, 110, 0.05);
 }
 
 .summary-card span {
-
   color: #6b7280;
-  font-size: 15px;
-
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .summary-card h3 {
-
-  font-size: 34px;
+  font-size: 32px;
   font-weight: 800;
-
-  margin-top: 8px;
-
+  margin: 6px 0 0 0;
   color: #111827;
-
 }
 
 .summary-card ion-icon {
-
-  font-size: 42px;
-
+  font-size: 38px;
+  flex-shrink: 0;
 }
 
-.pending ion-icon {
+.pending ion-icon { color: #f59e0b; }
+.paid ion-icon { color: #14b8a6; }
 
-  color: #f59e0b;
-
-}
-
-.paid ion-icon {
-
-  color: #14b8a6;
-
-}
-
-/* =========================
-   GRID
-========================= */
-
+/* ==========================================================================
+   REJILLA CENTRAL ASIMÉTRICA (GRID LAYOUT)
+   ========================================================================== */
 .payments-grid {
-
   display: grid;
-  grid-template-columns: 2fr 1fr;
-
-  gap: 24px;
-
+  grid-template-columns: 2fr 1fr; /* Diseño sofisticado de escritorio */
+  gap: 28px;
 }
 
 .section-card {
-
-  background: white;
-
-  border-radius: 28px;
-
+  background: #ffffff;
+  border-radius: 24px;
   padding: 28px;
-
-  box-shadow:
-    0 10px 30px rgba(15,118,110,0.08);
-
+  box-shadow: 0 10px 25px rgba(15, 118, 110, 0.04);
+  border: 1px solid rgba(15, 118, 110, 0.05);
 }
 
 .section-header {
-
-  margin-bottom: 24px;
-
+  margin-bottom: 20px;
 }
 
 .section-header h3 {
-
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
-
   color: #111827;
-
+  margin: 0;
 }
 
-/* =========================
-   PENDING PAYMENTS
-========================= */
-
-.payment-item {
-
+/* ==========================================================================
+   ELEMENTOS INTERNOS (ITEMS LISTS)
+   ========================================================================== */
+.payment-item, .history-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  padding: 18px 0;
-
-  border-bottom: 1px solid #f3f4f6;
-
+  padding: 16px 0;
+  border-bottom: 1px solid #f1f5f9;
 }
 
-.payment-item:last-child {
-
+.payment-item:last-child, .history-item:last-child {
   border-bottom: none;
-
 }
 
-.payment-item h4 {
-
-  font-size: 17px;
-  font-weight: 700;
-
+.payment-item h4, .history-item h4 {
+  font-size: 16px;
+  font-weight: 600;
   color: #111827;
-
+  margin: 0;
 }
 
-.payment-item p {
-
+.payment-item p, .history-item p {
   color: #6b7280;
-  margin-top: 6px;
-
+  margin: 4px 0 0 0;
+  font-size: 14px;
 }
 
-.payment-right {
-
+.payment-right, .history-right {
   text-align: right;
-
+  flex-shrink: 0;
 }
 
 .amount {
-
   display: block;
-
-  font-size: 20px;
-  font-weight: 800;
-
+  font-size: 18px;
+  font-weight: 700;
   color: #0f766e;
-
 }
 
 .status {
-
   display: inline-block;
-
-  margin-top: 8px;
-
-  padding: 6px 14px;
-
-  border-radius: 999px;
-
-  font-size: 13px;
-  font-weight: 700;
-
+  margin-top: 6px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .pending-status {
-
   background: #fef3c7;
-  color: #b45309;
-
+  color: #d97706;
 }
 
-/* =========================
-   METHODS
-========================= */
-
+/* MÉTODOS DE PAGO CARD */
 .method-card {
-
   display: flex;
   align-items: center;
   gap: 16px;
-
-  background: #f9fafb;
-
-  border: 1px solid #e5e7eb;
-
-  border-radius: 18px;
-
-  padding: 18px;
-
-  margin-bottom: 18px;
-
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 14px;
 }
 
 .method-icon {
-
-  width: 52px;
+width: 52px;   /* Mantenemos las dimensiones exactas de tu diseño inicial */
   height: 52px;
-
-  border-radius: 16px;
-
-  background: #ecfeff;
-
+  border-radius: 14px;
+  background: #ffffff; /* Cambiamos a fondo blanco sólido para que resalten los logos */
+  border: 1px solid #f1f5f9; /* Un borde sutil para dar volumen */
+  
   display: flex;
   justify-content: center;
   align-items: center;
-
+  padding: 6px; /* Espacio de amortiguación interna para que el logo no toque las esquinas */
+  box-sizing: border-box;
+  flex-shrink: 0;
+  overflow: hidden; /* Recorta cualquier imperfección del lienzo de la imagen */
 }
 
-.method-icon ion-icon {
-
-  font-size: 24px;
-  color: #14b8a6;
-
+.method-icon img {
+  width: 100%;
+  height: 100%;
+  /* object-fit: contain asegura que la imagen se encaje perfectamente sin deformar su aspecto */
+  object-fit: contain; 
+  display: block;
 }
 
 .method-card h4 {
-
-  font-size: 16px;
-  font-weight: 700;
-
+  font-size: 15px;
+  font-weight: 600;
   color: #111827;
-
+  margin: 0;
 }
 
 .method-card p {
-
   color: #6b7280;
-  margin-top: 4px;
-
+  margin: 2px 0 0 0;
+  font-size: 13px;
 }
 
 .add-method-btn {
-
-  margin-top: 14px;
-
+  margin-top: 8px;
   --border-color: #14b8a6;
   --color: #14b8a6;
-
-  --border-radius: 14px;
-
-  height: 48px;
-
+  --border-radius: 12px;
+  height: 44px;
+  font-weight: 600;
 }
 
-/* =========================
-   HISTORY
-========================= */
-
+/* HISTORIAL COMPLETO DE SECCIÓN */
 .history-section {
-
-  background: white;
-
-  border-radius: 28px;
-
+  background: #ffffff;
+  border-radius: 24px;
   padding: 28px;
-
-  box-shadow:
-    0 10px 30px rgba(15,118,110,0.08);
-
-}
-
-.history-item {
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  padding: 18px 0;
-
-  border-bottom: 1px solid #f3f4f6;
-
-}
-
-.history-item:last-child {
-
-  border-bottom: none;
-
-}
-
-.history-item h4 {
-
-  font-size: 17px;
-  font-weight: 700;
-
-  color: #111827;
-
-}
-
-.history-item p {
-
-  color: #6b7280;
-  margin-top: 6px;
-
-}
-
-.history-right {
-
-  text-align: right;
-
+  box-shadow: 0 10px 25px rgba(15, 118, 110, 0.04);
+  border: 1px solid rgba(15, 118, 110, 0.05);
 }
 
 .method {
-
   display: block;
-
   color: #6b7280;
-
-  margin-bottom: 6px;
-
+  font-size: 13px;
+  margin-bottom: 2px;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 992px) {
-
-  .payments-summary {
-
-    grid-template-columns: 1fr;
-
+/* ==========================================================================
+   MEDIA QUERIES (BREAKPOINTS RESPONSIVOS DE ALTA FIDELIDAD)
+   ========================================================================== */
+@media (max-width: 991px) {
+  .page-wrapper {
+    padding: 24px 20px 40px 20px;
+    gap: 24px;
   }
 
-  .payments-grid {
-
-    grid-template-columns: 1fr;
-
+  .page-header h2 {
+    font-size: 28px;
   }
 
+  .payments-summary, .payments-grid {
+    grid-template-columns: 1fr; /* Colapso ordenado de dos columnas a una */
+    gap: 20px;
+  }
 }
 
 @media (max-width: 768px) {
-
   .page-header {
-
     flex-direction: column;
     align-items: flex-start;
+    gap: 16px;
+  }
 
+  .pay-button {
+    width: 100%; /* Botón de acción completa en pantallas de smartphones */
   }
 
   .summary-card {
-
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
-
+    padding: 20px;
   }
 
-  .payment-item,
-  .history-item {
-
+  .payment-item, .history-item {
     flex-direction: column;
     align-items: flex-start;
-    gap: 14px;
-
+    gap: 12px;
   }
 
-  .payment-right,
-  .history-right {
-
+  .payment-right, .history-right {
     text-align: left;
-
+    width: 100%;
   }
+  
+  .status {
+    margin-top: 0;
+    margin-left: 8px; /* Ajuste alineado para modo móvil */
+  }
+}
 
+
+/* COMPLEMENTOS INTERACTIVOS DE ALTA FIDELIDAD */
+.payment-item.actionable {
+  cursor: pointer;
+  transition: padding-left 0.2s ease, background-color 0.2s ease;
+  border-radius: 12px;
+  padding: 16px 8px;
+
+  &:hover {
+    background-color: #f8fafc;
+    padding-left: 14px;
+  }
+}
+
+.empty-state-box {
+  text-align: center;
+  padding: 30px 10px;
+  color: #64748b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+
+  ion-icon {
+    font-size: 34px;
+    color: #14b8a6;
+  }
+  p { font-size: 14px; margin: 0; }
+}
+
+/* HISTORIAL DE COMPROBANTES CON ALINEACIÓN HORIZONTAL */
+.history-right-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.text-right-align { text-align: right; }
+
+.btn-download-invoice {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #0f766e;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #f0fdfa;
+    border-color: #14b8a6;
+    transform: scale(1.05);
+  }
+  ion-icon { font-size: 16px; }
+}
+
+/* RENDERING LOCAL DE LOGOS AUXILIARES */
+.badge-fallback-logo {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 8px;
+  border-radius: 6px;
+  
+  &[data-brand="Visa"] { background: #eff6ff; color: #1e40af; }
+  &[data-brand="MasterCard"] { background: #fff7ed; color: #c2410c; }
+  &[data-brand="Yape"] { background: #fae8ff; color: #a21caf; }
+  &[data-brand="Plin"] { background: #ecfdf5; color: #047857; }
+}
+
+/* ARQUITECTURA DE CONTENEDORES DE MODALES */
+.custom-suite-modal {
+  --width: 500px;
+  --height: auto;
+  --max-height: 90%;
+  --border-radius: 24px;
+  --box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.modal-viewport {
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
+
+  .title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #0f766e;
+    ion-icon { font-size: 20px; }
+    h3 { font-size: 18px; font-weight: 700; margin: 0; color: #111827; }
+  }
+}
+
+.close-modal-btn {
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.modal-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  label { font-size: 13px; font-weight: 600; color: #374151; }
+}
+
+.modal-select, .modal-input {
+  height: 44px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  font-size: 14px;
+  color: #1f2937;
+  outline: none;
+  &:focus { border-color: #14b8a6; box-shadow: 0 0 0 3px rgba(20,184,166,0.1); }
+}
+
+.secure-checkout-notice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f0fdfa;
+  padding: 12px;
+  border-radius: 10px;
+  color: #0f766e;
+  font-size: 12px;
+  p { margin: 0; line-height: 1.4; }
+  ion-icon { font-size: 18px; flex-shrink: 0; }
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #f1f5f9;
+  background: #f8fafc;
+}
+
+.modal-btn-cancel {
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background: white;
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modal-btn-confirm {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #14b8a6, #0f766e);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@media(max-width: 576px) {
+  .custom-suite-modal { --width: 100%; --border-radius: 0px; }
+  .history-item { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .history-right-row { justify-content: space-between; width: 100%; }
 }

@@ -1,197 +1,132 @@
-<div class="profile-page">
-
-  <!-- HEADER -->
-  <div class="page-header">
-
-    <div>
-
+<div class="page-wrapper">
+  <header class="page-header">
+    <div class="header-title-block">
       <h2>Mi perfil</h2>
-
       <p>
         Gestiona tu información personal y preferencias
       </p>
-
     </div>
 
     <ion-button
       class="save-button"
       (click)="saveProfile()">
-
       Guardar cambios
-
     </ion-button>
+  </header>
 
-  </div>
-
-  <!-- PROFILE TOP -->
-  <div class="profile-top-card">
-
+  <section class="profile-top-card">
     <div class="profile-avatar">
-
       <img
         src="https://i.pravatar.cc/300"
         alt="Paciente"
       />
-
     </div>
-
     <div class="profile-info">
-
       <h3>{{ patient.fullName }}</h3>
-
       <p>{{ patient.email }}</p>
 
       <span class="patient-badge">
         Paciente Premium
       </span>
-
     </div>
+  </section>
 
-  </div>
-
-  <!-- GRID -->
   <div class="profile-grid">
-
-    <!-- PERSONAL INFO -->
-    <div class="section-card">
-
+    <section class="section-card">
       <div class="section-header">
-
         <h3>Información personal</h3>
-
       </div>
 
       <div class="form-grid">
-
         <div class="custom-input">
-
           <label>Nombre completo</label>
-
           <ion-input
             [(ngModel)]="patient.fullName">
           </ion-input>
-
         </div>
 
         <div class="custom-input">
-
           <label>DNI</label>
-
           <ion-input
             [(ngModel)]="patient.dni">
           </ion-input>
-
         </div>
 
         <div class="custom-input">
-
           <label>Teléfono</label>
-
           <ion-input
             [(ngModel)]="patient.phone">
           </ion-input>
-
         </div>
 
         <div class="custom-input">
-
           <label>Correo electrónico</label>
-
           <ion-input
             [(ngModel)]="patient.email">
           </ion-input>
-
         </div>
 
         <div class="custom-input full-width">
-
           <label>Dirección</label>
-
           <ion-input
             [(ngModel)]="patient.address">
           </ion-input>
-
         </div>
-
       </div>
+    </section>
 
-    </div>
-
-    <!-- MEDICAL INFO -->
-    <div class="section-card">
+  
+    <section class="section-card">
 
       <div class="section-header">
-
         <h3>Información médica</h3>
-
       </div>
 
       <div class="form-grid">
-
         <div class="custom-input">
-
           <label>Contacto de emergencia</label>
-
           <ion-input
             [(ngModel)]="patient.emergencyContact">
           </ion-input>
-
         </div>
 
         <div class="custom-input">
-
           <label>Tipo de sangre</label>
-
           <ion-input
             [(ngModel)]="patient.bloodType">
           </ion-input>
-
         </div>
 
         <div class="custom-input full-width">
-
           <label>Alergias</label>
-
           <ion-textarea
             autoGrow="true"
             [(ngModel)]="patient.allergies">
           </ion-textarea>
-
         </div>
-
       </div>
-
-    </div>
-
+    </section>
   </div>
 
   
 
-  <!-- SECURITY -->
-  <div class="security-card">
-
+  <!-- MODULO DE SEGURIDAD -->
+  <section class="security-card">
     <div class="section-header">
-
       <h3>Seguridad</h3>
-
     </div>
 
     <div class="security-actions">
-
       <ion-button
         fill="outline"
         class="security-btn">
-
         Cambiar contraseña
-
       </ion-button>
 
       <ion-button
         fill="outline"
         class="security-btn">
-
         Descargar historial clínico
-
       </ion-button>
 
       <ion-button
@@ -199,13 +134,9 @@
         fill="outline"
         class="security-btn"
         (click)="logout()">
-
         Cerrar sesión
-
       </ion-button>
-
     </div>
-
-  </div>
+  </section>
 
 </div>

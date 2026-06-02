@@ -1,35 +1,208 @@
-<div class="appointments-header">
+<div class="page-wrapper">
 
-  <div>
+  <header class="page-header">
+    <div>
+      <h1>Gestión de Citas</h1>
+      <p>Administra tu agenda odontológica y reserva nuevas atenciones</p>
+    </div>
+  </header>
 
-    <h2>Mis citas</h2>
+  <section class="segment-container">
+    <ion-segment [(ngModel)]="segmentValue" mode="ios">
+      <ion-segment-button value="list">
+        <ion-label>Mis Citas</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="create">
+        <ion-label>Agendar Nueva Cita</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </section>
 
-    <p>
-      Gestiona tus consultas odontológicas
-    </p>
+  <main [ngSwitch]="segmentValue">
 
-  </div>
+    <div *ngSwitchCase="'list'" class="appointments-list">
+      <div *ngIf="appointmentsList.length === 0" class="empty-state">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <p>No registras citas programadas en este momento.</p>
+      </div>
 
-  <ion-button class="new-btn">
+      <div 
+        *ngFor="let appointment of appointmentsList" 
+        class="appointment-item"
+        [class.status-completed]="appointment.status === 'Completada'">
+        
+        <div class="appointment-item-header">
+          <div>
+            <span class="specialty-tag">{{ appointment.specialty }}</span>
+            <h3>{{ appointment.treatment }}</h3>
+          </div>
+          <span class="status-badge" [attr.data-status]="appointment.status">
+            {{ appointment.status }}
+          </span>
+        </div>
 
-    Nueva cita
+        <hr class="divider" />
 
-  </ion-button>
+        <div class="appointment-item-body">
+          <div class="meta-field">
+            <ion-icon name="person-outline"></ion-icon>
+            <span>{{ appointment.doctor }}</span>
+          </div>
+          <div class="meta-field">
+            <ion-icon name="business-outline"></ion-icon>
+            <span>{{ appointment.branch }}</span>
+          </div>
+          <div class="meta-field">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span>{{ appointment.date }} • {{ appointment.time }}</span>
+          </div>
+          <div class="meta-field">
+            <ion-icon name="cash-outline"></ion-icon>
+            <span class="payment-type-text">Pago: <strong>{{ appointment.paymentType }}</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
 
-</div>
+    <div *ngSwitchCase="'create'" class="form-container">
+      
+      <div class="form-section-card">
+        <div class="section-title">
+          <ion-icon name="medical-outline"></ion-icon>
+          <h2>1. Selecciona el Tratamiento</h2>
+        </div>
+        <div class="form-group">
+          <label>Servicio Odontológico</label>
+          <select [(ngModel)]="newAppointment.treatmentIndex" class="custom-select">
+            <option [ngValue]="null" disabled selected>Selecciona un tratamiento...</option>
+            <option *ngFor="let treatment of treatments; let i = index" [ngValue]="i">
+              {{ treatment.name }} — S/. {{ treatment.price }}.00
+            </option>
+          </select>
+        </div>
+      </div>
 
-<div class="appointments-grid">
+      <!-- BLOQUE 2: PROGRAMACIÓN AVANZADA CON TABLA DE DISPONIBILIDAD -->
+      <div class="form-section-card">
+        <div class="section-title">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <h2>2. Profesional, Sede y Agenda de Disponibilidad</h2>
+        </div>
 
-  <app-appointment-card
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Odontólogo Especialista</label>
+            <select [(ngModel)]="newAppointment.doctor" class="custom-select">
+              <option value="" disabled selected>Selecciona un médico...</option>
+              <option *ngFor="let doc of doctors" [value]="doc.name">{{ doc.name }} ({{ doc.specialty }})</option>
+            </select>
+          </div>
 
-    *ngFor="let item of appointments"
+          <div class="form-group">
+            <label>Sede de Atención</label>
+            <select [(ngModel)]="newAppointment.branch" class="custom-select">
+              <option value="" disabled selected>Selecciona la clínica...</option>
+              <option *ngFor="let branch of activeBranches" [value]="branch.name">{{ branch.name }}</option>
+            </select>
+          </div>
 
-    [doctor]="item.doctor"
-    [specialty]="item.specialty"
-    [date]="item.date"
-    [hour]="item.hour"
-    [status]="item.status">
+          <div class="form-group grid-full-width">
+            <label>Fecha de la Cita</label>
+            <input type="date" [(ngModel)]="newAppointment.date" [min]="minDate" (change)="onDateTimeCriteriaChange()" class="custom-input" />
+          </div>
+        </div>
 
-  </app-appointment-card>
+        <!-- CONTROL DE SELECCIÓN DE HORARIOS MEDIANTE TABLA EN REJILLA -->
+        <div class="availability-container" *ngIf="newAppointment.date && newAppointment.treatmentIndex !== null">
+          <hr class="divider" />
+          <h3>Horarios de Disponibilidad en la Clínica</h3>
+          <p class="info-interval">
+            Intervalos calculados de <strong>{{ treatments[newAppointment.treatmentIndex].duration }} min</strong> para este tratamiento.
+          </p>
 
+          <!-- Turno Mañana -->
+          <h4 class="shift-title">Turno Mañana (9:00 AM - 1:00 PM)</h4>
+          <div class="time-slots-grid">
+            <button 
+              *ngFor="let slot of morningSlots" 
+              [disabled]="!slot.available"
+              [class.slot-occupied]="!slot.available"
+              [class.slot-selected]="newAppointment.time === slot.time"
+              (click)="selectTime(slot)"
+              class="slot-btn">
+              {{ slot.time }}
+            </button>
+          </div>
+
+          <!-- Turno Tarde -->
+          <h4 class="shift-title">Turno Tarde (3:00 PM - 8:30 PM)</h4>
+          <div class="time-slots-grid">
+            <button 
+              *ngFor="let slot of afternoonSlots" 
+              [disabled]="!slot.available"
+              [class.slot-occupied]="!slot.available"
+              [class.slot-selected]="newAppointment.time === slot.time"
+              (click)="selectTime(slot)"
+              class="slot-btn">
+              {{ slot.time }}
+            </button>
+          </div>
+
+          <!-- Indicador de Selección -->
+          <div class="selected-time-bar" *ngIf="newAppointment.time">
+            <ion-icon name="time-outline"></ion-icon>
+            <span>Hora seleccionada para tu cita: <strong>{{ newAppointment.time }}</strong></span>
+          </div>
+        </div>
+        
+        <div class="availability-placeholder" *ngIf="!newAppointment.date || newAppointment.treatmentIndex === null">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <p>Selecciona un tratamiento del paso 1 y la fecha para desplegar la tabla de horas disponibles.</p>
+        </div>
+      </div>
+
+      
+      <div class="form-section-card">
+        <div class="section-title">
+          <ion-icon name="cash-outline"></ion-icon>
+          <h2>3. Tipo de Pago</h2>
+        </div>
+
+        <div class="payment-options">
+          <label class="payment-radio-box" [class.selected]="newAppointment.paymentMethod === 'consulta'">
+            <input type="radio" name="paymentGroup" value="consulta" [(ngModel)]="newAppointment.paymentMethod" />
+            <div class="radio-content">
+              <strong>Solo Agendar (Pago en Consulta)</strong>
+              <p>Reserva tu espacio y realiza el pago de la tarifa base directamente en la sede.</p>
+            </div>
+          </label>
+
+          <label class="payment-radio-box" [class.selected]="newAppointment.paymentMethod === 'adelantado'">
+            <input type="radio" name="paymentGroup" value="adelantado" [(ngModel)]="newAppointment.paymentMethod" />
+            <div class="radio-content">
+              <strong>Pago por Adelantado (10% Descuento Especial)</strong>
+              <p>Usa tu tarjeta guardada para procesar la transacción de forma inmediata y agilizar tu atención.</p>
+            </div>
+          </label>
+        </div>
+
+        <div class="payment-summary-box" *ngIf="newAppointment.treatmentIndex !== null">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <div>
+            <h4>Resumen de Operación</h4>
+            <p>Tratamiento: <strong>{{ treatments[newAppointment.treatmentIndex].name }}</strong></p>
+            <p>Monto Final: <strong class="price-highlight">S/. {{ treatments[newAppointment.treatmentIndex].price }}.00</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button class="btn-submit" (click)="onSubmitAppointment()">
+          Confirmar y Procesar Cita Médica
+        </button>
+      </div>
+
+    </div>
+
+  </main>
 </div>

@@ -1,164 +1,192 @@
-<div class="payments-page">
+<div class="page-wrapper">
 
-  <!-- HEADER -->
-  <div class="page-header">
-
-    <div>
+  <header class="page-header">
+    <div class="header-title-block">
       <h2>Pagos</h2>
-      <p>
-        Gestiona tus pagos, métodos y comprobantes
-      </p>
+      <p>Gestiona tus pagos, métodos y comprobantes</p>
     </div>
-
-    <ion-button class="pay-button">
+    <ion-button class="pay-button" mode="md" (click)="openPayModal(null)" [disabled]="pendingPayments.length === 0">
       Realizar pago
     </ion-button>
+  </header>
 
-  </div>
-
-  <!-- RESUMEN -->
-  <div class="payments-summary">
-
-    <div class="summary-card pending">
-
+  <section class="payments-summary">
+    <div class="summary-card pending" (click)="openPayModal(null)" style="cursor: pointer;">
       <div>
         <span>Pagos pendientes</span>
-        <h3>S/ 400</h3>
+        <h3>S/ {{ totalPending | number:'1.0-2' }}</h3>
       </div>
-
       <ion-icon name="alert-circle-outline"></ion-icon>
-
     </div>
 
     <div class="summary-card paid">
-
       <div>
         <span>Total pagado</span>
-        <h3>S/ 1,520</h3>
+        <h3>S/ {{ totalPaid | number:'1.0-2' }}</h3>
       </div>
-
       <ion-icon name="checkmark-done-outline"></ion-icon>
-
     </div>
+  </section>
 
-  </div>
-
-  <!-- GRID -->
   <div class="payments-grid">
-
-    <!-- PAGOS PENDIENTES -->
-    <div class="section-card">
-
+    <section class="section-card">
       <div class="section-header">
         <h3>Pagos pendientes</h3>
       </div>
 
-      <div
-        class="payment-item"
-        *ngFor="let payment of pendingPayments">
-
-        <div>
-
-          <h4>{{ payment.treatment }}</h4>
-
-          <p>
-            Vence:
-            {{ payment.dueDate }}
-          </p>
-
-        </div>
-
-        <div class="payment-right">
-
-          <span class="amount">
-            {{ payment.amount }}
-          </span>
-
-          <span class="status pending-status">
-            {{ payment.status }}
-          </span>
-
-        </div>
-
+      <div class="empty-state-box" *ngIf="pendingPayments.length === 0">
+        <ion-icon name="checkmark-done-outline"></ion-icon>
+        <p>¡Estás al día! No registras deudas pendientes de facturación.</p>
       </div>
 
-    </div>
+      <div class="payment-item actionable" *ngFor="let payment of pendingPayments" (click)="openPayModal(payment.id)">
+        <div>
+          <h4>{{ payment.treatment }}</h4>
+          <p>Vence: {{ payment.dueDate }}</p>
+        </div>
+        <div class="payment-right">
+          <span class="amount">S/ {{ payment.amount }}</span>
+          <span class="status pending-status">{{ payment.status }}</span>
+        </div>
+      </div>
+    </section>
 
-    <!-- METODOS -->
-    <div class="section-card">
-
+    <section class="section-card">
       <div class="section-header">
         <h3>Métodos de pago</h3>
       </div>
 
-      <div
-        class="method-card"
-        *ngFor="let method of paymentMethods">
-
+      <div class="method-card" *ngFor="let method of paymentMethods">
         <div class="method-icon">
-
-          <ion-icon name="card-outline"></ion-icon>
-
+          <div class="badge-fallback-logo" [attr.data-brand]="method.type">
+            {{ method.type.slice(0, 2).toUpperCase() }}
+          </div>
         </div>
-
         <div>
-
           <h4>{{ method.type }}</h4>
-
           <p>{{ method.number }}</p>
-
         </div>
-
       </div>
 
-      <ion-button
-        expand="block"
-        fill="outline"
-        class="add-method-btn">
-
+      <ion-button expand="block" fill="outline" class="add-method-btn" mode="md" (click)="openAddMethodModal()">
+        <ion-icon slot="start" name="add-outline"></ion-icon>
         Agregar método
-
       </ion-button>
-
-    </div>
-
+    </section>
   </div>
 
-  <!-- HISTORIAL -->
-  <div class="history-section">
-
+  <section class="history-section">
     <div class="section-header">
       <h3>Historial de pagos</h3>
     </div>
 
-    <div
-      class="history-item"
-      *ngFor="let history of paymentHistory">
-
+    <div class="history-item" *ngFor="let history of paymentHistory">
       <div>
-
         <h4>{{ history.treatment }}</h4>
-
-        <p>
-          {{ history.date }}
-        </p>
-
+        <p>{{ history.date }}</p>
       </div>
-
-      <div class="history-right">
-
-        <span class="method">
-          {{ history.method }}
-        </span>
-
-        <span class="amount">
-          {{ history.amount }}
-        </span>
-
+      <div class="history-right-row">
+        <div class="history-right text-right-align">
+          <span class="method">{{ history.method }}</span>
+          <span class="amount">S/ {{ history.amount }}</span>
+        </div>
+        <button class="btn-download-invoice" (click)="downloadInvoice(history)" title="Descargar Comprobante">
+          <ion-icon name="download-outline"></ion-icon>
+        </button>
       </div>
-
     </div>
-
-  </div>
+  </section>
 
 </div>
+
+<ion-modal [isOpen]="isPayModalOpen" (didDismiss)="closePayModal()" class="custom-suite-modal">
+  <ng-template>
+    <div class="modal-viewport">
+      <header class="modal-header">
+        <div class="title-row">
+          <ion-icon name="cash-outline"></ion-icon>
+          <h3>Procesar Pago Dental</h3>
+        </div>
+        <button class="close-modal-btn" (click)="closePayModal()">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </header>
+
+      <main class="modal-body">
+        <div class="modal-field-group">
+          <label>Tratamiento / Concepto a Pagar</label>
+          <select [(ngModel)]="checkoutForm.paymentId" class="modal-select">
+            <option [ngValue]="null" disabled selected>Selecciona una deuda pendiente...</option>
+            <option *ngFor="let payment of pendingPayments" [ngValue]="payment.id">
+              {{ payment.treatment }} — S/ {{ payment.amount }}.00
+            </option>
+          </select>
+        </div>
+
+        <div class="modal-field-group">
+          <label>Selecciona tu Método Guardado</label>
+          <select [(ngModel)]="checkoutForm.methodId" class="modal-select">
+            <option [ngValue]="null" disabled selected>Selecciona una tarjeta o billetera...</option>
+            <option *ngFor="let m of paymentMethods" [ngValue]="m.id">
+              {{ m.type }} ({{ m.number }})
+            </option>
+          </select>
+        </div>
+
+        <div class="secure-checkout-notice">
+          <ion-icon name="checkmark-done-outline"></ion-icon>
+          <p>Pago encriptado de alta seguridad respaldado por SisteDent Premium Core.</p>
+        </div>
+      </main>
+
+      <footer class="modal-footer">
+        <button class="modal-btn-cancel" (click)="closePayModal()">Cancelar</button>
+        <button class="modal-btn-confirm" (click)="executePayment()">Confirmar y Pagar</button>
+      </footer>
+    </div>
+  </ng-template>
+</ion-modal>
+
+<ion-modal [isOpen]="isAddMethodModalOpen" (didDismiss)="closeAddMethodModal()" class="custom-suite-modal">
+  <ng-template>
+    <div class="modal-viewport">
+      <header class="modal-header">
+        <div class="title-row">
+          <ion-icon name="card-outline"></ion-icon>
+          <h3>Vincular Método de Pago</h3>
+        </div>
+        <button class="close-modal-btn" (click)="closeAddMethodModal()">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </header>
+
+      <main class="modal-body">
+        <div class="modal-field-group">
+          <label>Tipo de Billetera / Tarjeta</label>
+          <select [(ngModel)]="newMethodForm.type" class="modal-select">
+            <option value="Visa">Tarjeta de Crédito / Débito Visa</option>
+            <option value="MasterCard">Tarjeta de Crédito / Débito MasterCard</option>
+            <option value="Yape">Billetera Digital Yape</option>
+            <option value="Plin">Billetera Digital Plin</option>
+          </select>
+        </div>
+
+        <div class="modal-field-group">
+          <label *ngIf="newMethodForm.type === 'Visa' || newMethodForm.type === 'MasterCard'">Número de Tarjeta (16 dígitos)</label>
+          <label *ngIf="newMethodForm.type === 'Yape' || newMethodForm.type === 'Plin'">Número de Celular Asociado</label>
+          
+          <input 
+            type="text" 
+            [(ngModel)]="newMethodForm.identifier" 
+            [placeholder]="(newMethodForm.type==='Visa' || newMethodForm.type==='MasterCard') ? '4552 8891 2231 4552' : '987 654 321'" 
+            class="modal-input" />
+        </div>
+      </main>
+
+      <footer class="modal-footer">
+        <button class="modal-btn-cancel" (click)="closeAddMethodModal()">Cancelar</button>
+        <button class="modal-btn-confirm" (click)="registerPaymentMethod()">Guardar Método</button>
+      </footer>
+    </div>
+  </ng-template>
+</ion-modal>
