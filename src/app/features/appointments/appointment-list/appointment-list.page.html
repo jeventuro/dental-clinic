@@ -1,13 +1,129 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>appointment-list</ion-title>
-  </ion-toolbar>
-</ion-header>
+<!-- src/app/features/appointments/appointment-list/appointment-list.page.html -->
+<ion-content class="appointments-page">
+  <div class="page-container">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">appointment-list</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <!-- HEADER -->
+    <header class="page-header">
+      <div>
+        <h1>Mis Citas</h1>
+        <p>Visualiza y gestiona todas tus citas odontológicas</p>
+      </div>
+      <button class="btn-primary" (click)="nuevaCita()">
+        <ion-icon name="add-circle-outline"></ion-icon>
+        Agendar Cita
+      </button>
+    </header>
+
+    <!-- FILTROS -->
+    <div class="filters-container">
+      <div class="filter-group">
+        <button 
+          class="filter-btn"
+          [class.active]="filtroEstado === 'todas'"
+          (click)="cambiarFiltro('todas')">
+          Todas
+        </button>
+        <button 
+          class="filter-btn"
+          [class.active]="filtroEstado === 'pendiente'"
+          (click)="cambiarFiltro('pendiente')">
+          Pendientes
+        </button>
+        <button 
+          class="filter-btn"
+          [class.active]="filtroEstado === 'confirmada'"
+          (click)="cambiarFiltro('confirmada')">
+          Confirmadas
+        </button>
+        <button 
+          class="filter-btn"
+          [class.active]="filtroEstado === 'completada'"
+          (click)="cambiarFiltro('completada')">
+          Completadas
+        </button>
+        <button 
+          class="filter-btn"
+          [class.active]="filtroEstado === 'cancelada'"
+          (click)="cambiarFiltro('cancelada')">
+          Canceladas
+        </button>
+      </div>
+      <button class="refresh-btn" (click)="cargarCitas()" [disabled]="isLoading">
+        <ion-icon [name]="isLoading ? 'refresh-outline' : 'refresh-outline'" [class.spinning]="isLoading"></ion-icon>
+      </button>
+    </div>
+
+    <!-- LISTA DE CITAS -->
+    <div class="appointments-list">
+      <!-- Skeleton Loader -->
+      <div *ngIf="isLoading" class="skeleton-container">
+        <div class="skeleton-item" *ngFor="let _ of [1,2,3]">
+          <div class="skeleton-line w-60"></div>
+          <div class="skeleton-line w-40"></div>
+          <div class="skeleton-line w-80"></div>
+        </div>
+      </div>
+
+      <!-- Sin citas -->
+      <div *ngIf="!isLoading && citasFiltradas.length === 0" class="empty-state">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <h3>No hay citas</h3>
+        <p>{{ filtroEstado === 'todas' ? 'Aún no tienes citas programadas.' : 'No hay citas con este estado.' }}</p>
+        <button class="btn-primary btn-small" (click)="nuevaCita()">Agendar primera cita</button>
+      </div>
+
+      <!-- Lista de citas -->
+      <div *ngFor="let cita of citasFiltradas" class="appointment-card">
+        <div class="appointment-card-header">
+          <div class="appointment-info">
+            <span class="appointment-date">
+              <ion-icon name="calendar-outline"></ion-icon>
+              {{ cita.fecha | date:'EEEE, d MMM yyyy' }}
+            </span>
+            <span class="appointment-time">
+              <ion-icon name="time-outline"></ion-icon>
+              {{ cita.hora }}
+            </span>
+          </div>
+          <ion-badge [color]="getEstadoColor(cita.estado)" class="appointment-badge">
+            <ion-icon [name]="getEstadoIcon(cita.estado)" slot="start"></ion-icon>
+            {{ cita.estado | titlecase }}
+          </ion-badge>
+        </div>
+
+        <div class="appointment-card-body">
+          <h3>{{ cita.tratamiento || 'Consulta' }}</h3>
+          <div class="appointment-meta">
+            <div class="meta-item">
+              <ion-icon name="medical-outline"></ion-icon>
+              <span>{{ cita.doctores?.usuarios?.nombre_completo || 'Doctor' }}</span>
+            </div>
+            <div class="meta-item">
+              <ion-icon name="business-outline"></ion-icon>
+              <span>{{ cita.sede?.nombre || 'Sede no especificada' }}</span>
+            </div>
+            <div class="meta-item" *ngIf="cita.notas">
+              <ion-icon name="document-text-outline"></ion-icon>
+              <span>{{ cita.notas }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="appointment-card-footer">
+          <button class="btn-outline btn-small" (click)="verDetalle(cita.id)">
+            <ion-icon name="create-outline"></ion-icon>
+            Ver detalles
+          </button>
+          <button 
+            *ngIf="cita.estado !== 'cancelada' && cita.estado !== 'completada'"
+            class="btn-outline danger btn-small"
+            (click)="cancelarCita(cita)">
+            <ion-icon name="trash-outline"></ion-icon>
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </ion-content>

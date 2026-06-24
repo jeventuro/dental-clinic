@@ -1,0 +1,399 @@
+// src/app/features/appointments/appointment-list/appointment-list.page.scss
+
+.appointments-page {
+  --background: #f4f7f6;
+  padding: 20px 24px 40px 24px;
+
+  @media (max-width: 992px) {
+    padding: 16px;
+  }
+
+  @media (max-width: 576px) {
+    padding: 12px;
+  }
+}
+
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 24px;
+  padding: 28px 32px 36px 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+
+  @media (max-width: 992px) {
+    padding: 20px;
+  }
+
+  @media (max-width: 576px) {
+    padding: 16px;
+  }
+}
+
+// ============================================================
+// HEADER
+// ============================================================
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a2e2b;
+    margin: 0 0 4px;
+
+    @media (max-width: 576px) {
+      font-size: 22px;
+    }
+  }
+
+  p {
+    font-size: 15px;
+    color: #6b7280;
+    margin: 4px 0 0;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #14b8a6, #0f766e);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(15, 118, 110, 0.25);
+    white-space: nowrap;
+
+    ion-icon {
+      font-size: 20px;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(15, 118, 110, 0.30);
+    }
+
+    &:active {
+      transform: scale(0.97);
+    }
+
+    @media (max-width: 576px) {
+      width: 100%;
+      justify-content: center;
+      padding: 12px 16px;
+    }
+  }
+}
+
+// ============================================================
+// FILTROS
+// ============================================================
+.filters-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.filter-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  .filter-btn {
+    padding: 8px 16px;
+    border-radius: 12px;
+    border: 1.5px solid #e2e8f0;
+    background: white;
+    font-size: 13px;
+    font-weight: 500;
+    color: #4b5563;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: #14b8a6;
+      color: #0f766e;
+    }
+
+    &.active {
+      background: linear-gradient(135deg, #14b8a6, #0f766e);
+      color: white;
+      border-color: #0f766e;
+    }
+  }
+}
+
+.refresh-btn {
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  ion-icon {
+    font-size: 22px;
+    color: #4b5563;
+  }
+
+  &:hover {
+    border-color: #14b8a6;
+    ion-icon {
+      color: #0f766e;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .spinning {
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ============================================================
+// LISTA DE CITAS
+// ============================================================
+.appointments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// ============================================================
+// SKELETON
+// ============================================================
+.skeleton-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.skeleton-item {
+  background: #f1f5f9;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeleton-line {
+  height: 16px;
+  border-radius: 8px;
+  background: #e2e8f0;
+  animation: pulse 1.5s ease-in-out infinite;
+
+  &.w-60 { width: 60%; }
+  &.w-40 { width: 40%; }
+  &.w-80 { width: 80%; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+// ============================================================
+// EMPTY STATE
+// ============================================================
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  color: #6b7280;
+  text-align: center;
+
+  ion-icon {
+    font-size: 56px;
+    color: #d1d5db;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1a2e2b;
+    margin: 0 0 8px;
+  }
+
+  p {
+    font-size: 15px;
+    margin: 0 0 16px;
+  }
+
+  .btn-small {
+    padding: 10px 24px;
+    font-size: 14px;
+  }
+}
+
+// ============================================================
+// APPOINTMENT CARD
+// ============================================================
+.appointment-card {
+  background: white;
+  border-radius: 20px;
+  padding: 20px 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f1f5f9;
+  transition: all 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  }
+
+  @media (max-width: 576px) {
+    padding: 16px;
+  }
+}
+
+.appointment-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.appointment-info {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  .appointment-date,
+  .appointment-time {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+
+    ion-icon {
+      font-size: 18px;
+      color: #0f766e;
+    }
+  }
+}
+
+.appointment-badge {
+  font-weight: 600;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  ion-icon {
+    font-size: 14px;
+  }
+}
+
+.appointment-card-body {
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a2e2b;
+    margin: 0 0 12px;
+  }
+
+  .appointment-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 16px;
+
+    @media (max-width: 576px) {
+      grid-template-columns: 1fr;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: #4b5563;
+
+      ion-icon {
+        font-size: 18px;
+        color: #0f766e;
+      }
+    }
+  }
+}
+
+.appointment-card-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+
+  .btn-outline {
+    padding: 8px 16px;
+    border-radius: 12px;
+    border: 1.5px solid #d1d5db;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    &:hover {
+      background: #f9fafb;
+      border-color: #9ca3af;
+    }
+
+    &.danger {
+      border-color: #fca5a5;
+      color: #dc2626;
+
+      &:hover {
+        background: #fef2f2;
+        border-color: #f87171;
+      }
+    }
+
+    &.btn-small {
+      padding: 6px 14px;
+      font-size: 12px;
+    }
+
+    ion-icon {
+      font-size: 16px;
+    }
+  }
+}

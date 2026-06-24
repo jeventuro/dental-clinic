@@ -1,10 +1,10 @@
 // src/app/roles/cliente/dashboard/dash-view.page.ts
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/auth/auth.service';
-import { DataService, Cita, Tratamiento, Notificacion } from '@core/data/data.service';
+import { DataService, Cita, Tratamiento } from '@core/data/data.service';
 import { addIcons } from 'ionicons';
 import {
   addCircleOutline,
@@ -53,21 +53,30 @@ interface ProximaCita extends Cita {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashViewPage implements OnInit {
-
   public Math = Math;
 
+  // Datos del usuario
   userName = '';
   userRole = '';
   userAvatar = '';
   usuarioId = '';
   pacienteId = '';
+
+  // Próxima cita (datos reales)
   proximaCita: ProximaCita | null = null;
   tieneCita = false;
+
+  // Resumen de cuenta
   balance = 0;
   totalPaid = 0;
+
+  // Tratamiento activo
   tratamientoActivo: Tratamiento | null = null;
+
+  // Actividad reciente
   actividadReciente: any[] = [];
 
+  // Acciones rápidas (fijas)
   quickActions = [
     { label: 'Ver Radiografías', icon: 'images-outline', route: '/client/medical-records', color: 'primary' },
     { label: 'Descargar Facturas', icon: 'download-outline', route: '/client/invoices', color: 'secondary' },
@@ -75,6 +84,7 @@ export class DashViewPage implements OnInit {
     { label: 'Contactar por WhatsApp', icon: 'logo-whatsapp', route: 'https://wa.me/51999999999', color: 'success', external: true },
   ];
 
+  // Mapeo de colores para actividad
   colorMap: Record<string, string> = {
     info: 'primary',
     exito: 'success',
@@ -86,30 +96,15 @@ export class DashViewPage implements OnInit {
   constructor(
     private authService: AuthService,
     private dataService: DataService,
-    private router: Router
+    private router: Router,
+    private cd: ChangeDetectorRef
   ) {
     this.registerIcons();
   }
 
   async ngOnInit() {
-    /* await this.cargarDatosUsuario();
-    await this.cargarDatosDashboard();*/
-    const user = this.authService.getCurrentUser();
-    if (user) {
-      this.userName = user.nombre_completo || 'Cliente';
-      this.userRole = user.rol === 'cliente' ? 'Paciente Premium' : 'Usuario';
-      this.userAvatar = user.avatar_url || 'assets/avatars/default.png';
-      this.usuarioId = user.id;
-      // 🔧 TEMPORAL: Desactivar carga real
-      // await this.cargarDatosDashboard();
-      // Usar datos mock para probar
-      this.tieneCita = true;
-      this.proximaCita = { /* mock */ } as any;
-      this.balance = 1250;
-      this.totalPaid = 3400;
-      this.tratamientoActivo = { /* mock */ } as any;
-      this.actividadReciente = [{ titulo: 'Mock', mensaje: 'Prueba', created_at: new Date().toISOString(), tipo: 'info' }];
-    }
+    await this.cargarDatosUsuario();
+    await this.cargarDatosDashboard();
   }
 
   // ============================================================
@@ -137,9 +132,9 @@ export class DashViewPage implements OnInit {
   // 📊 CARGA DE DATOS DEL DASHBOARD
   // ============================================================
   private async cargarDatosDashboard() {
-  if (!this.pacienteId) return;
+    if (!this.pacienteId) return;
 
-  console.log('⏳ Iniciando carga de datos...');
+    console.log('⏳ Iniciando carga de datos...');
     try {
       console.time('⏱️ Próxima cita');
       await this.cargarProximaCita();
@@ -158,6 +153,9 @@ export class DashViewPage implements OnInit {
       console.timeEnd('⏱️ Actividad reciente');
 
       console.log('✅ Todos los datos cargados correctamente.');
+      
+      // Forzar detección de cambios
+      this.cd.detectChanges();
     } catch (error) {
       console.error('❌ Error cargando datos del dashboard:', error);
     }
@@ -196,7 +194,6 @@ export class DashViewPage implements OnInit {
   private async cargarTratamientoActivo() {
     const tratamiento = await this.dataService.getTratamientoActivo(this.pacienteId);
     if (tratamiento) {
-      // Asegurar fechas válidas para el pipe date
       this.tratamientoActivo = {
         ...tratamiento,
         fecha_inicio: tratamiento.fecha_inicio || new Date().toISOString().split('T')[0],
@@ -235,8 +232,11 @@ export class DashViewPage implements OnInit {
     this.router.navigate(['/client/notifications']);
   }
 
+  /**
+   * Redirige a la página de agendar cita (usando la ruta definida en cliente.routes.ts)
+   */
   newAppointment() {
-    this.router.navigate(['/client/appointments/new']);
+    this.router.navigate(['/client/appointments']);
   }
 
   reschedule() {

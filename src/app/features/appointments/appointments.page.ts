@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+// src/app/features/appointments/appointments.page.ts
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
-import { PaymentsService } from 'src/core/services/payments.service';
+import { DataService, Cita } from '@core/data/data.service';
+import { AuthService } from '@core/auth/auth.service';
 import { 
   calendarOutline, 
   timeOutline, 
@@ -15,23 +17,6 @@ import {
   medicalOutline
 } from 'ionicons/icons';
 
-interface Appointment {
-  id: number;
-  treatment: string;
-  doctor: string;
-  specialty: string;
-  date: string;
-  time: string;
-  branch: string;
-  paymentType: 'Adelantado' | 'En Consulta';
-  status: 'Pendiente' | 'Completada' | 'Cancelada';
-}
-
-interface TimeSlot {
-  time: string;
-  available: boolean;
-}
-
 @Component({
   selector: 'app-appointments',
   templateUrl: './appointments.page.html',
@@ -39,11 +24,11 @@ interface TimeSlot {
   standalone: true,
   imports: [CommonModule, IonicModule, FormsModule]
 })
-export class AppointmentsPage {
-  
-  public segmentValue = 'create'; // Cambiado a 'create' para desarrollo rápido
+export class AppointmentsPage implements OnInit {
+  public segmentValue = 'create';
+  public pacienteId: string = '';
 
-  // 1. Catálogo de Tratamientos con Duración Profesional (en minutos)
+  // Catálogo de Tratamientos
   public treatments = [
     { name: 'Consulta Médica de Diagnóstico', specialty: 'Odontología General', price: 50, duration: 15 },
     { name: 'Limpieza Dental Avanzada', specialty: 'Odontología General', price: 120, duration: 30 },
@@ -52,43 +37,29 @@ export class AppointmentsPage {
     { name: 'Instalación de Brackets', specialty: 'Ortodoncia', price: 1200, duration: 120 }
   ];
 
-  public doctors = [
-    { name: 'Dr. Carlos Mendoza', specialty: 'Especialista en Estética' },
-    { name: 'Dra. Ana Marina Solís', specialty: 'Especialista en Ortodoncia' },
-    { name: 'Dr. Jorge Luis Ramos', specialty: 'Especialista en Endodoncia' }
-  ];
+  public doctors: any[] = [];
+  public activeBranches: any[] = [];
+  public citas: Cita[] = [];
 
-  public activeBranches = [
-    { id: 1, name: 'Sede Huaral - Central' },
-    { id: 2, name: 'Sede Huaral - CliniDent' },
-    { id: 3, name: 'Sede Comas' }
-  ];
-
-  public appointmentsList: Appointment[] = [];
-
-  // Formulario vinculado
   public newAppointment = {
     treatmentIndex: null as number | null,
-    doctor: '',
-    branch: '',
+    doctor_id: '',
+    sede_id: '',
     date: '',
     time: '',
-    paymentMethod: 'consulta'
   };
 
   public minDate: string = new Date().toISOString().split('T')[0];
-  
-  // Arreglos que contendrán las horas divididas para la tabla visual
-  public morningSlots: TimeSlot[] = [];
-  public afternoonSlots: TimeSlot[] = [];
+  public morningSlots: any[] = [];
+  public afternoonSlots: any[] = [];
 
-  // Mocks de horas ya ocupadas en BD por fecha para pruebas de colisión
-  private dbOccupiedTimes: string[] = ['09:30 AM', '10:00 AM', '04:00 PM', '05:30 PM'];
+  // Simulación de horas ocupadas (después se reemplazará con consulta a BD)
+  private dbOccupiedTimes: string[] = [];
 
   constructor(
-    private toastController: ToastController,
-    private paymentsService: PaymentsService
-
+    private dataService: DataService,
+    private authService: AuthService,
+    private toastController: ToastController
   ) {
     addIcons({
       calendarOutline, timeOutline, personOutline, businessOutline,
@@ -96,9 +67,46 @@ export class AppointmentsPage {
     });
   }
 
-  /**
-   * Se ejecuta cada vez que cambia el tratamiento o la fecha para recalcular la tabla de horas
-   */
+  async ngOnInit() {
+    await this.cargarDatosIniciales();
+    await this.cargarCitasUsuario();
+  }
+
+  private async cargarDatosIniciales() {
+    const user = this.authService.getCurrentUser();
+    if (!user) return;
+
+    // Obtener paciente_id
+    const { data: paciente } = await this.dataService.getPacienteByUsuarioId(user.id);
+    if (paciente) {
+      this.pacienteId = paciente.id;
+    }
+
+    // Cargar doctores
+    const { data: doctores } = await this.dataService.getDoctores();
+    if (doctores) {
+      this.doctors = doctores.map(d => ({
+        id: d.id,
+        name: d.usuarios?.nombre_completo || 'Doctor',
+        specialty: d.especialidad || 'Odontología General'
+      }));
+    }
+
+    // Cargar sedes
+    const { data: sedes } = await this.dataService.getSedes();
+    if (sedes) {
+      this.activeBranches = sedes;
+    }
+  }
+
+  private async cargarCitasUsuario() {
+    if (!this.pacienteId) return;
+    const { data } = await this.dataService.getCitasByPaciente(this.pacienteId);
+    if (data) {
+      this.citas = data;
+    }
+  }
+
   public onDateTimeCriteriaChange(): void {
     if (this.newAppointment.treatmentIndex === null || !this.newAppointment.date) {
       this.morningSlots = [];
@@ -107,46 +115,26 @@ export class AppointmentsPage {
     }
 
     const duration = this.treatments[this.newAppointment.treatmentIndex].duration;
-    
-    // Generar los bloques dinámicamente según las reglas del negocio
     this.morningSlots = this.generateSlots(9, 0, 13, 0, duration);
     this.afternoonSlots = this.generateSlots(15, 0, 20, 30, duration);
   }
 
-  /**
-   * Algoritmo avanzado para segmentar las franjas horarias operativas de la clínica
-   */
-  private generateSlots(startHr: number, startMin: number, endHr: number, endMin: number, stepMinutes: number): TimeSlot[] {
-    const slots: TimeSlot[] = [];
-    
+  private generateSlots(startHr: number, startMin: number, endHr: number, endMin: number, stepMinutes: number): any[] {
+    const slots: any[] = [];
     let current = new Date();
     current.setHours(startHr, startMin, 0, 0);
-
     const end = new Date();
     end.setHours(endHr, endMin, 0, 0);
 
     while (current.getTime() + (stepMinutes * 60000) <= end.getTime()) {
       const formattedTime = this.formatTimeFromDate(current);
-      
-      // Simulación de validación contra base de datos: comprobar si la hora ya está en el registro
-      const isOccupied = this.dbOccupiedTimes.includes(formattedTime);
-
       slots.push({
         time: formattedTime,
-        available: !isOccupied
+        available: !this.dbOccupiedTimes.includes(formattedTime)
       });
-
-      // Avanzar el puntero de tiempo según los minutos requeridos por el servicio
       current.setTime(current.getTime() + stepMinutes * 60000);
     }
-
     return slots;
-  }
-
-  public selectTime(slot: TimeSlot): void {
-    if (slot.available) {
-      this.newAppointment.time = slot.time;
-    }
   }
 
   private formatTimeFromDate(date: Date): string {
@@ -154,71 +142,60 @@ export class AppointmentsPage {
     const minutes = date.getMinutes();
     const ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12 || 12;
-    const minStr = minutes < 10 ? '0' + minutes : minutes;
-    const hrStr = hours < 10 ? '0' + hours : hours;
-    return `${hrStr}:${minStr} ${ampm}`;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+  }
+
+  public selectTime(slot: any): void {
+    if (slot.available) {
+      this.newAppointment.time = slot.time;
+    }
   }
 
   public async onSubmitAppointment() {
-    if (this.newAppointment.treatmentIndex === null || !this.newAppointment.doctor || 
-        !this.newAppointment.branch || !this.newAppointment.date || !this.newAppointment.time) {
-      this.presentToast('Por favor, selecciona todos los campos incluyendo el horario disponible.', 'warning');
+    if (this.newAppointment.treatmentIndex === null || !this.newAppointment.doctor_id ||
+        !this.newAppointment.sede_id || !this.newAppointment.date || !this.newAppointment.time) {
+      await this.presentToast('Por favor, completa todos los campos.', 'warning');
       return;
     }
 
     const selectedTreatment = this.treatments[this.newAppointment.treatmentIndex];
-    // ==========================================
-    // LÓGICA DE INTERCONEXIÓN DE PAGOS
-    // ==========================================
-    if (this.newAppointment.paymentMethod === 'consulta') {
-      // Caso A: Va presencial -> Se genera deuda automática en el Módulo de Pagos
-      this.paymentsService.addPendingPayment(
-        `Consulta Presencial: ${selectedTreatment.name}`, 
-        selectedTreatment.price
-      );
-    } else {
-      // Caso B: Pagó por adelantado -> Pasa directo al historial liquidado
-      this.paymentsService.addDirectToHistory(
-        `Adelantado: ${selectedTreatment.name}`, 
-        selectedTreatment.price,
-        'Visa' // Simula cobro por su tarjeta Visa registrada por defecto
-      );
-    }
-    // ==========================================
 
-    // Generar la cita en la agenda visual del usuario
-    const created = {
-      id: Math.floor(100 + Math.random() * 900),
-      treatment: selectedTreatment.name,
-      doctor: this.newAppointment.doctor,
-      specialty: selectedTreatment.specialty,
-      date: this.newAppointment.date,
-      time: this.newAppointment.time,
-      branch: this.newAppointment.branch,
-      paymentType: this.newAppointment.paymentMethod === 'adelantado' ? 'Adelantado' : 'En Consulta' as any,
-      status: 'Pendiente' as any
+    const citaData = {
+      paciente_id: this.pacienteId,
+      doctor_id: this.newAppointment.doctor_id,
+      sede_id: this.newAppointment.sede_id,
+      fecha: this.newAppointment.date,
+      hora: this.newAppointment.time,
+      duracion: selectedTreatment.duration,
+      tratamiento: selectedTreatment.name,
+      estado: 'pendiente' as const,
     };
 
-    this.appointmentsList.unshift(created);
-    
-    const msg = this.newAppointment.paymentMethod === 'consulta'
-      ? '¡Cita registrada! Se ha generado una orden de cobro en tu pestaña de Pagos.'
-      : '¡Pago por adelantado procesado con éxito y cita agendada!';
+    const { error } = await this.dataService.createCita(citaData);
+    if (error) {
+      await this.presentToast('Error al agendar la cita: ' + error.message, 'danger');
+      return;
+    }
 
-    await this.presentToast(msg, 'success');
+    await this.presentToast('¡Cita agendada con éxito!', 'success');
     this.resetForm();
+    await this.cargarCitasUsuario();
     this.segmentValue = 'list';
   }
-/*========================*/
 
   private resetForm() {
-    this.newAppointment = { treatmentIndex: null, doctor: '', branch: '', date: '', time: '', paymentMethod: 'consulta' };
+    this.newAppointment = { treatmentIndex: null, doctor_id: '', sede_id: '', date: '', time: '' };
     this.morningSlots = [];
     this.afternoonSlots = [];
   }
 
   private async presentToast(message: string, color: 'success' | 'warning' | 'danger') {
-    const toast = await this.toastController.create({ message, duration: 3000, color, position: 'bottom' });
+    const toast = await this.toastController.create({
+      message,
+      duration: 3000,
+      color,
+      position: 'bottom'
+    });
     await toast.present();
   }
 }

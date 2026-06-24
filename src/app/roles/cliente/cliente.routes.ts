@@ -17,7 +17,16 @@ export const CLIENT_ROUTES: Routes = [
       },
       {
         path: 'appointments',
-        loadComponent: () => import('@features/appointments/appointment-list/appointment-list.page').then((m) => m.AppointmentListPage),
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('@features/appointments/appointment-list/appointment-list.page').then((m) => m.AppointmentListPage),
+          },
+          {
+            path: 'new',
+            loadComponent: () => import('@features/appointments/appointment-form/appointment-form.page').then((m) => m.AppointmentFormPage),
+          }
+        ]
       },
       {
         path: 'treatments',

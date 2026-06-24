@@ -56,6 +56,7 @@ export interface Cita {
   updated_at: string;
   pacientes?: Paciente;
   doctores?: Doctor;
+  sede?: Sede;
 }
 
 export interface Tratamiento {
@@ -314,7 +315,7 @@ export class DataService {
   async getCitas(filtros?: { paciente_id?: string; doctor_id?: string; fecha?: string }) {
     let query = this.supabase
       .from('citas')
-      .select('*, pacientes(*), doctores(*, usuarios(*))')
+      .select('*, pacientes(*), doctores(*, usuarios(*)), sedes(*)')
       .order('fecha', { ascending: true })
       .order('hora', { ascending: true });
 
@@ -335,7 +336,7 @@ export class DataService {
   const hoy = new Date().toISOString().split('T')[0];
   const { data, error } = await this.supabase
     .from('citas')
-    .select('*, pacientes(*), doctores(*, usuarios(*))')
+    .select('*, pacientes(*), doctores(*, usuarios(*)), sedes(*)')
     .eq('paciente_id', pacienteId)
     .gte('fecha', hoy)  // solo citas desde hoy en adelante
     .order('fecha', { ascending: true })
@@ -357,7 +358,7 @@ export class DataService {
   async getCitaById(id: string) {
     return this.supabase
       .from('citas')
-      .select('*, pacientes(*), doctores(*, usuarios(*))')
+      .select('*, pacientes(*), doctores(*, usuarios(*)), sedes(*)')
       .eq('id', id)
       .single();
   }

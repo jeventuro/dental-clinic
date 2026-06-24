@@ -121,13 +121,13 @@ export class SidebarComponent implements OnInit {
 
   goToNotifications() {
     const role = this.role?.toLowerCase();
-    const base = role === 'admin' ? 'admin' : role === 'doctor' ? 'doctor' : 'client';
+    const base = role === 'admin' ? 'admin' : role === 'doctor' ? 'doctor' : 'cliente';
     this.router.navigate([`/${base}/notifications`]);
   }
 
   goToSettings() {
     const role = this.role?.toLowerCase();
-    const base = role === 'admin' ? 'admin' : role === 'doctor' ? 'doctor' : 'client';
+    const base = role === 'admin' ? 'admin' : role === 'doctor' ? 'doctor' : 'cliente';
     this.router.navigate([`/${base}/settings`]);
   }
 

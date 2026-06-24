@@ -1,13 +1,156 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>appointment-form</ion-title>
-  </ion-toolbar>
-</ion-header>
+<!-- src/app/features/appointments/appointment-form/appointment-form.page.html -->
+<ion-content class="form-page">
+  <div class="page-container">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">appointment-form</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <!-- HEADER -->
+    <header class="page-header">
+      <div>
+        <button class="btn-back" (click)="goBack()">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+          Volver
+        </button>
+        <h1>Agendar Nueva Cita</h1>
+        <p>Completa los datos para programar tu atención odontológica</p>
+      </div>
+    </header>
+
+    <!-- FORMULARIO -->
+    <form (ngSubmit)="onSubmit()" #appointmentForm="ngForm" class="appointment-form">
+
+      <!-- 1. TRATAMIENTO -->
+      <div class="form-section">
+        <div class="section-title">
+          <ion-icon name="medical-outline"></ion-icon>
+          <h2>1. Selecciona el tratamiento</h2>
+        </div>
+        <div class="form-group">
+          <label>Servicio Odontológico</label>
+          <select [(ngModel)]="newAppointment.treatmentIndex" name="treatmentIndex" class="custom-select" required (change)="onDateTimeCriteriaChange()">
+            <option [ngValue]="null" disabled selected>Selecciona un tratamiento...</option>
+            <option *ngFor="let treatment of treatments; let i = index" [ngValue]="i">
+              {{ treatment.name }} — S/. {{ treatment.price }}.00 ({{ treatment.duration }} min)
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 2. DOCTOR, SEDE, FECHA -->
+      <div class="form-section">
+        <div class="section-title">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <h2>2. Profesional, Sede y Fecha</h2>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Odontólogo Especialista</label>
+            <select [(ngModel)]="newAppointment.doctor_id" name="doctor_id" class="custom-select" required (change)="onDateTimeCriteriaChange()">
+              <option value="" disabled selected>Selecciona un médico...</option>
+              <option *ngFor="let doc of doctors" [value]="doc.id">{{ doc.name }} ({{ doc.specialty }})</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Sede de Atención</label>
+            <select [(ngModel)]="newAppointment.sede_id" name="sede_id" class="custom-select" required>
+              <option value="" disabled selected>Selecciona la clínica...</option>
+              <option *ngFor="let branch of branches" [value]="branch.id">{{ branch.nombre }}</option>
+            </select>
+          </div>
+
+          <div class="form-group grid-full-width">
+            <label>Fecha de la Cita</label>
+            <input type="date" [(ngModel)]="newAppointment.date" name="date" [min]="minDate" class="custom-input" required (change)="onDateTimeCriteriaChange()" />
+          </div>
+        </div>
+
+        <!-- SLOTS DE HORARIOS -->
+        <div class="availability-container" *ngIf="newAppointment.date && newAppointment.treatmentIndex !== null">
+          <hr class="divider" />
+          <h3>Horarios Disponibles</h3>
+          <p class="info-interval">
+            Intervalos de <strong>{{ treatments[newAppointment.treatmentIndex].duration }} min</strong> para este tratamiento.
+          </p>
+
+          <h4 class="shift-title">Turno Mañana (9:00 AM - 1:00 PM)</h4>
+          <div class="time-slots-grid">
+            <button 
+              *ngFor="let slot of morningSlots" 
+              type="button"
+              [disabled]="!slot.available"
+              [class.slot-occupied]="!slot.available"
+              [class.slot-selected]="newAppointment.time === slot.time"
+              (click)="selectTime(slot)"
+              class="slot-btn">
+              {{ slot.time }}
+            </button>
+          </div>
+
+          <h4 class="shift-title">Turno Tarde (3:00 PM - 8:30 PM)</h4>
+          <div class="time-slots-grid">
+            <button 
+              *ngFor="let slot of afternoonSlots" 
+              type="button"
+              [disabled]="!slot.available"
+              [class.slot-occupied]="!slot.available"
+              [class.slot-selected]="newAppointment.time === slot.time"
+              (click)="selectTime(slot)"
+              class="slot-btn">
+              {{ slot.time }}
+            </button>
+          </div>
+
+          <div class="selected-time-bar" *ngIf="newAppointment.time">
+            <ion-icon name="time-outline"></ion-icon>
+            <span>Hora seleccionada: <strong>{{ newAppointment.time }}</strong></span>
+          </div>
+        </div>
+
+        <div class="availability-placeholder" *ngIf="!newAppointment.date || newAppointment.treatmentIndex === null">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <p>Selecciona un tratamiento y la fecha para ver los horarios disponibles.</p>
+        </div>
+      </div>
+
+      <!-- 3. RESUMEN Y BOTÓN -->
+      <div class="form-section">
+        <div class="section-title">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <h2>3. Confirmar cita</h2>
+        </div>
+
+        <div class="summary-box" *ngIf="newAppointment.treatmentIndex !== null">
+          <div class="summary-item">
+            <span>Tratamiento:</span>
+            <strong>{{ treatments[newAppointment.treatmentIndex].name }}</strong>
+          </div>
+          <div class="summary-item">
+            <span>Duración:</span>
+            <strong>{{ treatments[newAppointment.treatmentIndex].duration }} min</strong>
+          </div>
+          <div class="summary-item">
+            <span>Precio:</span>
+            <strong>S/. {{ treatments[newAppointment.treatmentIndex].price }}.00</strong>
+          </div>
+          <div class="summary-item" *ngIf="newAppointment.date">
+            <span>Fecha:</span>
+            <strong>{{ newAppointment.date | date:'EEEE, d MMM yyyy' }}</strong>
+          </div>
+          <div class="summary-item" *ngIf="newAppointment.time">
+            <span>Hora:</span>
+            <strong>{{ newAppointment.time }}</strong>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <button type="submit" class="btn-submit" [disabled]="isSubmitting || appointmentForm.invalid">
+            <ion-spinner *ngIf="isSubmitting" name="crescent"></ion-spinner>
+            {{ isSubmitting ? 'Agendando...' : 'Confirmar Cita' }}
+          </button>
+        </div>
+      </div>
+
+    </form>
+
+  </div>
 </ion-content>

@@ -2,7 +2,7 @@ import { SidebarItem } from './sidebar.model';
 
 export const SIDEBAR_CONFIG: Record<string, SidebarItem[]> = {
 
-  CLIENT: [
+  CLIENTE: [
 
     {
       title: 'Inicio',

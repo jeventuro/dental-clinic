@@ -1,13 +1,188 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>appointment-detail</ion-title>
-  </ion-toolbar>
-</ion-header>
+<!-- src/app/features/appointments/appointment-detail/appointment-detail.page.html -->
+<ion-content class="detail-page">
+  <div class="page-container">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">appointment-detail</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <!-- HEADER -->
+    <header class="page-header">
+      <div>
+        <button class="btn-back" (click)="goBack()">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+          Volver a citas
+        </button>
+        <h1>Detalle de Cita</h1>
+        <p>Información completa de la cita odontológica</p>
+      </div>
+      <div class="header-actions" *ngIf="!isLoading && cita">
+        <button class="btn-outline" (click)="editarCita()">
+          <ion-icon name="create-outline"></ion-icon>
+          Editar
+        </button>
+        <button class="btn-outline danger" (click)="eliminarCita()" [disabled]="isSubmitting">
+          <ion-icon name="trash-outline"></ion-icon>
+          Eliminar
+        </button>
+      </div>
+    </header>
+
+    <!-- SKELETON LOADER -->
+    <div *ngIf="isLoading" class="skeleton-container">
+      <div class="skeleton-item">
+        <div class="skeleton-line w-60"></div>
+        <div class="skeleton-line w-40"></div>
+        <div class="skeleton-line w-80"></div>
+        <div class="skeleton-line w-50"></div>
+      </div>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div *ngIf="!isLoading && cita" class="detail-content">
+
+      <!-- TIMELINE Y ESTADO -->
+      <div class="status-section">
+        <div class="estado-actual">
+          <span class="estado-label">Estado Actual</span>
+          <ion-badge [color]="getEstadoColor(cita.estado)" class="estado-badge">
+            <ion-icon [name]="cita.estado === 'confirmada' ? 'checkmark-circle-outline' : 
+                              cita.estado === 'completada' ? 'checkmark-done-circle-outline' :
+                              cita.estado === 'cancelada' ? 'close-circle-outline' : 'alert-circle-outline'" 
+                      slot="start"></ion-icon>
+            {{ getEstadoLabel(cita.estado) }}
+          </ion-badge>
+        </div>
+
+        <!-- TIMELINE -->
+        <div class="timeline">
+          <div 
+            *ngFor="let estado of estados; let i = index" 
+            class="timeline-item"
+            [class.active]="isEstadoActivo(i)">
+            <div class="timeline-marker">
+              <div class="marker-dot" [class.active]="isEstadoActivo(i)"></div>
+              <div class="marker-line" *ngIf="i < estados.length - 1" [class.active]="isEstadoActivo(i + 1)"></div>
+            </div>
+            <div class="timeline-content">
+              <ion-icon [name]="estado.icon" [color]="estado.color"></ion-icon>
+              <span>{{ estado.label }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACCIONES RÁPIDAS (Admin) -->
+        <div class="estado-actions" *ngIf="cita.estado !== 'cancelada' && cita.estado !== 'completada'">
+          <button 
+            class="btn-action confirm" 
+            (click)="actualizarEstado('confirmada')"
+            [disabled]="isSubmitting">
+            <ion-icon name="checkmark-circle-outline"></ion-icon>
+            Confirmar
+          </button>
+          <button 
+            class="btn-action complete" 
+            (click)="actualizarEstado('completada')"
+            [disabled]="isSubmitting">
+            <ion-icon name="checkmark-done-circle-outline"></ion-icon>
+            Completar
+          </button>
+          <button 
+            class="btn-action cancel" 
+            (click)="actualizarEstado('cancelada')"
+            [disabled]="isSubmitting">
+            <ion-icon name="close-circle-outline"></ion-icon>
+            Cancelar
+          </button>
+        </div>
+      </div>
+
+      <!-- INFORMACIÓN DEL PACIENTE -->
+      <section class="info-section">
+        <h2 class="section-title">
+          <ion-icon name="person-outline"></ion-icon>
+          Información del Paciente
+        </h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Nombre</span>
+            <span class="info-value">{{ pacienteNombre }}</span>
+          </div>
+          <div class="info-item" *ngIf="pacienteDni">
+            <span class="info-label">DNI</span>
+            <span class="info-value">{{ pacienteDni }}</span>
+          </div>
+          <div class="info-item" *ngIf="pacienteEmail">
+            <span class="info-label">Correo</span>
+            <span class="info-value">
+              <ion-icon name="mail-outline"></ion-icon>
+              {{ pacienteEmail }}
+            </span>
+          </div>
+          <div class="info-item" *ngIf="pacienteTelefono">
+            <span class="info-label">Teléfono</span>
+            <span class="info-value">
+              <ion-icon name="call-outline"></ion-icon>
+              {{ pacienteTelefono }}
+            </span>
+          </div>
+          <div class="info-item" *ngIf="pacienteFechaNacimiento">
+            <span class="info-label">Fecha de Nacimiento</span>
+            <span class="info-value">{{ pacienteFechaNacimiento | date:'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- INFORMACIÓN DE LA CITA -->
+      <section class="info-section">
+        <h2 class="section-title">
+          <ion-icon name="calendar-outline"></ion-icon>
+          Detalles de la Cita
+        </h2>
+        <div class="info-grid three-col">
+          <div class="info-item">
+            <span class="info-label">Fecha</span>
+            <span class="info-value">{{ cita.fecha | date:'EEEE, d MMM yyyy' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Hora</span>
+            <span class="info-value">{{ cita.hora }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Duración</span>
+            <span class="info-value">{{ cita.duracion }} min</span>
+          </div>
+          <div class="info-item grid-full">
+            <span class="info-label">Tratamiento</span>
+            <span class="info-value">{{ cita.tratamiento || 'Consulta' }}</span>
+          </div>
+          <div class="info-item grid-full" *ngIf="cita.notas">
+            <span class="info-label">Notas</span>
+            <span class="info-value">{{ cita.notas }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- INFORMACIÓN DEL DOCTOR Y SEDE -->
+      <section class="info-section">
+        <h2 class="section-title">
+          <ion-icon name="medical-outline"></ion-icon>
+          Profesional y Sede
+        </h2>
+        <div class="info-grid two-col">
+          <div class="info-item">
+            <span class="info-label">Doctor</span>
+            <span class="info-value">{{ doctorNombre }}</span>
+            <span class="info-subvalue" *ngIf="doctorEspecialidad">{{ doctorEspecialidad }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Sede</span>
+            <span class="info-value">{{ sedeNombre }}</span>
+            <span class="info-subvalue" *ngIf="sedeDireccion">{{ sedeDireccion }}</span>
+            <span class="info-subvalue" *ngIf="sedeTelefono">
+              <ion-icon name="call-outline"></ion-icon> {{ sedeTelefono }}
+            </span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+  </div>
 </ion-content>

@@ -21,11 +21,16 @@ export const ADMIN_ROUTES: Routes = [
       // Módulos (features compartidos)
       {
         path: 'appointments',
-        loadComponent: () => import('@features/appointments/appointment-list/appointment-list.page').then((m) => m.AppointmentListPage),
-      },
-      {
-        path: 'appointments/:id',
-        loadComponent: () => import('@features/appointments/appointment-detail/appointment-detail.page').then((m) => m.AppointmentDetailPage),
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('@features/appointments/appointment-list/appointment-list.page').then(m => m.AppointmentListPage),
+          },
+          {
+            path: ':id',
+            loadComponent: () => import('@features/appointments/appointment-detail/appointment-detail.page').then(m => m.AppointmentDetailPage),
+          }
+        ]
       },
       {
         path: 'patients',
