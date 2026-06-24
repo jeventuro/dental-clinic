@@ -8,7 +8,7 @@ export const CLIENT_ROUTES: Routes = [
     path: '',
     component: AppShellComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['CLIENT'] },
+    data: { roles: ['cliente'] },
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {

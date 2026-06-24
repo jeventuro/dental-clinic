@@ -97,8 +97,6 @@ export class RegisterPage implements OnInit {
         telefono: phone,
         rol: 'cliente',
         dni: dni,
-        // Si quieres guardar dni, puedes agregarlo a la tabla usuarios? No está en el schema, pero puedes agregarlo si lo deseas.
-        // Por ahora lo omitimos.
       });
       await loading.dismiss();
       this.isLoading = false;

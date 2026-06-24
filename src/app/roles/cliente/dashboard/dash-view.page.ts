@@ -36,6 +36,14 @@ import {
   ellipsisHorizontalOutline
 } from 'ionicons/icons';
 
+/**
+ * Interfaz extendida para la próxima cita con datos adicionales
+ */
+interface ProximaCita extends Cita {
+  doctor_nombre: string;
+  especialidad: string;
+}
+
 @Component({
   selector: 'app-dash-view',
   templateUrl: './dash-view.page.html',
@@ -45,28 +53,21 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashViewPage implements OnInit {
+
   public Math = Math;
-  // Datos del usuario
-  pacienteId: string = '';
 
   userName = '';
   userRole = '';
   userAvatar = '';
-  usuarioId: string = '';
-
-  // Próxima cita (datos reales)
-  nextAppointment: Cita | null = null;
-
-  // Resumen de cuenta
-  accountSummary = { balance: 0, totalPaid: 0 };
-
-  // Tratamiento activo
+  usuarioId = '';
+  pacienteId = '';
+  proximaCita: ProximaCita | null = null;
+  tieneCita = false;
+  balance = 0;
+  totalPaid = 0;
   tratamientoActivo: Tratamiento | null = null;
+  actividadReciente: any[] = [];
 
-  // Actividad reciente
-  actividadReciente: Notificacion[] = [];
-
-  // Acciones rápidas (fijas)
   quickActions = [
     { label: 'Ver Radiografías', icon: 'images-outline', route: '/client/medical-records', color: 'primary' },
     { label: 'Descargar Facturas', icon: 'download-outline', route: '/client/invoices', color: 'secondary' },
@@ -74,13 +75,12 @@ export class DashViewPage implements OnInit {
     { label: 'Contactar por WhatsApp', icon: 'logo-whatsapp', route: 'https://wa.me/51999999999', color: 'success', external: true },
   ];
 
-  recentActivities: any[] = [];
-  // Mapeo de colores para actividad
   colorMap: Record<string, string> = {
     info: 'primary',
     exito: 'success',
     advertencia: 'warning',
     error: 'danger',
+    cita: 'success',
   };
 
   constructor(
@@ -88,6 +88,174 @@ export class DashViewPage implements OnInit {
     private dataService: DataService,
     private router: Router
   ) {
+    this.registerIcons();
+  }
+
+  async ngOnInit() {
+    /* await this.cargarDatosUsuario();
+    await this.cargarDatosDashboard();*/
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.userName = user.nombre_completo || 'Cliente';
+      this.userRole = user.rol === 'cliente' ? 'Paciente Premium' : 'Usuario';
+      this.userAvatar = user.avatar_url || 'assets/avatars/default.png';
+      this.usuarioId = user.id;
+      // 🔧 TEMPORAL: Desactivar carga real
+      // await this.cargarDatosDashboard();
+      // Usar datos mock para probar
+      this.tieneCita = true;
+      this.proximaCita = { /* mock */ } as any;
+      this.balance = 1250;
+      this.totalPaid = 3400;
+      this.tratamientoActivo = { /* mock */ } as any;
+      this.actividadReciente = [{ titulo: 'Mock', mensaje: 'Prueba', created_at: new Date().toISOString(), tipo: 'info' }];
+    }
+  }
+
+  // ============================================================
+  // 👤 CARGA DE DATOS DEL USUARIO
+  // ============================================================
+  private async cargarDatosUsuario() {
+    const user = this.authService.getCurrentUser();
+    if (!user) return;
+
+    this.userName = user.nombre_completo || 'Cliente';
+    this.userRole = user.rol === 'cliente' ? 'Paciente Premium' : 'Usuario';
+    this.userAvatar = user.avatar_url || 'assets/avatars/default.png';
+    this.usuarioId = user.id;
+
+    // Obtener paciente_id
+    const { data: paciente } = await this.dataService.getPacienteByUsuarioId(this.usuarioId);
+    if (paciente) {
+      this.pacienteId = paciente.id;
+    } else {
+      console.warn('⚠️ No se encontró paciente para el usuario:', this.usuarioId);
+    }
+  }
+
+  // ============================================================
+  // 📊 CARGA DE DATOS DEL DASHBOARD
+  // ============================================================
+  private async cargarDatosDashboard() {
+  if (!this.pacienteId) return;
+
+  console.log('⏳ Iniciando carga de datos...');
+    try {
+      console.time('⏱️ Próxima cita');
+      await this.cargarProximaCita();
+      console.timeEnd('⏱️ Próxima cita');
+
+      console.time('⏱️ Resumen cuenta');
+      await this.cargarResumenCuenta();
+      console.timeEnd('⏱️ Resumen cuenta');
+
+      console.time('⏱️ Tratamiento activo');
+      await this.cargarTratamientoActivo();
+      console.timeEnd('⏱️ Tratamiento activo');
+
+      console.time('⏱️ Actividad reciente');
+      await this.cargarActividadReciente();
+      console.timeEnd('⏱️ Actividad reciente');
+
+      console.log('✅ Todos los datos cargados correctamente.');
+    } catch (error) {
+      console.error('❌ Error cargando datos del dashboard:', error);
+    }
+  }
+
+  // ============================================================
+  // 📅 PRÓXIMA CITA
+  // ============================================================
+  private async cargarProximaCita() {
+    const cita = await this.dataService.getProximaCita(this.pacienteId);
+    if (cita) {
+      this.proximaCita = {
+        ...cita,
+        doctor_nombre: cita.doctores?.usuarios?.nombre_completo || 'Doctor',
+        especialidad: cita.doctores?.especialidad || 'Especialista',
+      };
+      this.tieneCita = true;
+    } else {
+      this.proximaCita = null;
+      this.tieneCita = false;
+    }
+  }
+
+  // ============================================================
+  // 💰 RESUMEN DE CUENTA
+  // ============================================================
+  private async cargarResumenCuenta() {
+    const resumen = await this.dataService.getResumenCuenta(this.pacienteId);
+    this.balance = resumen.balance;
+    this.totalPaid = resumen.totalPaid;
+  }
+
+  // ============================================================
+  // 💊 TRATAMIENTO ACTIVO
+  // ============================================================
+  private async cargarTratamientoActivo() {
+    const tratamiento = await this.dataService.getTratamientoActivo(this.pacienteId);
+    if (tratamiento) {
+      // Asegurar fechas válidas para el pipe date
+      this.tratamientoActivo = {
+        ...tratamiento,
+        fecha_inicio: tratamiento.fecha_inicio || new Date().toISOString().split('T')[0],
+        fecha_fin: tratamiento.fecha_fin || new Date().toISOString().split('T')[0],
+        descripcion: tratamiento.descripcion || 'Seguir tratamiento',
+      };
+    } else {
+      this.tratamientoActivo = null;
+    }
+  }
+
+  // ============================================================
+  // 🔔 ACTIVIDAD RECIENTE
+  // ============================================================
+  private async cargarActividadReciente() {
+    const actividad = await this.dataService.getActividadReciente(this.usuarioId, 5);
+    this.actividadReciente = actividad.map(item => ({
+      ...item,
+      mensaje: item.mensaje || item.descripcion || 'Sin detalles',
+      created_at: item.created_at || item.fecha || new Date().toISOString(),
+    }));
+  }
+
+  // ============================================================
+  // 🧭 MÉTODOS DE NAVEGACIÓN
+  // ============================================================
+  navigateTo(route: string) {
+    this.router.navigate([route]);
+  }
+
+  openExternal(url: string) {
+    window.open(url, '_blank');
+  }
+
+  viewAllActivity() {
+    this.router.navigate(['/client/notifications']);
+  }
+
+  newAppointment() {
+    this.router.navigate(['/client/appointments/new']);
+  }
+
+  reschedule() {
+    if (this.proximaCita) {
+      this.router.navigate([`/client/appointments/reschedule/${this.proximaCita.id}`]);
+    }
+  }
+
+  cancelAppointment() {
+    if (this.proximaCita) {
+      console.log('🗑️ Cancelar cita:', this.proximaCita.id);
+      // Aquí iría la lógica de cancelación (llamar a DataService)
+    }
+  }
+
+  // ============================================================
+  // 🎨 REGISTRO DE ICONOS
+  // ============================================================
+  private registerIcons() {
     addIcons({
       addCircleOutline,
       calendarOutline,
@@ -117,120 +285,5 @@ export class DashViewPage implements OnInit {
       notificationsOutline,
       ellipsisHorizontalOutline,
     });
-  }
-
-  async ngOnInit() {
-    const user = this.authService.getCurrentUser();
-    if (user) {
-      this.userName = user.nombre_completo || 'Cliente';
-      this.userRole = user.rol === 'cliente' ? 'Paciente Premium' : 'Usuario';
-      this.userAvatar = user.avatar_url || 'assets/avatars/default.png';
-      this.usuarioId = user.id;
-
-      // Obtener el paciente asociado a este usuario
-      const { data: paciente } = await this.dataService.getPacienteByUsuarioId(this.usuarioId);
-      if (paciente) {
-        this.pacienteId = paciente.id;
-        await this.cargarDatosDashboard();
-      } else {
-        console.warn('No se encontró paciente para el usuario:', this.usuarioId);
-      }
-    }
-  }
-
-  private async cargarDatosDashboard() {
-    try {
-      const user = this.authService.getCurrentUser();
-      if (!user) return;
-
-      // 1. Obtener el paciente_id del usuario logueado
-      const { data: paciente } = await this.dataService.getPacienteByUsuarioId(user.id);
-      if (!paciente) {
-        console.warn('No se encontró paciente para el usuario:', user.id);
-        return;
-      }
-      this.pacienteId = paciente.id;
-      this.usuarioId = user.id;
-
-      // 2. Próxima cita
-      const cita = await this.dataService.getProximaCita(this.pacienteId);
-      if (cita) {
-        this.nextAppointment = {
-          id: cita.id,
-          title: cita.tratamiento || 'Consulta',
-          date: new Date(cita.fecha).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' }),
-          time: cita.hora.slice(0, 5),
-          specialist: cita.doctores?.usuarios?.nombre_completo || 'Doctor',
-          status: cita.estado === 'confirmada' ? 'Confirmada' : 'Pendiente',
-        };
-      } else {
-        this.nextAppointment = null;
-      }
-
-      // 3. Resumen de cuenta
-      const resumen = await this.dataService.getResumenCuenta(this.pacienteId);
-      this.accountSummary = {
-        balance: resumen.balance,
-        totalPaid: resumen.totalPaid,
-      };
-
-      // 4. Tratamiento activo
-      const tratamiento = await this.dataService.getTratamientoActivo(this.pacienteId);
-      if (tratamiento) {
-        this.activeTreatment = {
-          id: tratamiento.id,
-          name: tratamiento.nombre,
-          phase: `Fase ${tratamiento.progreso}%`,
-          progress: tratamiento.progreso,
-          startDate: new Date(tratamiento.fecha_inicio || Date.now()).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' }),
-          estimatedEnd: new Date(tratamiento.fecha_fin || Date.now()).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' }),
-          nextStep: tratamiento.descripcion || 'Sin pasos definidos',
-          lastVisit: 'Próxima visita programada',
-        };
-      } else {
-        this.activeTreatment = null;
-      }
-
-      // 5. Actividad reciente
-      const actividad = await this.dataService.getActividadReciente(this.usuarioId, 5);
-      this.recentActivities = actividad.map((a: any) => ({
-        icon: a.tipo === 'cita' ? 'calendar-outline' : 'notifications-outline',
-        title: a.titulo,
-        description: a.descripcion,
-        date: new Date(a.fecha).toLocaleString('es-ES', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
-        color: a.tipo === 'cita' ? 'success' : 'primary',
-      }));
-    } catch (error) {
-      console.error('Error cargando datos del dashboard:', error);
-    }
-  }
-
-
-  // Navegación
-  navigateTo(route: string) {
-    this.router.navigate([route]);
-  }
-
-  openExternal(url: string) {
-    window.open(url, '_blank');
-  }
-
-  viewAllActivity() {
-    this.router.navigate(['/client/notifications']);
-  }
-
-  newAppointment() {
-    this.router.navigate(['/client/appointments/new']);
-  }
-
-  reschedule() {
-    if (this.nextAppointment?.id) {
-      this.router.navigate([`/client/appointments/reschedule/${this.nextAppointment.id}`]);
-    }
-  }
-
-  cancelAppointment() {
-    // Lógica de cancelación
-    console.log('Cancelar cita');
   }
 }

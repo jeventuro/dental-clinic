@@ -1,4 +1,4 @@
-// src/app/core/data/data.service.ts
+// src/app/core/data/data.service.ts actualizado
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '@env/environment';
@@ -134,7 +134,10 @@ export class DataService {
     return this.supabase.auth.signUp({
       email,
       password,
-      options: { data: metadata },
+      options: { 
+        data: metadata,
+        emailRedirectTo: window.location.origin + '/login', 
+      },
     });
   }
 
@@ -160,45 +163,36 @@ export class DataService {
     const user = await this.getCurrentUser();
     if (!user) return null;
 
-    // 1. Intentar obtener el perfil
-    let { data: perfil, error } = await this.supabase
+    const { data: perfil, error} = await this.supabase
       .from('usuarios')
-      .select('*, sedes(nombre)')
+      .select('*')
       .eq('id', user.id)
-      .single();
+      .maybeSingle();
 
-    // 2. Si no existe, crearlo automáticamente
-    if (error || !perfil) {
-      console.warn('⚠️ Perfil no encontrado, creando automáticamente...');
-      const metadata = user.user_metadata || {};
-      const nuevoPerfil = {
-        id: user.id,
-        email: user.email,
-        nombre_completo: metadata['nombre_completo'] || 'Usuario',
-        telefono: metadata['telefono'] || null,
-        rol: metadata['rol'] || 'cliente',
-        dni: metadata['dni'] || null,
-        activo: true,
-      };
-
-      const { data: creado, error: insertError } = await this.supabase
-        .from('usuarios')
-        .insert(nuevoPerfil)
-        .select('*, sedes(nombre)')
-        .single();
-
-      if (insertError) {
-        console.error('❌ Error al crear perfil automático:', insertError);
-        return null;
-      }
-      perfil = creado;
+    console.log('Perfil obtenido:', perfil, 'Error:', error);
+      
+    if (!perfil) {
+      console.error(
+          'Perfil no encontrado para:',
+          user.id
+      );
+      return null;
     }
 
+    let sedeNombre: string | undefined;
+    if (perfil.sede_id) {
+      const { data: sede } = await this.supabase
+        .from('sedes')
+        .select('nombre')
+        .eq('id', perfil.sede_id)
+        .maybeSingle();
+      sedeNombre = sede?.nombre;
+    }
     // 3. Extraer nombre de la sede
     return {
       ...perfil,
-      sede_nombre: perfil.sedes?.nombre,
-    } as Usuario & { sede_nombre?: string };
+      sede_nombre: sedeNombre,
+    };
   }
 
   // ==========================================================

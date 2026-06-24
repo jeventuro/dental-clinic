@@ -22,11 +22,23 @@ export class AuthService {
   }
 
   async login(email: string, password: string): Promise<Usuario> {
+    // 1. Iniciar sesión en Supabase
     const { data, error } = await this.dataService.signIn(email, password);
-    if (error) throw new Error(error.message);
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    // 2. Obtener el perfil del usuario desde la tabla 'usuarios'
     const profile = await this.dataService.getCurrentUserProfile();
+    if (!profile) {
+      throw new Error('No se pudo cargar el perfil del usuario');
+    }
+
+    // 3. Actualizar el BehaviorSubject
     this.currentUserSubject.next(profile);
-    return profile!;
+
+    // 4. Devolver el perfil completo
+    return profile;
   }
 
   async register(email: string, password: string, metadata: any): Promise<any> {

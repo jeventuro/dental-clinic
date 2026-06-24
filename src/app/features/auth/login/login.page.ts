@@ -23,7 +23,7 @@ import { mailOutline, lockClosedOutline, eyeOutline, eyeOffOutline } from 'ionic
     RouterLink,
   ],
 })
-export class LoginPage implements OnInit, OnDestroy {
+export class LoginPage implements OnInit {
   loginForm: FormGroup;
   showPassword = false;
   isLoading = false;
@@ -51,11 +51,10 @@ export class LoginPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this.authService.isLoggedIn()) {
-      this.navigateByRole();
+      const user = this.authService.getCurrentUser();
+      this.navigateByRole(user?.rol);
     }
   }
-
-  ngOnDestroy() {}
 
   goToRegister() {
     this.router.navigateByUrl('/register');
@@ -78,13 +77,16 @@ export class LoginPage implements OnInit, OnDestroy {
 
     try {
       const user = await this.authService.login(email, password);
+      
       await loading.dismiss();
       this.isLoading = false;
-      // user tiene la propiedad 'rol'
-      this.navigateByRole(user?.rol);
+
+      this.navigateByRole(user.rol);
+
     } catch (error: any) {
       await loading.dismiss();
       this.isLoading = false;
+      
       const toast = await this.toastCtrl.create({
         message: error?.message || 'Error al iniciar sesión. Verifica tus credenciales.',
         duration: 3000,
@@ -98,6 +100,7 @@ export class LoginPage implements OnInit, OnDestroy {
   private navigateByRole(rol?: string) {
     const currentUser = this.authService.getCurrentUser();
     const userRol = rol || currentUser?.rol;
+    
     switch (userRol) {
       case 'admin':
         this.router.navigate(['/admin/dashboard']);
