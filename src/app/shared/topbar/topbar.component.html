@@ -1,34 +1,27 @@
 <div class="topbar">
-
   <div>
-
     <h1>Bienvenido</h1>
-
-    <p>
-      Gestiona tus citas y tratamientos
-    </p>
-
+    <p>Gestiona tus citas y tratamientos</p>
   </div>
 
   <div class="topbar-actions">
-
     <div class="search-box">
-
       <ion-icon name="search-outline"></ion-icon>
-
       <input
         type="text"
         placeholder="Buscar..."
       />
-
     </div>
+    <!--agregue el apartado de notificacion y setting desde el topbar-->
+    <div class="header-actions">
+        <button routerLink="/notifications">
+          <ion-icon name="notifications-outline"></ion-icon>
+        </button>
 
-    <div class="notification">
+        <button routerLink="/settings">
+          <ion-icon name="settings-outline"></ion-icon>
+        </button>
 
-      <ion-icon name="notifications-outline"></ion-icon>
-
-    </div>
-
+      </div>
   </div>
-
 </div>

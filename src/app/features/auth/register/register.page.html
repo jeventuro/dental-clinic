@@ -1,180 +1,136 @@
-<!-- REGISTER PAGE -->
+<!-- src/app/features/auth/register/register.page.html -->
 <ion-content class="register-content">
+  <div class="wave-background"></div>
 
-  <div class="overlay"></div>
+  <div class="register-container">
+    <!-- Logo y título -->
+    <div class="brand-section">
+      <div class="logo-image">🦷</div>
+      <h1 class="brand-title">DentalCare</h1>
+      <p class="brand-subtitle">Sistema de Gestión Dental</p>
+    </div>
 
-  <div class="register-wrapper">
+    <!-- Tarjeta del formulario -->
+    <div class="register-card">
+      <h2 class="card-title">Crear Cuenta</h2>
+      <p class="card-subtitle">Regístrate para comenzar</p>
 
-    <!-- LEFT PANEL -->
-    <div class="branding-section">
-
-      <div class="branding-content">
-
-        <img
-          src="assets/icon/logo.png"
-          alt="Dental Premium"
-          class="logo"
-        />
-
-        <h1>Únete a Dental Premium</h1>
-
-        <p>
-          Gestiona tus citas odontológicas, especialistas y recordatorios desde cualquier dispositivo.
-        </p>
-
-        <div class="feature-list">
-
-          <div class="feature-item">
-
-            <ion-icon name="medkit-outline"></ion-icon>
-
-            <span>
-              Especialistas certificados
-            </span>
-
-          </div>
-
-          <div class="feature-item">
-
-            <ion-icon name="calendar-clear-outline"></ion-icon>
-
-            <span>
-              Reserva rápida de citas
-            </span>
-
-          </div>
-
-          <div class="feature-item">
-
-            <ion-icon name="phone-portrait-outline"></ion-icon>
-
-            <span>
-              Compatible con Android y Web
-            </span>
-
-          </div>
-
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+        <!-- Nombre completo -->
+        <div class="input-wrapper">
+          <ion-item lines="none" class="input-item" [class.error]="name?.invalid && name?.touched">
+            <ion-icon name="person-outline" slot="start" class="input-icon"></ion-icon>
+            <ion-input type="text" placeholder="Nombre completo" formControlName="name" required></ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="name?.invalid && name?.touched" class="error-message">
+            <small *ngIf="name?.errors?.['required']">El nombre es obligatorio</small>
+            <small *ngIf="name?.errors?.['minlength']">Mínimo 3 caracteres</small>
+          </ion-text>
         </div>
 
-      </div>
+        <!-- Email -->
+        <div class="input-wrapper">
+          <ion-item lines="none" class="input-item" [class.error]="email?.invalid && email?.touched">
+            <ion-icon name="mail-outline" slot="start" class="input-icon"></ion-icon>
+            <ion-input type="email" placeholder="Correo electrónico" formControlName="email" required></ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="email?.invalid && email?.touched" class="error-message">
+            <small *ngIf="email?.errors?.['required']">El correo es obligatorio</small>
+            <small *ngIf="email?.errors?.['email']">Ingresa un correo válido</small>
+          </ion-text>
+        </div>
 
-    </div>
-
-    <!-- RIGHT PANEL -->
-    <div class="form-section">
-
-      <ion-card class="register-card">
-
-        <ion-card-content>
-
-          <div class="header">
-
-            <h2>Crear Cuenta</h2>
-
-            <p>
-              Registra tus datos para comenzar
-            </p>
-
-          </div>
-
-          <!-- NOMBRE -->
-          <div class="custom-input">
-
-            <ion-icon name="person-outline"></ion-icon>
-
-            <ion-input
-              type="text"
-              placeholder="Nombres completos"
-              [(ngModel)]="name">
-            </ion-input>
-
-          </div>
-          
-          <!-- CONTENEDOR DE DNI Y TELEFONO -->
-          <div class="custom-input-container">
-            <!-- DNI -->
-            <div class="custom-input">
-              <ion-icon name="card-outline"></ion-icon>
-
-              <ion-input
-                type="text"
-                placeholder="DNI"
-                [(ngModel)]="dni">
-              </ion-input>
-            </div>
-            <!-- TELEFONO --> 
-            <div class="custom-input">
-              <ion-icon name="call-outline"></ion-icon>
-
-            <ion-input
-              type="tel"
-              placeholder="Teléfono"
-              [(ngModel)]="phone">
-            </ion-input>
-
+        <!-- DNI y Teléfono -->
+        <div class="row-fields">
+          <div class="field-col">
+            <div class="input-wrapper">
+              <ion-item lines="none" class="input-item" [class.error]="dni?.invalid && dni?.touched">
+                <ion-icon name="card-outline" slot="start" class="input-icon"></ion-icon>
+                <ion-input type="text" placeholder="DNI" formControlName="dni" required></ion-input>
+              </ion-item>
+              <ion-text color="danger" *ngIf="dni?.invalid && dni?.touched" class="error-message">
+                <small *ngIf="dni?.errors?.['required']">DNI requerido</small>
+                <small *ngIf="dni?.errors?.['pattern']">8-10 dígitos</small>
+              </ion-text>
             </div>
           </div>
-          
-
-          <!-- EMAIL -->
-          <div class="custom-input">
-
-            <ion-icon name="mail-outline"></ion-icon>
-
-            <ion-input
-              type="email"
-              placeholder="Correo electrónico"
-              [(ngModel)]="email">
-            </ion-input>
-
+          <div class="field-col">
+            <div class="input-wrapper">
+              <ion-item lines="none" class="input-item" [class.error]="phone?.invalid && phone?.touched">
+                <ion-icon name="call-outline" slot="start" class="input-icon"></ion-icon>
+                <ion-input type="tel" placeholder="Teléfono" formControlName="phone" required></ion-input>
+              </ion-item>
+              <ion-text color="danger" *ngIf="phone?.invalid && phone?.touched" class="error-message">
+                <small *ngIf="phone?.errors?.['required']">Teléfono requerido</small>
+                <small *ngIf="phone?.errors?.['pattern']">9-15 dígitos</small>
+              </ion-text>
+            </div>
           </div>
+        </div>
 
-          <!-- PASSWORD -->
-          <div class="custom-input">
-
-            <ion-icon name="lock-closed-outline"></ion-icon>
-
+        <!-- Contraseña -->
+        <div class="input-wrapper">
+          <ion-item lines="none" class="input-item" [class.error]="password?.invalid && password?.touched">
+            <ion-icon name="lock-closed-outline" slot="start" class="input-icon"></ion-icon>
             <ion-input
-              type="password"
+              [type]="showPassword ? 'text' : 'password'"
               placeholder="Contraseña"
-              [(ngModel)]="password">
-            </ion-input>
+              formControlName="password"
+              required
+            ></ion-input>
+            <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility('password')" class="eye-button">
+              <ion-icon slot="icon-only" [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            </ion-button>
+          </ion-item>
+          <ion-text color="danger" *ngIf="password?.invalid && password?.touched" class="error-message">
+            <small *ngIf="password?.errors?.['required']">La contraseña es obligatoria</small>
+            <small *ngIf="password?.errors?.['minlength']">Mínimo 6 caracteres</small>
+          </ion-text>
+        </div>
 
-          </div>
+        <!-- Confirmar contraseña -->
+        <div class="input-wrapper">
+          <ion-item lines="none" class="input-item" [class.error]="registerForm.hasError('passwordMismatch') && confirmPassword?.touched">
+            <ion-icon name="lock-open-outline" slot="start" class="input-icon"></ion-icon>
+            <ion-input
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              placeholder="Confirmar contraseña"
+              formControlName="confirmPassword"
+              required
+            ></ion-input>
+            <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility('confirm')" class="eye-button">
+              <ion-icon slot="icon-only" [name]="showConfirmPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            </ion-button>
+          </ion-item>
+          <ion-text color="danger" *ngIf="registerForm.hasError('passwordMismatch') && confirmPassword?.touched" class="error-message">
+            <small>Las contraseñas no coinciden</small>
+          </ion-text>
+        </div>
 
-          <!-- BOTON -->
-          <ion-button
-            expand="block"
-            class="register-button"
-            (click)="register()">
+        <!-- Términos -->
+        <ion-item lines="none" class="terms-item">
+          <ion-checkbox slot="start" formControlName="terms"></ion-checkbox>
+          <ion-label>
+            Acepto los
+            <a href="#" class="terms-link">términos y condiciones</a>
+          </ion-label>
+        </ion-item>
+        <ion-text color="danger" *ngIf="terms?.invalid && terms?.touched" class="error-message">
+          <small>Debes aceptar los términos</small>
+        </ion-text>
 
-            Crear Cuenta
+        <!-- Botón -->
+        <ion-button expand="block" type="submit" class="register-button" [disabled]="isLoading">
+          <ion-spinner *ngIf="isLoading" name="crescent" slot="start"></ion-spinner>
+          {{ isLoading ? 'Creando...' : 'Crear Cuenta' }}
+        </ion-button>
 
-          </ion-button>
-
-          <!-- LOGIN -->
-          <div class="login-section">
-
-            <span>
-              ¿Ya tienes cuenta?
-            </span>
-
-            <button
-              class="login-link"
-              routerLink="/login">
-
-              Iniciar Sesión
-
-            </button>
-
-          </div>
-
-        </ion-card-content>
-
-      </ion-card>
-
+        <!-- Ir a login -->
+        <div class="login-row">
+          <span>¿Ya tienes cuenta?</span>
+          <a routerLink="/login" class="login-link">Iniciar Sesión</a>
+        </div>
+      </form>
     </div>
-
   </div>
-
 </ion-content>

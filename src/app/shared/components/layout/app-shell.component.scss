@@ -1,0 +1,61 @@
+// src/app/shared/components/layout/app-shell.component.scss
+:host {
+  display: block;
+  height: 100%;
+}
+
+.app-shell {
+  height: 100%;
+  background: #f4f7f6;
+}
+
+.main-sidebar {
+  --width: 260px; /* Reducido para que sea más delgado */
+  min-width: 260px;
+  max-width: 260px;
+  border-right: none !important; /* Elimina la línea de separación */
+  box-shadow: 1px 0 12px rgba(0, 0, 0, 0.04); /* Sombra suave */
+}
+
+.main-sidebar ion-content {
+  --background: transparent;
+  background: transparent;
+}
+
+.shell-main {
+  --background: #f4f7f6;
+  background: #f4f7f6;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.shell-router-content {
+  flex: 1;
+  overflow-y: auto;
+  background: #f4f7f6;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobile-header {
+  display: none;
+}
+
+.main-sidebar ion-content {
+  --background: #ffffff;
+  --padding-end: 0;
+  --padding-start: 0;
+  // Quitar scrollbar si existe
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  scrollbar-width: none;
+}
+
+/* Ajustar para móvil */
+@media (max-width: 992px) {
+  .mobile-header {
+    display: block;
+  }
+}

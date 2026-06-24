@@ -1,143 +1,84 @@
-<!-- =============================
-LOGIN PAGE - login.page.html
-============================= -->
-
+<!-- src/app/features/auth/login/login.page.html -->
 <ion-content class="login-content">
+  <!-- Fondo decorativo con olas (opcional, pero queda bien) -->
+  <div class="wave-background"></div>
 
-  <div class="overlay"></div>
-
-  <div class="login-wrapper">
-
-    <!-- PANEL IZQUIERDO -->
-    <div class="branding-section">
-
-      <div class="branding-content">
-
-        <img
-          src="assets/icon/logo+clinica.png"
-          alt="Dental Premium"
-          class="logo"
-        />
-
-        <!-- <h1>Dent System</h1>-->
-
-        <p>
-          Especialistas en sonrisas saludables y estética dental avanzada.
-        </p>
-
-        <div class="features">
-
-          <div class="feature-item">
-            <ion-icon name="shield-checkmark-outline"></ion-icon>
-            <span>Atención segura y profesional</span>
-          </div>
-
-          <div class="feature-item">
-            <ion-icon name="calendar-outline"></ion-icon>
-            <span>Agenda tus citas fácilmente</span>
-          </div>
-
-          <div class="feature-item">
-            <ion-icon name="notifications-outline"></ion-icon>
-            <span>Recordatorios automáticos</span>
-          </div>
-
-        </div>
-
+  <div class="login-container">
+    <!-- Logo y título (solo texto) -->
+    <div class="brand-section">
+      <div class="logo-icon">
+        <img src="assets/icon/logo+clinica.png" alt="Dental Premium" class="logo-image" />
       </div>
-
+      <h1 class="brand-title">Clinica Dental Premium</h1>
+      <p class="brand-subtitle">Cuidando tu sonrisa</p>
     </div>
 
-    <!-- PANEL DERECHO -->
-    <div class="form-section">
+    <!-- Tarjeta del formulario -->
+    <div class="login-card">
+      
+      <p class="card-subtitle">Ingresa tus credenciales para continuar</p>
 
-      <ion-card class="login-card">
-
-        <ion-card-content>
-
-          <div class="header">
-
-            <h2>Bienvenido</h2>
-
-            <p>
-              Inicia sesión para continuar
-            </p>
-
-          </div>
-
-          <!-- EMAIL -->
-          <div class="custom-input">
-
-            <ion-icon name="mail-outline"></ion-icon>
-
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <!-- Email -->
+        <div class="input-wrapper">
+          <ion-item lines="none" class="input-item" [class.error]="email?.invalid && email?.touched">
+            <ion-icon name="mail-outline" slot="start" class="input-icon"></ion-icon>
             <ion-input
               type="email"
               placeholder="Correo electrónico"
-              [(ngModel)]="email">
-            </ion-input>
+              formControlName="email"
+              autocomplete="email"
+              required
+            ></ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="email?.invalid && email?.touched" class="error-message">
+            <small *ngIf="email?.errors?.['required']">El correo es obligatorio</small>
+            <small *ngIf="email?.errors?.['email']">Ingresa un correo válido</small>
+          </ion-text>
+        </div>
 
-          </div>
-
-          <!-- PASSWORD -->
-          <div class="custom-input">
-
-            <ion-icon name="lock-closed-outline"></ion-icon>
-
+        <!-- Password -->
+        <div class="input-wrapper">
+          <ion-item lines="none" class="input-item" [class.error]="password?.invalid && password?.touched">
+            <ion-icon name="lock-closed-outline" slot="start" class="input-icon"></ion-icon>
             <ion-input
-              type="password"
+              [type]="showPassword ? 'text' : 'password'"
               placeholder="Contraseña"
-              [(ngModel)]="password">
-            </ion-input>
+              formControlName="password"
+              autocomplete="current-password"
+              required
+            ></ion-input>
+            <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility()" class="eye-button">
+              <ion-icon slot="icon-only" [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            </ion-button>
+          </ion-item>
+          <ion-text color="danger" *ngIf="password?.invalid && password?.touched" class="error-message">
+            <small *ngIf="password?.errors?.['required']">La contraseña es obligatoria</small>
+            <small *ngIf="password?.errors?.['minlength']">Mínimo 6 caracteres</small>
+          </ion-text>
+        </div>
 
-          </div>
+        <!-- Opciones: recordar y olvidé contraseña -->
+        <div class="options-row">
+          <ion-item lines="none" class="remember-item">
+            <ion-checkbox slot="start" formControlName="rememberMe"></ion-checkbox>
+            <ion-label>Recordarme</ion-label>
+          </ion-item>
+          <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+        </div>
 
-          <!-- OPCIONES -->
-          <div class="options">
+        <!-- Botón de login -->
+        <ion-button expand="block" type="submit" class="login-button" [disabled]="isLoading">
+          <ion-spinner *ngIf="isLoading" name="crescent" slot="start"></ion-spinner>
+          {{ isLoading ? 'Iniciando...' : 'Iniciar Sesión' }}
+        </ion-button>
 
-            <ion-item lines="none">
-              <ion-checkbox slot="start"></ion-checkbox>
-              <ion-label>Recordarme</ion-label>
-            </ion-item>
-
-            <a href="#">
-              ¿Olvidaste tu contraseña?
-            </a>
-
-          </div>
-
-          <!-- BOTON LOGIN -->
-          <ion-button
-            expand="block"
-            class="login-button"
-            (click)="login()">
-
-            Ingresar
-
-          </ion-button>
-
-          <!-- REGISTER -->
-          <div class="register-section">
-
-            <span>
-              ¿No tienes cuenta?
-            </span>
-
-            <button
-              class="register-button"
-              routerLink="/register">
-
-              Crear cuenta
-
-            </button>
-
-          </div>
-
-        </ion-card-content>
-
-      </ion-card>
-
+        <!-- Registro -->
+        <div class="register-row">
+          <span>¿No tienes cuenta?</span>
+          <a routerLink="/register" class="register-link">Crear cuenta</a>
+        </div>
+      </form>
     </div>
-
   </div>
-
 </ion-content>

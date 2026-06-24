@@ -9,7 +9,10 @@
  * https://ionicframework.com/docs/layout/global-stylesheets
  */
 
+ 
 /* Core CSS required for Ionic components to work properly */
+@use './theme/variables.scss' as *;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 @import "@ionic/angular/css/core.css";
 
 /* Basic CSS for apps built with Ionic */
@@ -35,3 +38,29 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+
+* {
+  font-family: var(--font-family-base, 'Poppins', sans-serif);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-base, 'Poppins', sans-serif);
+  font-weight: 600;
+}
+
+p, span, div, ion-label, ion-text, ion-title, .ion-text {
+  font-family: var(--font-family-base, 'Poppins', sans-serif);
+}
+
+// Para evitar que el autocompletado tenga fondo amarillo/azul
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 5000s ease-in-out 0s !important;
+  -webkit-box-shadow: 0 0 0 1000px #f9fafb inset !important;
+  -webkit-text-fill-color: #374151 !important;
+}

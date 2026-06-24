@@ -1,0 +1,188 @@
+<!-- src/app/roles/cliente/dashboard/dash-view.page.html -->
+<ion-content class="client-dashboard">
+  <div class="dashboard-container">
+
+    <!-- ============================================================
+         ENCABEZADO DE BIENVENIDA
+    ============================================================ -->
+    <div class="welcome-header">
+      <div>
+        <h1>Hola, {{ userName }}</h1>
+        <p>Tienes una cita programada para esta semana y un tratamiento en curso.</p>
+      </div>
+      <button class="btn-primary" (click)="newAppointment()">
+        <ion-icon name="add-circle-outline"></ion-icon>
+        Agendar Cita
+      </button>
+    </div>
+
+    <!-- ============================================================
+         BENTO GRID (12 columnas)
+    ============================================================ -->
+    <div class="bento-grid">
+
+      <!-- ==========================================================
+           PRÓXIMA CITA (col-span-8 en desktop)
+      ========================================================== -->
+      <section class="bento-item col-span-8">
+        <div class="card-next-appointment">
+          <div class="card-header">
+            <span class="badge-label">PRÓXIMA CITA</span>
+            <span *ngIf="tieneCita && proximaCita" class="badge-status confirmed">
+              {{ proximaCita.estado === 'confirmada' ? 'Confirmada' : 'Pendiente' }}
+            </span>
+          </div>
+
+          <ng-container *ngIf="tieneCita && proximaCita; else noCita">
+            <h2>{{ proximaCita.tratamiento || 'Consulta' }}</h2>
+            <div class="appointment-meta">
+              <div class="meta-item">
+                <ion-icon name="calendar-outline"></ion-icon>
+                <span>{{ proximaCita.fecha | date:'EEEE, d MMM' }}</span>
+              </div>
+              <div class="meta-item">
+                <ion-icon name="time-outline"></ion-icon>
+                <span>{{ proximaCita.hora }}</span>
+              </div>
+              <div class="meta-item full-width">
+                <ion-icon name="medical-outline"></ion-icon>
+                <span>{{ proximaCita.doctor_nombre }} — {{ proximaCita.especialidad || 'Especialista' }}</span>
+              </div>
+            </div>
+            <div class="card-actions">
+              <button class="btn-outline" (click)="reschedule()">Reagendar</button>
+              <button class="btn-outline danger" (click)="cancelAppointment()">Cancelar</button>
+            </div>
+          </ng-container>
+
+          <ng-template #noCita>
+            <div class="no-data-message">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <p>No tienes citas programadas próximamente.</p>
+              <button class="btn-primary btn-small" (click)="newAppointment()">Agendar cita</button>
+            </div>
+          </ng-template>
+        </div>
+      </section>
+
+      <!-- ==========================================================
+           RESUMEN DE CUENTA (col-span-4 en desktop)
+      ========================================================== -->
+      <section class="bento-item col-span-4">
+        <div class="card-account">
+          <div class="card-header">
+            <span>Resumen de Cuenta</span>
+            <ion-icon name="wallet-outline"></ion-icon>
+          </div>
+          <div class="account-balance">
+            <p class="label">SALDO PENDIENTE</p>
+            <p class="amount">${{ balance | number:'1.2-2' }}</p>
+          </div>
+          <div class="account-total">
+            <span>Total pagado:</span>
+            <strong>${{ totalPaid | number:'1.2-2' }}</strong>
+          </div>
+          <button class="btn-link" (click)="navigateTo('/client/payments')">
+            Ver Facturación
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </button>
+        </div>
+      </section>
+
+      <!-- ==========================================================
+           TRATAMIENTO ACTIVO (col-span-7 en desktop)
+      ========================================================== -->
+      <section class="bento-item col-span-7">
+        <div class="card-treatment">
+          <ng-container *ngIf="tratamientoActivo; else noTratamiento">
+            <div class="card-header">
+              <div>
+                <span>Tratamiento Activo</span>
+                <p>{{ tratamientoActivo.nombre }}</p>
+              </div>
+              <span class="progress-badge">{{ tratamientoActivo.progreso }}%</span>
+            </div>
+            <div class="treatment-progress">
+              <span class="phase-badge">Fase {{ tratamientoActivo.progreso > 0 ? Math.ceil(tratamientoActivo.progreso / 20) : 1 }} de 5</span>
+              <ion-progress-bar value="{{ tratamientoActivo.progreso / 100 }}"></ion-progress-bar>
+            </div>
+            <div class="treatment-dates">
+              <span>Inicio: {{ tratamientoActivo.fecha_inicio | date:'MMMM yyyy' }}</span>
+              <span>Estimado: {{ tratamientoActivo.fecha_fin | date:'MMMM yyyy' }}</span>
+            </div>
+            <div class="treatment-steps">
+              <div class="step">
+                <p class="step-label">PRÓXIMO PASO</p>
+                <p class="step-value">{{ tratamientoActivo.descripcion || 'Seguir tratamiento' }}</p>
+              </div>
+              <div class="step">
+                <p class="step-label">ÚLTIMA VISITA</p>
+                <p class="step-value">15 Sept — Ajuste General</p>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #noTratamiento>
+            <div class="no-data-message">
+              <ion-icon name="medical-outline"></ion-icon>
+              <p>No tienes tratamientos activos.</p>
+            </div>
+          </ng-template>
+        </div>
+      </section>
+
+      <!-- ==========================================================
+           ACCIONES RÁPIDAS (col-span-5 en desktop)
+      ========================================================== -->
+      <section class="bento-item col-span-5">
+        <div class="card-actions-grid">
+          <div class="card-header">
+            <span>Acciones Rápidas</span>
+          </div>
+          <div class="actions-grid">
+            <button
+              *ngFor="let action of quickActions"
+              class="action-btn"
+              [class]="'action-' + action.color"
+              (click)="action.external ? openExternal(action.route) : navigateTo(action.route)"
+            >
+              <ion-icon [name]="action.icon"></ion-icon>
+              <span>{{ action.label }}</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================================
+           ACTIVIDAD RECIENTE (col-span-12 en desktop)
+      ========================================================== -->
+      <section class="bento-item col-span-12">
+        <div class="card-activity">
+          <div class="card-header">
+            <span>Actividad Reciente</span>
+            <button class="btn-link" (click)="viewAllActivity()">
+              Ver todo
+              <ion-icon name="chevron-forward-outline"></ion-icon>
+            </button>
+          </div>
+          <div class="activity-list">
+            <div *ngFor="let activity of actividadReciente" class="activity-item">
+              <div class="activity-icon" [class]="'icon-' + colorMap[activity.tipo]">
+                <ion-icon [name]="activity.tipo === 'exito' ? 'checkmark-circle-outline' : 'information-circle-outline'"></ion-icon>
+              </div>
+              <div class="activity-content">
+                <p class="activity-title">{{ activity.titulo }}</p>
+                <p class="activity-desc">{{ activity.mensaje }}</p>
+              </div>
+              <span class="activity-date">{{ activity.created_at | date:'short' }}</span>
+            </div>
+            <div *ngIf="actividadReciente.length === 0" class="no-data-message">
+              <p>No hay actividad reciente.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- end bento-grid -->
+
+  </div><!-- end dashboard-container -->
+</ion-content>

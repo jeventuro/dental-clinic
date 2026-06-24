@@ -1,0 +1,729 @@
+// src/app/roles/cliente/dashboard/dash-view.page.scss
+
+.client-dashboard {
+  --background: #f4f7f6;
+  padding: 20px 24px 40px 24px;
+
+  @media (max-width: 992px) {
+    padding: 16px;
+  }
+
+  @media (max-width: 576px) {
+    padding: 12px;
+  }
+}
+
+.dashboard-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 24px;
+  padding: 28px 32px 36px 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+
+  @media (max-width: 992px) {
+    padding: 20px;
+  }
+
+  @media (max-width: 576px) {
+    padding: 16px;
+  }
+}
+
+// ============================================================
+// ENCABEZADO
+// ============================================================
+.welcome-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 28px;
+
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a2e2b;
+    margin: 0 0 4px;
+
+    @media (max-width: 576px) {
+      font-size: 22px;
+    }
+  }
+
+  p {
+    font-size: 15px;
+    color: #6b7280;
+    margin: 4px 0 0;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #14b8a6, #0f766e);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(15, 118, 110, 0.25);
+    white-space: nowrap;
+
+    ion-icon {
+      font-size: 20px;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(15, 118, 110, 0.30);
+    }
+
+    &:active {
+      transform: scale(0.97);
+    }
+
+    @media (max-width: 576px) {
+      width: 100%;
+      justify-content: center;
+      padding: 12px 16px;
+    }
+  }
+}
+
+// ============================================================
+// BENTO GRID (12 columnas)
+// ============================================================
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 20px;
+
+  @media (max-width: 992px) {
+    gap: 16px;
+  }
+
+  @media (max-width: 768px) {
+    gap: 12px;
+  }
+}
+
+.bento-item {
+  &.col-span-12 { grid-column: span 12; }
+  &.col-span-8  { grid-column: span 8; }
+  &.col-span-7  { grid-column: span 7; }
+  &.col-span-5  { grid-column: span 5; }
+  &.col-span-4  { grid-column: span 4; }
+
+  @media (max-width: 992px) {
+    &.col-span-8,
+    &.col-span-7,
+    &.col-span-5,
+    &.col-span-4 {
+      grid-column: span 12;
+    }
+  }
+}
+
+// ============================================================
+// CARD: PRÓXIMA CITA
+// ============================================================
+.card-next-appointment {
+  background: white;
+  border-radius: 20px;
+  padding: 24px 28px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  border-left: 6px solid var(--ion-color-primary);
+  height: 100%;
+  transition: all 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  @media (max-width: 576px) {
+    padding: 18px 16px;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+
+    .badge-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #6b7280;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .badge-status {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: 999px;
+
+      &.confirmed {
+        background: #d1fae5;
+        color: #065f46;
+      }
+    }
+  }
+
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a2e2b;
+    margin: 0 0 16px;
+
+    @media (max-width: 576px) {
+      font-size: 18px;
+    }
+  }
+
+  .appointment-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 24px;
+    margin-bottom: 20px;
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: #374151;
+
+      ion-icon {
+        font-size: 18px;
+        color: var(--ion-color-primary);
+      }
+
+      &.full-width {
+        grid-column: span 2;
+      }
+
+      @media (max-width: 576px) {
+        grid-column: span 2;
+      }
+    }
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 12px;
+
+    .btn-outline {
+      padding: 8px 20px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 12px;
+      background: transparent;
+      font-size: 13px;
+      font-weight: 500;
+      color: #374151;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #f9fafb;
+        border-color: #9ca3af;
+      }
+
+      &.danger {
+        border-color: #fca5a5;
+        color: #dc2626;
+
+        &:hover {
+          background: #fef2f2;
+          border-color: #f87171;
+        }
+      }
+
+      @media (max-width: 576px) {
+        flex: 1;
+        text-align: center;
+      }
+    }
+  }
+}
+
+// ============================================================
+// CARD: RESUMEN DE CUENTA
+// ============================================================
+.card-account {
+  background: white;
+  border-radius: 20px;
+  padding: 24px 28px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  @media (max-width: 576px) {
+    padding: 18px 16px;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+
+    span {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a2e2b;
+    }
+
+    ion-icon {
+      font-size: 24px;
+      color: #6b7280;
+    }
+  }
+
+  .account-balance {
+    margin-bottom: 12px;
+
+    .label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0 0 2px;
+    }
+
+    .amount {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--ion-color-primary);
+      margin: 0;
+    }
+  }
+
+  .account-total {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-top: 1px solid #f1f5f9;
+    font-size: 14px;
+    color: #6b7280;
+
+    strong {
+      color: #1a2e2b;
+    }
+  }
+
+  .btn-link {
+    background: transparent;
+    border: none;
+    color: var(--ion-color-primary);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 0;
+    margin-top: auto;
+    transition: all 0.2s ease;
+
+    ion-icon {
+      font-size: 18px;
+      transition: transform 0.2s ease;
+    }
+
+    &:hover {
+      opacity: 0.8;
+      ion-icon {
+        transform: translateX(4px);
+      }
+    }
+  }
+}
+
+// ============================================================
+// CARD: TRATAMIENTO ACTIVO
+// ============================================================
+.card-treatment {
+  background: white;
+  border-radius: 20px;
+  padding: 24px 28px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  height: 100%;
+  transition: all 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  @media (max-width: 576px) {
+    padding: 18px 16px;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+
+    div {
+      span {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1a2e2b;
+      }
+
+      p {
+        font-size: 14px;
+        color: #6b7280;
+        margin: 2px 0 0;
+      }
+    }
+
+    .progress-badge {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ion-color-primary);
+    }
+  }
+
+  .treatment-progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+
+    .phase-badge {
+      background: #0f766e;
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    ion-progress-bar {
+      flex: 1;
+      height: 8px;
+      border-radius: 4px;
+      --progress-background: var(--ion-color-primary);
+    }
+  }
+
+  .treatment-dates {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 16px;
+
+    @media (max-width: 576px) {
+      flex-direction: column;
+      gap: 4px;
+    }
+  }
+
+  .treatment-steps {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+
+    .step {
+      background: #f9fafb;
+      border-radius: 12px;
+      padding: 12px 14px;
+
+      .step-label {
+        font-size: 10px;
+        font-weight: 600;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin: 0 0 4px;
+      }
+
+      .step-value {
+        font-size: 14px;
+        font-weight: 500;
+        color: #1a2e2b;
+        margin: 0;
+      }
+    }
+
+    @media (max-width: 576px) {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+// ============================================================
+// CARD: ACCIONES RÁPIDAS
+// ============================================================
+.card-actions-grid {
+  background: white;
+  border-radius: 20px;
+  padding: 24px 28px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  @media (max-width: 576px) {
+    padding: 18px 16px;
+  }
+
+  .card-header {
+    margin-bottom: 16px;
+
+    span {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a2e2b;
+    }
+  }
+
+  .actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    flex: 1;
+
+    .action-btn {
+      background: white;
+      border: 1px solid #f1f5f9;
+      border-radius: 16px;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+
+      ion-icon {
+        font-size: 28px;
+      }
+
+      span {
+        font-size: 12px;
+        font-weight: 500;
+        color: #1a2e2b;
+        text-align: center;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      }
+
+      &:active {
+        transform: scale(0.96);
+      }
+
+      &.action-primary ion-icon { color: var(--ion-color-primary); }
+      &.action-secondary ion-icon { color: var(--ion-color-secondary); }
+      &.action-tertiary ion-icon { color: var(--ion-color-tertiary); }
+      &.action-success ion-icon { color: #25D366; }
+
+      @media (max-width: 576px) {
+        padding: 14px 10px;
+        ion-icon { font-size: 24px; }
+        span { font-size: 11px; }
+      }
+    }
+  }
+}
+
+// ============================================================
+// CARD: ACTIVIDAD RECIENTE
+// ============================================================
+.card-activity {
+  background: white;
+  border-radius: 20px;
+  padding: 24px 28px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  @media (max-width: 576px) {
+    padding: 18px 16px;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    span {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a2e2b;
+    }
+
+    .btn-link {
+      background: transparent;
+      border: none;
+      color: var(--ion-color-primary);
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 0;
+      transition: all 0.2s ease;
+
+      ion-icon {
+        font-size: 18px;
+        transition: transform 0.2s ease;
+      }
+
+      &:hover {
+        opacity: 0.8;
+        ion-icon {
+          transform: translateX(4px);
+        }
+      }
+    }
+  }
+
+  .activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .activity-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: #f9fafb;
+    }
+
+    @media (max-width: 576px) {
+      flex-wrap: wrap;
+      padding: 10px 12px;
+    }
+
+    .activity-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      ion-icon {
+        font-size: 20px;
+        color: white;
+      }
+
+      &.icon-primary { background: linear-gradient(135deg, #14b8a6, #0f766e); }
+      &.icon-success { background: linear-gradient(135deg, #10b981, #059669); }
+      &.icon-warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    }
+
+    .activity-content {
+      flex: 1;
+      min-width: 0;
+
+      .activity-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1a2e2b;
+        margin: 0;
+      }
+
+      .activity-desc {
+        font-size: 13px;
+        color: #6b7280;
+        margin: 2px 0 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        @media (max-width: 576px) {
+          white-space: normal;
+        }
+      }
+    }
+
+    .activity-date {
+      font-size: 12px;
+      color: #9ca3af;
+      white-space: nowrap;
+      flex-shrink: 0;
+
+      @media (max-width: 576px) {
+        width: 100%;
+        padding-left: 54px;
+        margin-top: 2px;
+      }
+    }
+  }
+}
+
+
+.no-data-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 0;
+  color: #6b7280;
+
+  ion-icon {
+    font-size: 48px;
+    color: #d1d5db;
+    margin-bottom: 12px;
+  }
+
+  p {
+    margin: 0 0 12px;
+    font-size: 14px;
+  }
+
+  .btn-small {
+    padding: 8px 16px;
+    font-size: 13px;
+    background: var(--ion-color-primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}

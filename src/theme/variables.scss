@@ -1,2 +1,18 @@
 // For information on how to create your own theme, please refer to:
 // https://ionicframework.com/docs/theming/
+
+// src/theme/variables.scss
+:root {
+  // Fuente base para toda la app
+  --font-family-base: 'Poppins', sans-serif;
+
+  // Colores principales (puedes mantener los que ya tenías)
+  --ion-color-primary: #0f766e;
+  --ion-color-primary-rgb: 15,118,110;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255,255,255;
+  --ion-color-primary-shade: #0d685f;
+  --ion-color-primary-tint: #27847d;
+
+  // ... resto de variables que tengas
+}

@@ -1,266 +1,234 @@
-*{
-  font-family: 'Poppins', sans-serif;
-
-}
-
+// src/app/features/auth/register/register.page.scss
 
 .register-content {
-
-  --background: #f7fffd;
-
+  --background: #f4f7f6;  // Mismo fondo que login
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
   position: relative;
-
+  overflow: hidden;
 }
 
-.overlay {
-
+.wave-background {
   position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-
   background:
-    radial-gradient(circle at top right,
-      rgba(20,184,166,0.12),
-      transparent 30%),
-
-    radial-gradient(circle at bottom left,
-      rgba(45,212,191,0.12),
-      transparent 30%);
+    radial-gradient(circle at 20% 80%, rgba(20, 184, 166, 0.08), transparent 40%),
+    radial-gradient(circle at 80% 20%, rgba(45, 212, 191, 0.06), transparent 40%);
+  pointer-events: none;
+  z-index: 1;
 }
 
-.register-wrapper {
-
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-
-  min-height: 100vh;
-
+.register-container {
   position: relative;
-
-}
-
-/* =========================================
-   LEFT
-========================================= */
-
-.branding-section {
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  padding: 60px;
-
-}
-
-.branding-content {
-  //cuadro de la izquierda con datos de texto e info
-  max-width: 520px;
-
-}
-
-.logo {
-
-  width: 110px;
-  margin-bottom: 20px;
-
-}
-
-.branding-content h1 {
-//titulo del cuadro de la izquierda
-  font-size: 48px;
-  font-weight: 800;
-  color: #0f766e;
-  margin-bottom: 20px;
-}
-
-.branding-content p {
-// contenido de texto debajo del titulo del cuadro de la izquierda
-  color: #4b5563;
-  line-height: 1.8;
-  margin-bottom: 30px;
-  font-size: 18px;
-}
-
-/* FEATURES */
-
-.feature-list {
-  //lista de caracteristicas debajo del texto del cuadro de la izquierda
+  z-index: 10;
+  width: 100%;
+  max-width: 500px;        // Mismo que login
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
-}
-
-.feature-item {
-//cada item de la lista de caracteristicas debajo del texto del cuadro de la izquierda
-  display: flex;
   align-items: center;
-  gap: 14px;
-  background: white;
-  padding: 18px;
-  border-radius: 18px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+  gap: 29px;              // Misma separación que login
+  margin: 0 auto;
 }
 
-.feature-item ion-icon {
-  color: #14b8a6;
-  font-size: 26px;
-}
-
-.feature-item span {
-  //aqui colocamos el texto de cada item de la lista de caracteristicas debajo del texto del cuadro de la izquierda
-  font-size: 16px;
-  color: #4b5563;
-}
-
-/* =========================================
-   RIGHT
-========================================= */
-
-.form-section {
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-//padding para el registro
-  padding: 30px;
-  
-}
-
-.register-card {
-
-  width: 100%;
-  max-width: 540px;
-  border-radius: 30px;
-  padding: 30px;
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(10px);
-  //aqui se cambia el color del fondo del cuadro registro
-  box-shadow:
-    0 10px 40px rgba(14, 185, 197, 0.507)
-
-}
-
-.header {
+// Logo / título (igual que login)
+.brand-section {
   text-align: center;
-  margin-bottom: 30px;
+
+  .logo-image {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+  }
+  .brand-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0f766e;
+    margin: 0;
+    letter-spacing: -0.5px;
+  }
+  .brand-subtitle {
+    font-size: 15px;
+    color: #6b7280;
+    margin: 2px 0 0;
+  }
 }
 
-.header h2 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 34px;
-  font-weight: 740;
+// Tarjeta (igual que login)
+.register-card {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  border-radius: 28px;
+  padding: 22px 23px;
+  box-shadow: 0 20px 60px rgba(15, 118, 110, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
 
-  color: #0f766e;
-
+  .card-title {
+    font-size: 16px;
+    font-weight: 610;
+    color: #0f766e;
+    margin: 0 0 4px 0;
+  }
+  .card-subtitle {
+    font-size: 12px;
+    color: #6b7280;
+    margin: 0 0 24px 0;
+  }
 }
 
-.header p {
-// color para el parrafo abajo de "Crear cuenta"
-  color: #181f2e;
-
-}
-
-/* INPUT */
-
-.custom-input {
-
+.register-form {
   display: flex;
-  align-items: center;
-  gap: 15px;
-  color : #2f3741;
-  background: #f9fafb;
+  flex-direction: column;
+  gap: 10px;
+  color: #0f766e;
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.input-item {
+  --background: #f9fafb;
+  --border-radius: 16px;
+  --border-color: #d1fae5;
+  --border-width: 1px;
+  --highlight-height: 0;
+  --padding-start: 14px;
+  --inner-padding-end: 14px;
   border: 1px solid #d1fae5;
   border-radius: 16px;
-  padding: 4px 16px;
-  margin-bottom: 15px;
+  transition: border-color 0.2s;
+  color: #374151;
 
+  &.error {
+    border-color: #f87171;
+  }
 }
 
-// container para compartir 2 apartados de la misma linea, en este caso el dni y el telefono
-.custom-input-container {
+.input-icon {
+  color: #374151 !important;
+  font-size: 24px !important;
+}
+
+.eye-button {
+  --color: #6b7280;
+  height: 100%;
+  margin: 0;
+}
+
+.error-message {
+  display: block;
+  font-size: 12px;
+  color: #ef4444;
+  padding-left: 4px;
+}
+
+// Filas para DNI y teléfono
+.row-fields {
   display: flex;
-  align-items: center;
-  gap: 15px;
-  color : #2f3741;
-  padding: auto, 16px;
-  margin-bottom: 0px;
-} 
+  gap: 12px;
 
-.custom-input ion-icon {
-  font-size: 30px;
-  color: #14b8a6;
+  .field-col {
+    flex: 1;
+  }
 }
 
-/* BUTTON */
+.terms-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --background: transparent;
+  font-size: 13px;
+  color: #374151;
+
+  .terms-link {
+    color: #0f766e;
+    font-weight: 600;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
 
 .register-button {
-
-  --background:
-    linear-gradient(
-      135deg,
-      #14b8a6,
-      #0f766e
-    );
-
-  height: 50px;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 16px;
-  margin-top: 10px;
-  color : white;
-}
-
-
-
-/* LOGIN SECTION RETURN */
-
-.login-section {
-
-  margin-top: 25px;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-
-}
-
-.login-link {
-
-  border: none;
-  background: transparent;
-
-  color: #0f766e;
-
+  --background: linear-gradient(135deg, #14b8a6, #0f766e);
+  --border-radius: 16px;
+  height: 42px;
+  font-size: 15px;
   font-weight: 700;
+  margin-top: 1px;
+  box-shadow: 0 8px 24px rgba(20, 184, 166, 0.30);
+  transition: transform 0.2s;
 
-  cursor: pointer;
-
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+  &[disabled] {
+    opacity: 0.7;
+  }
 }
 
-/* =========================================
-   RESPONSIVE
-========================================= */
+.login-row {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 13px;
+  color: #4b5563;
 
-@media (max-width: 992px) {
-
-  .register-wrapper {
-
-    grid-template-columns: 1fr;
-
+  .login-link {
+    color: #0f766e;
+    font-weight: 700;
+    text-decoration: none;
+    margin-left: 6px;
+    &:hover {
+      text-decoration: underline;
+    }
   }
+}
 
-  .branding-section {
+// ============================================================
+// ELIMINAR ESTILO DE AUTCOMPLETADO
+// ============================================================
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 5000s ease-in-out 0s !important;
+  -webkit-box-shadow: 0 0 0 1000px #f9fafb inset !important;
+  -webkit-text-fill-color: #374151 !important;
+  caret-color: #374151 !important;
+}
 
-    display: none;
+ion-input input:-webkit-autofill {
+  transition: background-color 5000s ease-in-out 0s !important;
+  -webkit-box-shadow: 0 0 0 1000px #f9fafb inset !important;
+  -webkit-text-fill-color: #374151 !important;
+}
 
-  }
-
+// ============================================================
+// RESPONSIVE
+// ============================================================
+@media (max-width: 480px) {
   .register-card {
-
-    max-width: 100%;
-
+    padding: 24px 16px;
   }
-
+  .brand-title {
+    font-size: 28px;
+  }
+  .register-container {
+    gap: 24px;
+  }
+  .row-fields {
+    flex-direction: column;
+    gap: 4px;
+  }
 }

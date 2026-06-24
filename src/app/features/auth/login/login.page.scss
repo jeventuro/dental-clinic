@@ -1,331 +1,235 @@
-/* =============================
-LOGIN PAGE - login.page.scss
-============================= */
+// src/app/features/auth/login/login.page.scss
+
 .login-content {
-
-  --background: #f4fffd;
-
+  --background: #f4f7f6;  // Fondo suave, similar al diseño
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
   position: relative;
-
+  overflow: hidden;
 }
 
-.overlay {
-
+// Fondo decorativo (olas suaves)
+.wave-background {
   position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-
   background:
-    radial-gradient(circle at top left,
-      rgba(20, 184, 166, 0.15),
-      transparent 30%),
-
-    radial-gradient(circle at bottom right,
-      rgba(45, 212, 191, 0.15),
-      transparent 30%);
+    radial-gradient(circle at 20% 80%, rgba(20, 184, 166, 0.08), transparent 40%),
+    radial-gradient(circle at 80% 20%, rgba(45, 212, 191, 0.06), transparent 40%);
+  pointer-events: none;
+  z-index: 1;
 }
 
-.login-wrapper {
-
+.login-container {
   position: relative;
-
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-
-  min-height: 100vh;
-
-}
-
-/* ==========================================
-   LEFT SIDE
-========================================== */
-
-.branding-section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  padding: 10px;
-
-}
-
-.branding-content {
-
+  z-index: 10;
+  width: 100%;
   max-width: 500px;
-
-}
-
-.logo {
-
-  width: 400px;
-  height: 200px;
-  margin-bottom: 20px;
-
-}
-
-.branding-content h1 {
-
-  font-size: 48px;
-  font-weight: 800;
-  color: #0f766e;
-  margin-bottom: 20px;
-
-}
-
-.branding-content p {
-
-  font-size: 18px;
-  line-height: 1.8;
-  color: #4b5563;
-  margin-bottom: 40px;
-
-}
-
-/* FEATURES */
-
-.features {
-
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-
-}
-
-.feature-item {
-
-  display: flex;
   align-items: center;
-  gap: 14px;
-
-  background: white;
-
-  padding: 18px;
-
-  border-radius: 18px;
-
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-
+  gap: 29px;  // Espacio entre el logo y la tarjeta
+  margin: 0 auto;  // Centra horizontalmente por si falla flex
 }
 
-.feature-item ion-icon {
-
-  font-size: 26px;
-  color: #14b8a6;
-
-}
-.feature-item span {
-  font-size: 16px;
-  color: #4b5563;
-
-}
-
-/* ==========================================
-   RIGHT SIDE
-========================================== */
-
-.form-section {
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  padding: 30px;
-
-}
-
-.login-card {
-
-  width: 100%;
-  max-width: 480px;
-
-  border-radius: 30px;
-
-  padding: 30px;
-
-  box-shadow:
-    0 10px 40px rgba(15, 118, 110, 0.10);
-
-  background: rgba(255,255,255,0.92);
-
-  backdrop-filter: blur(10px);
-
-}
-
-.header {
-
-  margin-bottom: 30px;
+// ============================================================
+// SECCIÓN DEL LOGO / TÍTULO (arriba)
+// ============================================================
+.brand-section {
   text-align: center;
 
+  .logo-image {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    
+  }
+  .brand-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0f766e;
+    margin: 0;
+    letter-spacing: -0.5px;
+    
+  }
+  .brand-subtitle {
+    font-size: 15px;
+    color: #6b7280;
+    margin: 2px 0 0;
+    
+  }
 }
 
-.header h2 {
+// ============================================================
+// TARJETA DEL FORMULARIO (abajo)
+// ============================================================
+.login-card {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  border-radius: 28px;
+  padding: 22px 23px;
+  box-shadow: 0 20px 60px rgba(15, 118, 110, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
 
-  font-size: 34px;
-  font-weight: 700;
-
-  color: #0f766e;
-
+  .card-subtitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: #0f766e;
+    margin: 0 0 24px 0;
+    text-align: center;
+  }
 }
 
-.header p {
-
-  color: #6b7280;
-
-}
-
-/* INPUT */
-
-.custom-input {
-
+// ============================================================
+// FORMULARIO
+// ============================================================
+.login-form {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  gap: 10px;
+  color:#0f766e;
+}
 
-  background: #f9fafb;
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  
+}
 
+
+
+.input-item {
+  --background: #f9fafb;
+  --border-radius: 16px;
+  --border-color: #d1fae5;
+  --border-width: 1px;
+  --highlight-height: 0;
+  --padding-start: 14px;
+  --inner-padding-end: 14px;
+  
   border: 1px solid #d1fae5;
-
   border-radius: 16px;
+  transition: border-color 0.2s;
+  color: #374151;
 
-  padding: 10px 16px;
-
-  margin-bottom: 20px;
-
+  &.error {
+    border-color: #f87171;
+  }
 }
 
-.custom-input ion-icon {
-
+.input-icon {
+  color: #3d78d6;  // Oscuro para que se note
   font-size: 22px;
-  color: #14b8a6;
-
 }
 
-/* OPTIONS */
 
-.options {
+.eye-button {
+  --color: #6b7280;
+  height: 100%;
+  margin: 0;
+}
 
+.error-message {
+  display: block;
+  font-size: 12px;
+  color: #ef4444;
+  padding-left: 4px;
+}
+
+// ============================================================
+// OPCIONES (Recordar y Olvidé contraseña)
+// ============================================================
+.options-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
-  margin-bottom: 24px;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 4px;
+  margin: 2px 2px;
+  padding: 0 4px;
 }
 
-//agrego un options items
-.options ion-item {
-
+.remember-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
   --background: transparent;
-  //--border-color: transparent;
-  //--inner-border-width: 0;
-  //--padding-start: 0;
-
-  font-size: 14px;
-  color: #2b80f8;
-
+  font-size: 13px;
+  color: #374151;
 }
 
-.options ion-label {
-
-  color: #2b80f8 !important;
-  font-size: 14px;
-
-}
-
-
-.options ion-checkbox {
-  --size: 20px;
-  --checkbox-background: transparent;
-  --border-color: #cbd5e1;
-  --border-color-checked: #14b8a6;
-  --background-checked: #14b8a6;
-  --checkmark-color: white;
-  margin-right: 8px;
-}
-
-
-.options a {
-
+.forgot-link {
+  font-size: 13px;
   color: #0f766e;
   text-decoration: none;
   font-weight: 600;
-
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
-/* LOGIN BUTTON */
-
+// ============================================================
+// BOTÓN DE LOGIN
+// ============================================================
 .login-button {
+  --background: linear-gradient(135deg, #14b8a6, #0f766e);
+  --border-radius: 16px;
+  height: 42px;
+  font-size: 15px;
+  font-weight: 700;
+  margin-top: 1px;
+  box-shadow: 0 8px 24px rgba(20, 184, 166, 0.30);
+  transition: transform 0.2s;
 
-  --background: linear-gradient(
-    135deg,
-    #14b8a6,
-    #0f766e
-  );
-
-  height: 56px;
-
-  font-size: 16px;
-  font-weight: bold;
-  color: white;
-  border-radius: 16px;
-
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+  &[disabled] {
+    opacity: 0.7;
+  }
 }
 
-/* REGISTER */
+// ============================================================
+// REGISTRO (enlace)
+// ============================================================
+.register-row {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 13px;
+  color: #4b5563;
+  
 
-.register-section {
-
-  margin-top: 30px;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-
+  .register-link {
+    color: #0f766e;
+    font-weight: 700;
+    text-decoration: none;
+    margin-left: 6px;
+  
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
-.register-button {
-
-  background: transparent;
-  border: none;
-
-  color: #0f766e;
-
-  font-weight: bold;
-
-  cursor: pointer;
-
-}
-
-/* ==========================================
-   RESPONSIVE
-========================================== */
-
-@media (max-width: 992px) {
-
-  .login-wrapper {
-
-    grid-template-columns: 1fr;
-
-  }
-
-  .branding-section {
-
-    display: none;
-
-  }
-
-  .form-section {
-
-    padding: 20px;
-
-  }
-
+// ============================================================
+// RESPONSIVE
+// ============================================================
+@media (max-width: 480px) {
   .login-card {
-
-    max-width: 100%;
-
+    padding: 24px 16px;
   }
-
+  .brand-title {
+    font-size: 28px;
+  }
+  .login-container {
+    gap: 24px;
+  }
 }

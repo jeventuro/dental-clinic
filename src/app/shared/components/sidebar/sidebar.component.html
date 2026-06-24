@@ -1,0 +1,117 @@
+<!-- src/app/shared/components/sidebar/sidebar.component.html -->
+<div class="sidebar" [class.collapsed]="collapsed">
+
+  <!-- ================================================= -->
+  <!-- HEADER -->
+  <!-- ================================================= -->
+  <div class="sidebar-header">
+    <div class="brand-container">
+      <img src="assets/icon/logo+clinica.png" alt="Dental Premium" class="brand-logo" />
+      <div *ngIf="!collapsed" class="brand-info">
+        <h3>Dental Premium</h3>
+        <span>Sistema Clínico Integral</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================= -->
+  <!-- USER PROFILE -->
+  <!-- ================================================= -->
+  <div *ngIf="!collapsed" class="user-card">
+    <div class="avatar-container">
+      <img [src]="userAvatar" alt="Usuario" class="avatar" />
+      <span class="online-dot"></span>
+    </div>
+    <div class="user-info">
+      <h4>{{ userName }}</h4>
+      <p>{{ role }}</p>
+      <span class="branch">{{ currentBranch }}</span>
+    </div>
+  </div>
+
+  <!-- ================================================= -->
+  <!-- SEARCH (filtro de módulos) -->
+  <!-- ================================================= -->
+  <div *ngIf="!collapsed" class="search-container">
+    <ion-icon name="search-outline"></ion-icon>
+    <input
+      type="text"
+      placeholder="Buscar módulo..."
+      [(ngModel)]="searchTerm"
+      (ngModelChange)="filterMenu()"
+    />
+  </div>
+
+  <!-- ================================================= -->
+  <!-- MENU (filtrado) -->
+  <!-- ================================================= -->
+  <div class="sidebar-body">
+    <div
+      *ngFor="let item of filteredMenuItems"
+      class="menu-wrapper"
+    >
+      <!-- MENU ITEM -->
+      <div
+        class="menu-item"
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="item.children ? toggleMenu(item.title) : null"
+      >
+        <div class="menu-left">
+          <ion-icon [name]="item.icon"></ion-icon>
+          <span *ngIf="!collapsed">{{ item.title }}</span>
+        </div>
+        <div *ngIf="!collapsed" class="menu-right">
+          <span *ngIf="item.badge" class="badge">{{ item.badge }}</span>
+          <ion-icon
+            *ngIf="item.children"
+            [name]="isMenuOpen(item.title) ? 'chevron-down-outline' : 'chevron-forward-outline'"
+          ></ion-icon>
+        </div>
+      </div>
+
+      <!-- SUBMENU -->
+      <div
+        *ngIf="item.children && isMenuOpen(item.title) && !collapsed"
+        class="submenu"
+      >
+        <a
+          *ngFor="let child of item.children"
+          [routerLink]="child.route"
+          routerLinkActive="active-submenu"
+          class="submenu-item"
+        >
+          <ion-icon [name]="child.icon"></ion-icon>
+          <span>{{ child.title }}</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Mensaje cuando no hay resultados -->
+    <div *ngIf="filteredMenuItems.length === 0 && searchTerm" class="no-results">
+      <ion-icon name="search-outline"></ion-icon>
+      <span>No se encontraron módulos</span>
+    </div>
+  </div>
+
+  <!-- ================================================= -->
+  <!-- FOOTER (Notificaciones, Configuración, Cerrar sesión) -->
+  <!-- ================================================= -->
+  <div class="sidebar-footer">
+    <div class="footer-item" (click)="goToNotifications()">
+      <ion-icon name="notifications-outline"></ion-icon>
+      <span *ngIf="!collapsed">Notificaciones</span>
+    </div>
+
+    <div class="footer-item" (click)="goToSettings()">
+      <ion-icon name="settings-outline"></ion-icon>
+      <span *ngIf="!collapsed">Configuración</span>
+    </div>
+    <div class="footer-item logout" (click)="logout()">
+      <ion-icon name="log-out-outline"></ion-icon>
+      <span *ngIf="!collapsed">Cerrar sesión</span>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,22 @@
+<!-- src/app/shared/components/layout/app-shell.component.html -->
+<ion-split-pane when="lg" contentId="main-content" class="app-shell">
+  <ion-menu side="start" contentId="main-content" menuId="mobile-menu" class="main-sidebar">
+    <ion-content>
+      <app-sidebar [collapsed]="false"></app-sidebar>
+    </ion-content>
+  </ion-menu>
+
+  <div class="shell-main ion-page" id="main-content">
+    <ion-header class="mobile-header">
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-menu-button menu="mobile-menu"></ion-menu-button>
+        </ion-buttons>
+        <ion-title>Dental Premium</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <main class="shell-router-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</ion-split-pane>
