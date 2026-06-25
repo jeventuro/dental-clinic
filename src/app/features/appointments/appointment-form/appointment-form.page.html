@@ -25,10 +25,16 @@
         </div>
         <div class="form-group">
           <label>Servicio Odontológico</label>
-          <select [(ngModel)]="newAppointment.treatmentIndex" name="treatmentIndex" class="custom-select" required (change)="onDateTimeCriteriaChange()">
-            <option [ngValue]="null" disabled selected>Selecciona un tratamiento...</option>
-            <option *ngFor="let treatment of treatments; let i = index" [ngValue]="i">
-              {{ treatment.name }} — S/. {{ treatment.price }}.00 ({{ treatment.duration }} min)
+          <select
+            [(ngModel)]="newAppointment.tratamiento_id"
+            name="tratamiento_id"
+            class="custom-select"
+            required
+            (change)="onDateTimeCriteriaChange()"
+          >
+            <option value="" disabled selected>Selecciona un tratamiento...</option>
+            <option *ngFor="let t of tratamientos" [value]="t.id">
+              {{ t.nombre }} — S/. {{ t.precio }}.00 ({{ t.duracion }} min)
             </option>
           </select>
         </div>
@@ -44,7 +50,13 @@
         <div class="form-grid">
           <div class="form-group">
             <label>Odontólogo Especialista</label>
-            <select [(ngModel)]="newAppointment.doctor_id" name="doctor_id" class="custom-select" required (change)="onDateTimeCriteriaChange()">
+            <select
+              [(ngModel)]="newAppointment.doctor_id"
+              name="doctor_id"
+              class="custom-select"
+              required
+              (change)="onDateTimeCriteriaChange()"
+            >
               <option value="" disabled selected>Selecciona un médico...</option>
               <option *ngFor="let doc of doctors" [value]="doc.id">{{ doc.name }} ({{ doc.specialty }})</option>
             </select>
@@ -52,7 +64,12 @@
 
           <div class="form-group">
             <label>Sede de Atención</label>
-            <select [(ngModel)]="newAppointment.sede_id" name="sede_id" class="custom-select" required>
+            <select
+              [(ngModel)]="newAppointment.sede_id"
+              name="sede_id"
+              class="custom-select"
+              required
+            >
               <option value="" disabled selected>Selecciona la clínica...</option>
               <option *ngFor="let branch of branches" [value]="branch.id">{{ branch.nombre }}</option>
             </select>
@@ -60,42 +77,52 @@
 
           <div class="form-group grid-full-width">
             <label>Fecha de la Cita</label>
-            <input type="date" [(ngModel)]="newAppointment.date" name="date" [min]="minDate" class="custom-input" required (change)="onDateTimeCriteriaChange()" />
+            <input
+              type="date"
+              [(ngModel)]="newAppointment.date"
+              name="date"
+              [min]="minDate"
+              class="custom-input"
+              required
+              (change)="onDateTimeCriteriaChange()"
+            />
           </div>
         </div>
 
         <!-- SLOTS DE HORARIOS -->
-        <div class="availability-container" *ngIf="newAppointment.date && newAppointment.treatmentIndex !== null">
+        <div class="availability-container" *ngIf="newAppointment.date && newAppointment.tratamiento_id">
           <hr class="divider" />
           <h3>Horarios Disponibles</h3>
           <p class="info-interval">
-            Intervalos de <strong>{{ treatments[newAppointment.treatmentIndex].duration }} min</strong> para este tratamiento.
+            Intervalos de <strong>{{ obtenerDuracionSeleccionada() }} min</strong> para este tratamiento.
           </p>
 
           <h4 class="shift-title">Turno Mañana (9:00 AM - 1:00 PM)</h4>
           <div class="time-slots-grid">
-            <button 
-              *ngFor="let slot of morningSlots" 
+            <button
+              *ngFor="let slot of morningSlots"
               type="button"
               [disabled]="!slot.available"
               [class.slot-occupied]="!slot.available"
               [class.slot-selected]="newAppointment.time === slot.time"
               (click)="selectTime(slot)"
-              class="slot-btn">
+              class="slot-btn"
+            >
               {{ slot.time }}
             </button>
           </div>
 
           <h4 class="shift-title">Turno Tarde (3:00 PM - 8:30 PM)</h4>
           <div class="time-slots-grid">
-            <button 
-              *ngFor="let slot of afternoonSlots" 
+            <button
+              *ngFor="let slot of afternoonSlots"
               type="button"
               [disabled]="!slot.available"
               [class.slot-occupied]="!slot.available"
               [class.slot-selected]="newAppointment.time === slot.time"
               (click)="selectTime(slot)"
-              class="slot-btn">
+              class="slot-btn"
+            >
               {{ slot.time }}
             </button>
           </div>
@@ -106,7 +133,7 @@
           </div>
         </div>
 
-        <div class="availability-placeholder" *ngIf="!newAppointment.date || newAppointment.treatmentIndex === null">
+        <div class="availability-placeholder" *ngIf="!newAppointment.date || !newAppointment.tratamiento_id">
           <ion-icon name="alert-circle-outline"></ion-icon>
           <p>Selecciona un tratamiento y la fecha para ver los horarios disponibles.</p>
         </div>
@@ -119,18 +146,18 @@
           <h2>3. Confirmar cita</h2>
         </div>
 
-        <div class="summary-box" *ngIf="newAppointment.treatmentIndex !== null">
+        <div class="summary-box" *ngIf="newAppointment.tratamiento_id">
           <div class="summary-item">
             <span>Tratamiento:</span>
-            <strong>{{ treatments[newAppointment.treatmentIndex].name }}</strong>
+            <strong>{{ obtenerNombreTratamiento() }}</strong>
           </div>
           <div class="summary-item">
             <span>Duración:</span>
-            <strong>{{ treatments[newAppointment.treatmentIndex].duration }} min</strong>
+            <strong>{{ obtenerDuracionSeleccionada() }} min</strong>
           </div>
           <div class="summary-item">
             <span>Precio:</span>
-            <strong>S/. {{ treatments[newAppointment.treatmentIndex].price }}.00</strong>
+            <strong>S/. {{ obtenerPrecioTratamiento() }}.00</strong>
           </div>
           <div class="summary-item" *ngIf="newAppointment.date">
             <span>Fecha:</span>

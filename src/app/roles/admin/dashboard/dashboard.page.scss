@@ -14,10 +14,6 @@
   }
 }
 
-.inner-scroll scroll-y{
-  margin: 20px;
-}
-
 // ================================================================
 // ENCABEZADO DE BIENVENIDA
 // ================================================================
@@ -110,7 +106,7 @@
 
 .kpi-card {
   border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(39, 91, 236, 0.788);
+  box-shadow: 0 2px 12px rgba(15, 118, 110, 0.15);
   transition: transform 0.2s ease;
   margin: 0%;
   background: white;

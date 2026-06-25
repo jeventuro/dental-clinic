@@ -4,7 +4,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/auth/auth.service';
-import { DataService, Cita, Tratamiento } from '@core/data/data.service';
+import { DataService, Cita, PacienteTratamiento} from '@core/data/data.service';
 import { addIcons } from 'ionicons';
 import {
   addCircleOutline,
@@ -71,7 +71,7 @@ export class DashViewPage implements OnInit {
   totalPaid = 0;
 
   // Tratamiento activo
-  tratamientoActivo: Tratamiento | null = null;
+  tratamientoActivo: PacienteTratamiento | null = null;
 
   // Actividad reciente
   actividadReciente: any[] = [];
@@ -192,18 +192,14 @@ export class DashViewPage implements OnInit {
   // 💊 TRATAMIENTO ACTIVO
   // ============================================================
   private async cargarTratamientoActivo() {
-    const tratamiento = await this.dataService.getTratamientoActivo(this.pacienteId);
-    if (tratamiento) {
-      this.tratamientoActivo = {
-        ...tratamiento,
-        fecha_inicio: tratamiento.fecha_inicio || new Date().toISOString().split('T')[0],
-        fecha_fin: tratamiento.fecha_fin || new Date().toISOString().split('T')[0],
-        descripcion: tratamiento.descripcion || 'Seguir tratamiento',
-      };
+    const asignacion = await this.dataService.getTratamientoActivoPaciente(this.pacienteId);
+    if (asignacion) {
+      this.tratamientoActivo = asignacion;
     } else {
       this.tratamientoActivo = null;
     }
   }
+
 
   // ============================================================
   // 🔔 ACTIVIDAD RECIENTE

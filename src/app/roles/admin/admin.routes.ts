@@ -8,7 +8,7 @@ export const ADMIN_ROUTES: Routes = [
     path: '',
     component: AppShellComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['ADMIN'] },
+    data: { roles: ['admin'] },
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 
@@ -18,7 +18,7 @@ export const ADMIN_ROUTES: Routes = [
         loadComponent: () => import('./dashboard/dashboard.page').then((m) => m.DashboardPage),
       },
 
-      // Módulos (features compartidos)
+      // Modulo de citas
       {
         path: 'appointments',
         children: [
@@ -27,8 +27,29 @@ export const ADMIN_ROUTES: Routes = [
             loadComponent: () => import('@features/appointments/appointment-list/appointment-list.page').then(m => m.AppointmentListPage),
           },
           {
+            path: 'new', 
+            loadComponent: () => import('@features/appointments/appointment-form/appointment-form.page').then(m => m.AppointmentFormPage),
+          },
+          {
             path: ':id',
             loadComponent: () => import('@features/appointments/appointment-detail/appointment-detail.page').then(m => m.AppointmentDetailPage),
+          }
+        ]
+      },
+      {
+        path: 'treatments',
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('@features/treatments/treatment-list/treatment-list.page').then(m => m.TreatmentListPage),
+          },
+          {
+            path: 'new',
+            loadComponent: () => import('@features/treatments/treatment-form/treatment-form.page').then(m => m.TreatmentFormPage),
+          },
+          {
+            path: 'edit/:id',
+            loadComponent: () => import('@features/treatments/treatment-form/treatment-form.page').then(m => m.TreatmentFormPage),
           }
         ]
       },

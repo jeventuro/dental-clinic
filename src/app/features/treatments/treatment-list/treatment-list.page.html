@@ -1,13 +1,95 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>treatment-list</ion-title>
-  </ion-toolbar>
-</ion-header>
+<!-- src/app/features/tratamientos/treatment-list/treatment-list.page.html -->
+<ion-content class="treatments-page">
+  <div class="page-container">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">treatment-list</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <header class="page-header">
+      <div>
+        <h1>{{ isAdmin ? 'Gestión de Tratamientos' : 'Tratamientos Disponibles' }}</h1>
+        <p>{{ isAdmin ? 'Administra el catálogo de servicios odontológicos' : 'Conoce los tratamientos disponibles en nuestra clínica' }}</p>
+      </div>
+      <button *ngIf="isAdmin" class="btn-primary" (click)="nuevoTratamiento()">
+        <ion-icon name="add-circle-outline"></ion-icon>
+        Nuevo Tratamiento
+      </button>
+    </header>
+
+    <div class="filters-container">
+      <div class="search-box">
+        <ion-icon name="search-outline"></ion-icon>
+        <ion-input
+          placeholder="Buscar tratamiento..."
+          [(ngModel)]="searchTerm"
+          (ionInput)="onSearchChange($event)"
+          clear-input
+        ></ion-input>
+      </div>
+
+      <div class="filter-group" *ngIf="isAdmin">
+        <button class="filter-btn" [class.active]="filtroActivos === 'todos'" (click)="cambiarFiltroActivos('todos')">Todos</button>
+        <button class="filter-btn" [class.active]="filtroActivos === 'activos'" (click)="cambiarFiltroActivos('activos')">Activos</button>
+        <button class="filter-btn" [class.active]="filtroActivos === 'inactivos'" (click)="cambiarFiltroActivos('inactivos')">Inactivos</button>
+      </div>
+
+      <button class="refresh-btn" (click)="cargarTratamientos()" [disabled]="isLoading">
+        <ion-icon [name]="isLoading ? 'refresh-outline' : 'refresh-outline'" [class.spinning]="isLoading"></ion-icon>
+      </button>
+    </div>
+
+    <div class="treatments-list">
+      <div *ngIf="isLoading" class="skeleton-container">
+        <div class="skeleton-item" *ngFor="let _ of [1,2,3]">
+          <div class="skeleton-line w-60"></div>
+          <div class="skeleton-line w-40"></div>
+          <div class="skeleton-line w-80"></div>
+        </div>
+      </div>
+
+      <div *ngIf="!isLoading && tratamientosFiltrados.length === 0" class="empty-state">
+        <ion-icon name="medical-outline"></ion-icon>
+        <h3>No hay tratamientos</h3>
+        <p *ngIf="isAdmin">Comienza agregando el primer tratamiento al catálogo.</p>
+        <p *ngIf="!isAdmin">No hay tratamientos disponibles en este momento.</p>
+        <button *ngIf="isAdmin" class="btn-primary btn-small" (click)="nuevoTratamiento()">Agregar tratamiento</button>
+      </div>
+
+      <div *ngFor="let tratamiento of tratamientosFiltrados" class="treatment-card">
+        <div class="treatment-card-header">
+          <div>
+            <h3>{{ tratamiento.nombre }}</h3>
+            <span class="specialty-badge">{{ tratamiento.especialidad || 'General' }}</span>
+          </div>
+          <div class="card-actions">
+            <ion-badge [color]="tratamiento.activo ? 'success' : 'danger'" class="status-badge">
+              <ion-icon [name]="tratamiento.activo ? 'checkmark-circle-outline' : 'close-circle-outline'"></ion-icon>
+              {{ tratamiento.activo ? 'Activo' : 'Inactivo' }}
+            </ion-badge>
+            <button *ngIf="isAdmin" class="icon-btn" (click)="editarTratamiento(tratamiento.id)">
+              <ion-icon name="create-outline"></ion-icon>
+            </button>
+            <button *ngIf="isAdmin" class="icon-btn danger" (click)="eliminarTratamiento(tratamiento)">
+              <ion-icon name="trash-outline"></ion-icon>
+            </button>
+            <button *ngIf="isAdmin" class="icon-btn" (click)="toggleActivo(tratamiento)">
+              <ion-icon [name]="tratamiento.activo ? 'close-circle-outline' : 'checkmark-circle-outline'"></ion-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="treatment-card-body">
+          <p class="description">{{ tratamiento.descripcion || 'Sin descripción' }}</p>
+          <div class="treatment-meta">
+            <div class="meta-item">
+              <ion-icon name="cash-outline"></ion-icon>
+              <span>S/. {{ tratamiento.precio | number:'1.2-2' }}</span>
+            </div>
+            <div class="meta-item">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>{{ tratamiento.duracion }} min</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </ion-content>

@@ -94,11 +94,12 @@
       ========================================================== -->
       <section class="bento-item col-span-7">
         <div class="card-treatment">
-          <ng-container *ngIf="tratamientoActivo; else noTratamiento">
+
+          <ng-container *ngIf="tratamientoActivo && tratamientoActivo.tratamiento; else noTratamiento">
             <div class="card-header">
               <div>
                 <span>Tratamiento Activo</span>
-                <p>{{ tratamientoActivo.nombre }}</p>
+                <p>{{ tratamientoActivo.tratamiento.nombre }}</p>
               </div>
               <span class="progress-badge">{{ tratamientoActivo.progreso }}%</span>
             </div>
@@ -113,7 +114,7 @@
             <div class="treatment-steps">
               <div class="step">
                 <p class="step-label">PRÓXIMO PASO</p>
-                <p class="step-value">{{ tratamientoActivo.descripcion || 'Seguir tratamiento' }}</p>
+                <p class="step-value">{{ tratamientoActivo.tratamiento.descripcion || 'Seguir tratamiento' }}</p>
               </div>
               <div class="step">
                 <p class="step-label">ÚLTIMA VISITA</p>
@@ -181,8 +182,6 @@
           </div>
         </div>
       </section>
-
-    </div><!-- end bento-grid -->
-
-  </div><!-- end dashboard-container -->
+    </div>
+  </div>
 </ion-content>

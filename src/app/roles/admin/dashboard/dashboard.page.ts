@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Chart, ChartConfiguration, ChartOptions, registerables } from 'chart.js';
 import { AuthService } from '@core/auth/auth.service';
+import { DataService } from '@core/data/data.service';
 
 Chart.register(...registerables);
 
@@ -23,7 +24,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
   userRole = '';
   userBranch = '';
   todayDate = new Date();
-
+  // KPIs (mock - se reemplazarán con datos reales más adelante)
   kpis = [
     { 
       label: 'Ingresos Totales', 
@@ -109,11 +110,12 @@ export class DashboardPage implements OnInit, AfterViewInit {
 
   constructor(
     private authService: AuthService,
+    private dataService: DataService,
     private router: Router
   ) {}
 
-  ngOnInit() {
-    const user = this.authService.getCurrentUser();
+  async ngOnInit() {
+    const user = await this.dataService.getCurrentUserProfile();
     if (user) {
       this.userName = user.nombre_completo || 'Administrador';
       this.userRole = user.rol || 'admin';

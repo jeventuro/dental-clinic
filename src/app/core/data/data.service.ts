@@ -59,16 +59,30 @@ export interface Cita {
   sede?: Sede;
 }
 
-export interface Tratamiento {
+export interface TratamientoCatalogo {
   id: string;
-  paciente_id: string;
   nombre: string;
   descripcion?: string;
+  precio: number;
+  duracion: number;
+  especialidad?: string;
+  activo: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PacienteTratamiento {
+  id: string;
+  paciente_id: string;
+  tratamiento_id: string;
   fecha_inicio?: string;
   fecha_fin?: string;
   progreso: number;
   estado: 'activo' | 'completado' | 'cancelado';
+  notas?: string;
   created_at: string;
+  updated_at: string;
+  tratamiento?: TratamientoCatalogo;
 }
 
 export interface Pago {
@@ -381,55 +395,155 @@ export class DataService {
   // ==========================================================
   // 💊 TRATAMIENTOS (CRUD)
   // ==========================================================
-  async getTratamientos() {
-    return this.supabase
+  async getTratamientos(activos?: boolean): Promise<TratamientoCatalogo[]> {
+    let query = this.supabase
       .from('tratamientos')
-      .select('*, pacientes(*)')
-      .order('created_at', { ascending: false });
+      .select('*')
+      .order('nombre', { ascending: true });
+
+    if (activos !== undefined) {
+      query = query.eq('activo', activos);
+    }
+
+    const { data, error } = await query;
+    if (error) {
+      console.error('❌ Error al obtener tratamientos:', error);
+      return [];
+    }
+    return data || [];
   }
 
-  async getTratamientosByPaciente(pacienteId: string) {
-    return this.supabase
-      .from('tratamientos')
-      .select('*, pacientes(*)')
-      .eq('paciente_id', pacienteId)
-      .order('created_at', { ascending: false });
-  }
-
-  async getTratamientoById(id: string) {
-    return this.supabase
-      .from('tratamientos')
-      .select('*, pacientes(*)')
-      .eq('id', id)
-      .single();
-  }
-
-  async createTratamiento(data: Omit<Tratamiento, 'id' | 'created_at'>) {
-    return this.supabase.from('tratamientos').insert(data);
-  }
-
-  async updateTratamiento(id: string, updates: Partial<Tratamiento>) {
-    return this.supabase.from('tratamientos').update(updates).eq('id', id);
-  }
-
-  async deleteTratamiento(id: string) {
-    return this.supabase.from('tratamientos').delete().eq('id', id);
-  }
-
-  async getTratamientoActivo(pacienteId: string): Promise<Tratamiento | null> {
+async getTratamientoById(id: string): Promise<TratamientoCatalogo | null> {
     const { data, error } = await this.supabase
       .from('tratamientos')
       .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      console.error('❌ Error al obtener tratamiento:', error);
+      return null;
+    }
+    return data;
+  }
+
+  async createTratamiento(data: Omit<TratamientoCatalogo, 'id' | 'created_at' | 'updated_at'>) {
+    const { data: result, error } = await this.supabase
+      .from('tratamientos')
+      .insert(data)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('❌ Error al crear tratamiento:', error);
+      throw error;
+    }
+    return result;
+  }
+
+  async updateTratamiento(id: string, updates: Partial<TratamientoCatalogo>) {
+    const { data, error } = await this.supabase
+      .from('tratamientos')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('❌ Error al actualizar tratamiento:', error);
+      throw error;
+    }
+    return data;
+  }
+
+  async deleteTratamiento(id: string) {
+    const { error } = await this.supabase
+      .from('tratamientos')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('❌ Error al eliminar tratamiento:', error);
+      throw error;
+    }
+    return true;
+  }
+
+  /**
+   * ahora FUNCIONES para pacientes con tratamientos 
+   */
+
+  async getPacienteTratamientos(pacienteId: string) {
+    const { data, error } = await this.supabase
+      .from('paciente_tratamientos')
+      .select('*, tratamiento:tratamiento_id(*)')
+      .eq('paciente_id', pacienteId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('❌ Error al obtener tratamientos del paciente:', error);
+      return [];
+    }
+    return data || [];
+  }
+  
+  async getTratamientoActivoPaciente(pacienteId: string): Promise<any | null> {
+    const { data, error } = await this.supabase
+      .from('paciente_tratamientos')
+      .select('*, tratamiento:tratamiento_id(*)')
       .eq('paciente_id', pacienteId)
       .eq('estado', 'activo')
       .order('created_at', { ascending: false })
       .limit(1);
 
     if (error) {
-      console.error('Error al obtener tratamiento activo:', error);
+      console.error('❌ Error al obtener tratamiento activo del paciente:', error);
       return null;
     }
     return data && data.length > 0 ? data[0] : null;
+  }
+
+
+  async createPacienteTratamiento(data: Omit<PacienteTratamiento, 'id' | 'created_at' | 'updated_at'>) {
+    const { data: result, error } = await this.supabase
+      .from('paciente_tratamientos')
+      .insert(data)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('❌ Error al asignar tratamiento al paciente:', error);
+      throw error;
+    }
+    return result;
+  }
+
+  async updatePacienteTratamiento(id: string, updates: Partial<PacienteTratamiento>) {
+    const { data, error } = await this.supabase
+      .from('paciente_tratamientos')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('❌ Error al actualizar tratamiento del paciente:', error);
+      throw error;
+    }
+    return data;
+  }
+
+  async deletePacienteTratamiento(id: string) {
+    const { error } = await this.supabase
+      .from('paciente_tratamientos')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('❌ Error al eliminar asignación de tratamiento:', error);
+      throw error;
+    }
+    return true;
   }
 
   // ==========================================================

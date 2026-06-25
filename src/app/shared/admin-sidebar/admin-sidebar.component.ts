@@ -61,6 +61,11 @@ export class AdminSidebarComponent {
     },
 
     {
+      title: 'Tratamientos',
+      icon: 'treatments-outline',
+      route: '/admin-treatments'
+    },
+    {
       title: 'Doctores',
       icon: 'medical-outline',
       route: '/admin-doctors'

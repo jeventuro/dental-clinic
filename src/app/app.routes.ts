@@ -31,7 +31,6 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./roles/doctor/doctor.routes').then((m) => m.DOCTOR_ROUTES),
   },
-  
 
 ];
 

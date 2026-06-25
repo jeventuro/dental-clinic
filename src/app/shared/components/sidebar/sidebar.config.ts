@@ -43,6 +43,11 @@ export const SIDEBAR_CONFIG: Record<string, SidebarItem[]> = {
     { title: 'Dashboard', icon: 'grid-outline', route: '/admin/dashboard' },
     { title: 'Agenda General', icon: 'calendar-outline', route: '/admin/appointments' },
     { title: 'Pacientes', icon: 'people-outline', route: '/admin/patients' },
+    {
+      title: 'Tratamientos',
+      icon: 'treatments-outline',
+      route: '/admin/treatments'
+    },
     { title: 'Doctores', icon: 'medical-outline', route: '/admin/doctors' },
     { title: 'Finanzas', icon: 'cash-outline', route: '/admin/finances' },
     { title: 'Marketing', icon: 'megaphone-outline', route: '/admin/marketing' },
