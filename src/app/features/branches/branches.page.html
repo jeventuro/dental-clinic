@@ -1,13 +1,96 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>branches</ion-title>
-  </ion-toolbar>
-</ion-header>
+<!-- src/app/features/branches/branches.page.html -->
+<ion-content class="branches-page">
+  <div class="page-container">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">branches</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <header class="page-header">
+      <div>
+        <h1>Sedes</h1>
+        <p>Gestiona las sucursales de la clínica</p>
+      </div>
+      <button *ngIf="isAdmin" class="btn-primary" (click)="nuevaSede()">
+        <ion-icon name="add-circle-outline"></ion-icon>
+        Nueva Sede
+      </button>
+    </header>
+
+    <!-- FILTROS -->
+    <div class="filters-container">
+      <div class="search-box">
+        <ion-icon name="search-outline"></ion-icon>
+        <ion-input
+          placeholder="Buscar sede..."
+          [(ngModel)]="searchTerm"
+          (ionInput)="onSearchChange($event)"
+          clear-input
+        ></ion-input>
+      </div>
+      <button class="refresh-btn" (click)="cargarSedes()" [disabled]="isLoading">
+        <ion-icon [name]="isLoading ? 'refresh-outline' : 'refresh-outline'" [class.spinning]="isLoading"></ion-icon>
+      </button>
+    </div>
+
+    <!-- FORMULARIO DE NUEVA SEDE -->
+    <div *ngIf="showForm" class="form-card">
+      <h3>{{ isEditing ? 'Editar Sede' : 'Nueva Sede' }}</h3>
+      <div class="form-group">
+        <label>Nombre <span class="required">*</span></label>
+        <input type="text" class="custom-input" [(ngModel)]="formData.nombre" placeholder="Ej: Sede Principal">
+      </div>
+      <div class="form-group">
+        <label>Dirección</label>
+        <input type="text" class="custom-input" [(ngModel)]="formData.direccion" placeholder="Av. Principal 123">
+      </div>
+      <div class="form-group">
+        <label>Teléfono</label>
+        <input type="tel" class="custom-input" [(ngModel)]="formData.telefono" placeholder="+51 987654321">
+      </div>
+      <div class="form-actions">
+        <button class="btn-outline" (click)="cancelarFormulario()">Cancelar</button>
+        <button class="btn-submit" (click)="guardarSede()">
+          {{ isEditing ? 'Actualizar' : 'Crear' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- LISTA DE SEDES -->
+    <div class="branches-list">
+      <!-- Skeleton -->
+      <div *ngIf="isLoading" class="skeleton-container">
+        <div class="skeleton-item" *ngFor="let _ of [1,2,3]">
+          <div class="skeleton-line w-60"></div>
+          <div class="skeleton-line w-40"></div>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div *ngIf="!isLoading && sedesFiltradas.length === 0" class="empty-state">
+        <ion-icon name="business-outline"></ion-icon>
+        <h3>No hay sedes registradas</h3>
+        <p *ngIf="isAdmin">Comienza agregando la primera sede de la clínica.</p>
+        <button *ngIf="isAdmin" class="btn-primary btn-small" (click)="nuevaSede()">
+          Agregar sede
+        </button>
+      </div>
+
+      <!-- Cards -->
+      <div *ngFor="let sede of sedesFiltradas; trackBy: trackBySedeId" class="branch-card">
+        <div class="branch-card-header">
+          <div class="branch-info">
+            <h3>{{ sede.nombre }}</h3>
+            <p *ngIf="sede.direccion"><ion-icon name="location-outline"></ion-icon> {{ sede.direccion }}</p>
+            <p *ngIf="sede.telefono"><ion-icon name="call-outline"></ion-icon> {{ sede.telefono }}</p>
+          </div>
+          <div class="card-actions" *ngIf="isAdmin">
+            <ion-button fill="clear" (click)="editarSede(sede)">
+              <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" color="danger" (click)="eliminarSede(sede)">
+              <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </ion-content>

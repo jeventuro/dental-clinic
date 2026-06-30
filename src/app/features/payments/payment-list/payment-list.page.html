@@ -1,13 +1,77 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>payment-list</ion-title>
-  </ion-toolbar>
-</ion-header>
+<!-- src/app/features/payments/payments.page.html -->
+<ion-content class="payments-page">
+  <div class="page-container">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">payment-list</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <header class="page-header">
+      <div>
+        <h1>Mis Pagos</h1>
+        <p>Visualiza el historial de tus transacciones</p>
+      </div>
+      <button class="refresh-btn" (click)="cargarPagos()" [disabled]="isLoading">
+        <ion-icon [name]="isLoading ? 'refresh-outline' : 'refresh-outline'" [class.spinning]="isLoading"></ion-icon>
+      </button>
+    </header>
+
+    <!-- Resumen -->
+    <div class="summary-cards">
+      <div class="summary-card total">
+        <span class="label">Total Pagado</span>
+        <span class="value">S/. {{ totalPagado | number:'1.2-2' }}</span>
+      </div>
+      <div class="summary-card pending">
+        <span class="label">Pendiente</span>
+        <span class="value">S/. {{ totalPendiente | number:'1.2-2' }}</span>
+      </div>
+    </div>
+
+    <!-- Lista de pagos -->
+    <div class="payments-list">
+      <div *ngIf="isLoading" class="skeleton-container">
+        <div class="skeleton-item" *ngFor="let _ of [1,2,3]">
+          <div class="skeleton-line w-60"></div>
+          <div class="skeleton-line w-40"></div>
+          <div class="skeleton-line w-80"></div>
+        </div>
+      </div>
+
+      <div *ngIf="!isLoading && pagos.length === 0" class="empty-state">
+        <ion-icon name="wallet-outline"></ion-icon>
+        <h3>No hay pagos registrados</h3>
+        <p>Aún no tienes transacciones en tu historial.</p>
+      </div>
+
+      <div *ngFor="let pago of pagos" class="payment-card">
+        <div class="payment-header">
+          <div class="payment-info">
+            <span class="amount">S/. {{ pago.monto | number:'1.2-2' }}</span>
+            <span class="date">{{ pago.created_at | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <ion-badge [color]="getEstadoColor(pago.estado)" class="status-badge">
+            <ion-icon [name]="getEstadoIcon(pago.estado)"></ion-icon>
+            {{ pago.estado | titlecase }}
+          </ion-badge>
+        </div>
+
+        <div class="payment-details">
+          <div class="detail-item">
+            <span class="label">Método</span>
+            <span class="value">{{ getMetodoLabel(pago.metodo || 'otro') }}</span>
+          </div>
+          <div class="detail-item" *ngIf="pago.descripcion">
+            <span class="label">Descripción</span>
+            <span class="value">{{ pago.descripcion }}</span>
+          </div>
+          <div class="detail-item" *ngIf="pago.cita_id">
+            <span class="label">Cita</span>
+            <span class="value">#{{ pago.cita_id.slice(0, 8) }}</span>
+          </div>
+        </div>
+
+        <div class="payment-footer" *ngIf="pago.estado === 'pendiente'">
+          <button class="btn-pay">Pagar ahora</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </ion-content>

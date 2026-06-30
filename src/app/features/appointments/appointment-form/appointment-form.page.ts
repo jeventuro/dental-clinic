@@ -94,36 +94,45 @@ export class AppointmentFormPage implements OnInit {
     try {
       const user = this.authService.getCurrentUser();
       if (!user) {
-        this.mostrarToast('Usuario no autenticado', 'danger');
+        await this.mostrarToast('Usuario no autenticado', 'danger');
         return;
       }
 
-      // Obtener paciente
+      // 1. Obtener paciente asociado al usuario
       const { data: paciente, error: errorPaciente } = await this.dataService.getPacienteByUsuarioId(user.id);
       if (errorPaciente || !paciente) {
-        this.mostrarToast('No se encontró información del paciente', 'warning');
+        await this.mostrarToast('No se encontró información del paciente', 'warning');
         return;
       }
       this.pacienteId = paciente.id;
 
-      // Cargar doctores
-      const { data: doctores } = await this.dataService.getDoctores();
-      if (doctores) {
-        this.doctors = doctores.map(d => ({
+      // 2. Cargar doctores activos (solo los que tienen cuenta activa en usuarios)
+      const doctores = await this.dataService.getDoctores();
+      if (doctores && doctores.length > 0) {
+        this.doctors = doctores.map((d: any) => ({
           id: d.id,
-          name: d.usuarios?.nombre_completo || 'Doctor',
+          name: d.usuarios?.nombre_completo || 'Doctor sin nombre',
           specialty: d.especialidad || 'Odontología General'
         }));
       }
 
-      // Cargar sedes
-      const { data: sedes } = await this.dataService.getSedes();
-      if (sedes) {
-        this.branches = sedes;
+      // 3. Cargar sedes
+      const { data: sedes, error: errorSedes } = await this.dataService.getSedes();
+      if (errorSedes) {
+        console.error('Error al cargar sedes:', errorSedes);
+        await this.mostrarToast('Error al cargar sedes', 'warning');
+      } else {
+        this.branches = sedes || [];
       }
+
+      // Si no hay doctores, mostrar un mensaje informativo
+      if (this.doctors.length === 0) {
+        await this.mostrarToast('No hay doctores disponibles en este momento'); //quite aqui la 'info' 
+      }
+
     } catch (error) {
-      console.error('Error en cargarDatosIniciales:', error);
-      this.mostrarToast('Error al cargar datos iniciales', 'danger');
+      console.error('❌ Error en cargarDatosIniciales:', error);
+      await this.mostrarToast('Error al cargar datos iniciales. Intenta de nuevo.', 'danger');
     } finally {
       this.isLoading = false;
     }

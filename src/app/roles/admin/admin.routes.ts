@@ -63,7 +63,24 @@ export const ADMIN_ROUTES: Routes = [
       },
       {
         path: 'doctors',
-        loadComponent: () => import('@features/doctors/doctor-list/doctor-list.page').then((m) => m.DoctorListPage),
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('@features/doctors/doctor-list/doctor-list.page').then(m => m.DoctorListPage),
+          },
+          {
+            path: 'new',
+            loadComponent: () => import('@features/doctors/doctor-form/doctor-form.page').then(m => m.DoctorFormPage),
+          },
+          /*{   //para futuras integraciones
+            path: ':id',
+            loadComponent: () => import('@features/doctors/doctor-detail/doctor-detail.page').then(m => m.DoctorDetailPage),
+          },*/
+          {
+            path: 'edit/:id',
+            loadComponent: () => import('@features/doctors/doctor-form/doctor-form.page').then(m => m.DoctorFormPage),
+          },
+        ]
       },
       {
         path: 'finances',

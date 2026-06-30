@@ -31,6 +31,14 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./roles/doctor/doctor.routes').then((m) => m.DOCTOR_ROUTES),
   },
+  {
+    path: 'patients-form',
+    loadComponent: () => import('./features/patients/patients-form/patients-form.page').then( m => m.PatientsFormPage)
+  },
+  {
+    path: 'doctor-form',
+    loadComponent: () => import('./features/doctors/doctor-form/doctor-form.page').then( m => m.DoctorFormPage)
+  },
 
 ];
 

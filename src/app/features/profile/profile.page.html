@@ -1,142 +1,155 @@
-<div class="page-wrapper">
-  <header class="page-header">
-    <div class="header-title-block">
-      <h2>Mi perfil</h2>
-      <p>
-        Gestiona tu información personal y preferencias
-      </p>
-    </div>
+<!-- src/app/features/profile/profile.page.html -->
+<ion-content class="profile-page">
+  <div class="page-container">
 
-    <ion-button
-      class="save-button"
-      (click)="saveProfile()">
-      Guardar cambios
-    </ion-button>
-  </header>
-
-  <section class="profile-top-card">
-    <div class="profile-avatar">
-      <img
-        src="https://i.pravatar.cc/300"
-        alt="Paciente"
-      />
-    </div>
-    <div class="profile-info">
-      <h3>{{ patient.fullName }}</h3>
-      <p>{{ patient.email }}</p>
-
-      <span class="patient-badge">
-        Paciente Premium
-      </span>
-    </div>
-  </section>
-
-  <div class="profile-grid">
-    <section class="section-card">
-      <div class="section-header">
-        <h3>Información personal</h3>
+    <header class="page-header">
+      <div>
+        <h1>Mi Perfil</h1>
+        <p>Gestiona tu información personal</p>
       </div>
+      <div class="header-actions">
+        <button *ngIf="!isEditing" class="btn-primary" (click)="toggleEdit()">
+          <ion-icon name="create-outline"></ion-icon>
+          Editar
+        </button>
+        <button *ngIf="isEditing" class="btn-outline" (click)="toggleEdit()">
+          <ion-icon name="close-outline"></ion-icon>
+          Cancelar
+        </button>
+        <button *ngIf="isEditing" class="btn-primary" (click)="saveProfile()">
+          <ion-icon name="save-outline"></ion-icon>
+          Guardar
+        </button>
+      </div>
+    </header>
 
-      <div class="form-grid">
-        <div class="custom-input">
+    <!-- Avatar / Foto de perfil -->
+    <div class="avatar-section">
+      <div class="avatar">
+        {{ patient.fullName.charAt(0) || '?' }}
+      </div>
+      <h2>{{ patient.fullName || 'Sin nombre' }}</h2>
+      <p class="role">{{ isAdmin ? 'Administrador' : 'Paciente' }}</p>
+    </div>
+
+    <!-- Información del perfil -->
+    <div class="profile-form">
+      <div class="form-row">
+        <div class="form-group">
           <label>Nombre completo</label>
-          <ion-input
-            [(ngModel)]="patient.fullName">
-          </ion-input>
+          <input
+            type="text"
+            class="custom-input"
+            [class.edit-mode]="isEditing"
+            [(ngModel)]="patient.fullName"
+            [disabled]="!isEditing"
+            placeholder="Tu nombre completo"
+          >
         </div>
-
-        <div class="custom-input">
-          <label>DNI</label>
-          <ion-input
-            [(ngModel)]="patient.dni">
-          </ion-input>
-        </div>
-
-        <div class="custom-input">
-          <label>Teléfono</label>
-          <ion-input
-            [(ngModel)]="patient.phone">
-          </ion-input>
-        </div>
-
-        <div class="custom-input">
+        <div class="form-group">
           <label>Correo electrónico</label>
-          <ion-input
-            [(ngModel)]="patient.email">
-          </ion-input>
+          <input
+            type="email"
+            class="custom-input"
+            [class.edit-mode]="isEditing"
+            [(ngModel)]="patient.email"
+            [disabled]="!isEditing"
+            placeholder="tu@email.com"
+          >
         </div>
+      </div>
 
-        <div class="custom-input full-width">
+      <div class="form-row">
+        <div class="form-group">
+          <label>DNI</label>
+          <input
+            type="text"
+            class="custom-input"
+            [class.edit-mode]="isEditing"
+            [(ngModel)]="patient.dni"
+            [disabled]="!isEditing"
+            placeholder="DNI"
+          >
+        </div>
+        <div class="form-group">
+          <label>Teléfono</label>
+          <input
+            type="tel"
+            class="custom-input"
+            [class.edit-mode]="isEditing"
+            [(ngModel)]="patient.phone"
+            [disabled]="!isEditing"
+            placeholder="+51 987654321"
+          >
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
           <label>Dirección</label>
-          <ion-input
-            [(ngModel)]="patient.address">
-          </ion-input>
+          <input
+            type="text"
+            class="custom-input"
+            [class.edit-mode]="isEditing"
+            [(ngModel)]="patient.address"
+            [disabled]="!isEditing"
+            placeholder="Av. Principal 123"
+          >
         </div>
-      </div>
-    </section>
-
-  
-    <section class="section-card">
-
-      <div class="section-header">
-        <h3>Información médica</h3>
-      </div>
-
-      <div class="form-grid">
-        <div class="custom-input">
+        <div class="form-group">
           <label>Contacto de emergencia</label>
-          <ion-input
-            [(ngModel)]="patient.emergencyContact">
-          </ion-input>
-        </div>
-
-        <div class="custom-input">
-          <label>Tipo de sangre</label>
-          <ion-input
-            [(ngModel)]="patient.bloodType">
-          </ion-input>
-        </div>
-
-        <div class="custom-input full-width">
-          <label>Alergias</label>
-          <ion-textarea
-            autoGrow="true"
-            [(ngModel)]="patient.allergies">
-          </ion-textarea>
+          <input
+            type="text"
+            class="custom-input"
+            [class.edit-mode]="isEditing"
+            [(ngModel)]="patient.emergencyContact"
+            [disabled]="!isEditing"
+            placeholder="Nombre y teléfono"
+          >
         </div>
       </div>
-    </section>
-  </div>
 
-  
-
-  <!-- MODULO DE SEGURIDAD -->
-  <section class="security-card">
-    <div class="section-header">
-      <h3>Seguridad</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Tipo de sangre</label>
+          <select
+            class="custom-select"
+            [class.edit-mode]="isEditing"
+            [(ngModel)]="patient.bloodType"
+            [disabled]="!isEditing"
+          >
+            <option value="">Seleccionar...</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Alergias</label>
+          <input
+            type="text"
+            class="custom-input"
+            [class.edit-mode]="isEditing"
+            [(ngModel)]="patient.allergies"
+            [disabled]="!isEditing"
+            placeholder="Ej: Penicilina, Polen..."
+          >
+        </div>
+      </div>
     </div>
 
-    <div class="security-actions">
-      <ion-button
-        fill="outline"
-        class="security-btn">
-        Cambiar contraseña
-      </ion-button>
-
-      <ion-button
-        fill="outline"
-        class="security-btn">
-        Descargar historial clínico
-      </ion-button>
-
-      <ion-button
-        color="danger"
-        fill="outline"
-        class="security-btn"
-        (click)="logout()">
+    <!-- Botón de cierre de sesión -->
+    <div class="logout-section">
+      <button class="btn-logout" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
         Cerrar sesión
-      </ion-button>
+      </button>
     </div>
-  </section>
 
-</div>
+  </div>
+</ion-content>

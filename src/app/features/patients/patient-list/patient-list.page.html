@@ -1,13 +1,80 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>patient-list</ion-title>
-  </ion-toolbar>
-</ion-header>
+<!-- src/app/features/patients/patient-list/patient-list.page.html -->
+<ion-content class="patients-page">
+  <div class="page-container">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">patient-list</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <header class="page-header">
+      <div>
+        <h1>Pacientes</h1>
+        <p>Gestiona la información de todos los pacientes</p>
+      </div>
+      <button *ngIf="isAdmin" class="btn-primary" (click)="nuevoPaciente()">
+        <ion-icon name="add-circle-outline"></ion-icon>
+        Nuevo Paciente
+      </button>
+    </header>
+
+    <div class="filters-container">
+      <div class="search-box">
+        <ion-icon name="search-outline"></ion-icon>
+        <ion-input
+          placeholder="Buscar paciente..."
+          [(ngModel)]="searchTerm"
+          (ionInput)="onSearchChange($event)"
+          clear-input
+        ></ion-input>
+      </div>
+      <button class="refresh-btn" (click)="cargarPacientes()" [disabled]="isLoading">
+        <ion-icon [name]="isLoading ? 'refresh-outline' : 'refresh-outline'" [class.spinning]="isLoading"></ion-icon>
+      </button>
+    </div>
+
+    <div class="patients-list">
+      <!-- Skeleton -->
+      <div *ngIf="isLoading" class="skeleton-container">
+        <div class="skeleton-item" *ngFor="let _ of [1,2,3,4]">
+          <div class="skeleton-line w-60"></div>
+          <div class="skeleton-line w-40"></div>
+          <div class="skeleton-line w-80"></div>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div *ngIf="!isLoading && pacientesFiltrados.length === 0" class="empty-state">
+        <ion-icon name="people-outline"></ion-icon>
+        <h3>No hay pacientes registrados</h3>
+        <p *ngIf="isAdmin">Comienza agregando el primer paciente al sistema.</p>
+        <button *ngIf="isAdmin" class="btn-primary btn-small" (click)="nuevoPaciente()">
+          Agregar paciente
+        </button>
+      </div>
+
+      <!-- Cards -->
+      <div *ngFor="let paciente of pacientesFiltrados" class="patient-card" (click)="verDetalle(paciente.id)">
+        <div class="patient-card-header">
+          <div class="patient-avatar">
+            {{ paciente.usuarios?.nombre_completo?.charAt(0) || '?' }}
+          </div>
+          <div class="patient-info">
+            <h3>{{ paciente.usuarios?.nombre_completo || 'Sin nombre' }}</h3>
+            <p><ion-icon name="mail-outline"></ion-icon> {{ paciente.usuarios?.email || 'Sin email' }}</p>
+            <div class="patient-meta">
+              <span><ion-icon name="call-outline"></ion-icon> {{ paciente.usuarios?.telefono || 'Sin teléfono' }}</span>
+              <span><ion-icon name="card-outline"></ion-icon> {{ paciente.dni || 'Sin DNI' }}</span>
+              <span><ion-icon name="calendar-outline"></ion-icon> {{ paciente.created_at | date:'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+          <div class="card-actions">
+            <ion-button fill="clear" (click)="$event.stopPropagation(); editarPaciente(paciente.id)">
+              <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" color="danger" (click)="$event.stopPropagation(); eliminarPaciente(paciente)">
+              <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+            </ion-button>
+            <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </ion-content>

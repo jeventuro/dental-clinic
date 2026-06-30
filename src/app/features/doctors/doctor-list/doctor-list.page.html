@@ -1,13 +1,98 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>doctor-list</ion-title>
-  </ion-toolbar>
-</ion-header>
+<!-- src/app/features/doctors/doctor-list/doctor-list.page.html -->
+<ion-content class="doctors-page">
+  <div class="page-container">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">doctor-list</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <header class="page-header">
+      <div>
+        <h1>Doctores</h1>
+        <p>Gestiona el equipo de especialistas de la clínica</p>
+      </div>
+      <button *ngIf="isAdmin" class="btn-primary" (click)="nuevoDoctor()">
+        <ion-icon name="add-circle-outline"></ion-icon>
+        Nuevo Doctor
+      </button>
+    </header>
+
+    <div class="filters-container">
+      <div class="search-box">
+        <ion-icon name="search-outline"></ion-icon>
+        <ion-input
+          placeholder="Buscar doctor..."
+          [(ngModel)]="searchTerm"
+          (ionInput)="onSearchChange($event)"
+          clear-input
+        ></ion-input>
+      </div>
+      <button class="refresh-btn" (click)="cargarDoctores()" [disabled]="isLoading">
+        <ion-icon [name]="isLoading ? 'refresh-outline' : 'refresh-outline'" [class.spinning]="isLoading"></ion-icon>
+      </button>
+    </div>
+
+    <div class="doctors-list">
+      <!-- Skeleton -->
+      <div *ngIf="isLoading" class="skeleton-container">
+        <div class="skeleton-item" *ngFor="let _ of [1,2,3]">
+          <div class="skeleton-line w-60"></div>
+          <div class="skeleton-line w-40"></div>
+          <div class="skeleton-line w-80"></div>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div *ngIf="!isLoading && doctoresFiltrados.length === 0" class="empty-state">
+        <ion-icon name="medical-outline"></ion-icon>
+        <h3>No hay doctores registrados</h3>
+        <p *ngIf="isAdmin">Comienza agregando el primer doctor al equipo.</p>
+        <button *ngIf="isAdmin" class="btn-primary btn-small" (click)="nuevoDoctor()">
+          Agregar doctor
+        </button>
+      </div>
+
+      <!-- Cards -->
+      <div *ngFor="let doctor of doctoresFiltrados; trackBy:trackByDoctorId" class="doctor-card">
+        <div class="doctor-card-header">
+          <div class="doctor-avatar">
+            {{ doctor.usuarios?.nombre_completo?.charAt(0) || '?' }}
+          </div>
+          <div class="doctor-info">
+            <h3>{{ doctor.usuarios?.nombre_completo || 'Sin nombre' }}</h3>
+            <p class="specialty">
+              <ion-icon name="medical-outline"></ion-icon>
+              {{ doctor.especialidad || 'Especialidad no definida' }}
+            </p>
+            <div class="doctor-meta">
+              <span>
+                <ion-icon name="mail-outline"></ion-icon>
+                {{ doctor.usuarios?.email || 'Sin email' }}
+              </span>
+              <span>
+                <ion-icon name="call-outline"></ion-icon>
+                {{ doctor.usuarios?.telefono || 'Sin teléfono' }}
+              </span>
+              <span>
+                <ion-icon name="business-outline"></ion-icon>
+                {{ doctor.sede?.nombre || 'Sin sede' }}
+              </span>
+              <span *ngIf="doctor.horario">
+                <ion-icon name="time-outline"></ion-icon>
+                {{ doctor.horario }}
+              </span>
+            </div>
+          </div>
+          <div class="card-actions">
+            <ion-button fill="clear" (click)="verDetalle(doctor.id)" title="Ver detalle">
+              <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" (click)="$event.stopPropagation(); editarDoctor(doctor.id)" title="Editar">
+              <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" color="danger" (click)="$event.stopPropagation(); eliminarDoctor(doctor)" title="Eliminar">
+              <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </ion-content>

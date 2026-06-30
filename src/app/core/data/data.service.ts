@@ -39,6 +39,7 @@ export interface Doctor {
   sede_id?: string;
   created_at: string;
   usuarios?: Usuario;
+  sede?: Sede;
 }
 
 export interface Cita {
@@ -296,31 +297,319 @@ export class DataService {
   // ==========================================================
   // 🩺 DOCTORES (CRUD)
   // ==========================================================
-  async getDoctores() {
-    return this.supabase
+  /*async getDoctores(soloActivos?: boolean) {
+    let query = this.supabase
       .from('doctores')
-      .select('*, usuarios(*)')
+      .select(`
+        *,
+        usuarios!inner(*),
+        sedes(*)
+      `)
       .order('created_at', { ascending: false });
+
+    if (soloActivos) {
+      query = query.eq('usuarios.activo', true);
+    }
+
+    const { data, error } = await query;
+    if (error) {
+      console.error('❌ Error al obtener doctores:', error);
+      throw new Error(error.message);
+    }
+    return data || [];
+  }*/
+
+  async getDoctores(soloActivos: boolean = true) {
+    let query = this.supabase
+      .from('doctores')
+      .select(`
+        *,
+        usuarios(*),
+        sedes(*)
+      `)
+      .order('nombre_completo', { foreignTable: 'usuarios', ascending: true }) // Orden alfabético
+
+    // Si solo se necesitan doctores activos
+    if (soloActivos) {
+      query = query.eq('usuarios.activo', true);
+    }
+
+    const { data, error } = await query;
+    if (error) {
+      console.error('❌ Error al obtener doctores:', error);
+      throw new Error(error.message);
+    }
+    return data || [];
   }
 
-  async getDoctorById(id: string) {
-    return this.supabase
+  async getDoctoresActivos() {
+    return this.getDoctores(true);
+  }
+
+  /*async getDoctorById(id: string): Promise<Doctor & { usuarios: Usuario; sedes: Sede }> {
+    const { data, error } = await this.supabase
       .from('doctores')
-      .select('*, usuarios(*)')
+      .select(`
+        *,
+        usuarios!inner(*),
+        sedes(*)
+      `)
       .eq('id', id)
       .single();
+
+    if (error) {
+      console.error(`❌ Error al obtener doctor ${id}:`, error);
+      throw new Error(error.message);
+    }
+    if (!data) {
+      throw new Error('Doctor no encontrado');
+    }
+    return data;
+  }*/
+
+  async getDoctorById(id: string) {
+    const { data, error } = await this.supabase
+      .from('doctores')
+      .select(`
+        *,
+        usuarios!inner(*),
+        sedes(*)
+      `)
+      .eq('id', id)
+      .single();
+
+    if (error) throw error;
+    return data;
   }
 
-  async createDoctor(data: Omit<Doctor, 'id' | 'created_at'>) {
-    return this.supabase.from('doctores').insert(data);
+  async createDoctorWithUser(doctorData: {
+    nombre_completo: string;
+    email: string;
+    telefono?: string;
+    especialidad: string;
+    horario?: string;
+    sede_id: string;
+  }) {
+    // 1. Validar email duplicado
+    const { data: existing } = await this.supabase
+      .from('usuarios')
+      .select('id')
+      .eq('email', doctorData.email)
+      .maybeSingle();
+    if (existing) throw new Error('El correo electrónico ya está registrado');
+
+    // 2. Generar contraseña
+    const password = this.generateRandomPassword();
+
+    // 3. Crear usuario en auth
+    const { data: authData, error: signUpError } = await this.supabase.auth.signUp({
+      email: doctorData.email,
+      password: password,
+      options: {
+        data: {
+          nombre_completo: doctorData.nombre_completo,
+          telefono: doctorData.telefono || null,
+          rol: 'doctor',
+        },
+      },
+    });
+    if (signUpError) throw new Error(signUpError.message);
+    if (!authData.user) throw new Error('No se pudo crear el usuario');
+
+    // 4. Crear doctor
+    const { data: doctorResult, error: doctorError } = await this.supabase
+      .from('doctores')
+      .insert({
+        usuario_id: authData.user.id,
+        especialidad: doctorData.especialidad,
+        horario: doctorData.horario || null,
+        sede_id: doctorData.sede_id,
+      })
+      .select()
+      .single();
+
+    if (doctorError) {
+      // Rollback: eliminar usuario creado
+      await this.supabase.auth.admin.deleteUser(authData.user.id);
+      throw new Error('Error al crear perfil de doctor: ' + doctorError.message);
+    }
+
+    return {
+      user: authData.user,
+      doctor: doctorResult,
+      password: password,
+    };
   }
 
-  async updateDoctor(id: string, updates: Partial<Doctor>) {
-    return this.supabase.from('doctores').update(updates).eq('id', id);
+  async updateDoctorWithUser(
+    doctorId: string,
+    updates: {
+      nombre_completo?: string;
+      email?: string;
+      telefono?: string;
+      especialidad?: string;
+      horario?: string;
+      sede_id?: string;
+    }
+  ) {
+    // 1. Obtener doctor actual
+    const currentDoctor = await this.getDoctorById(doctorId);
+    const usuarioId = currentDoctor.usuarios.id;
+
+    // 2. Actualizar usuario
+    const userUpdates: any = {};
+    if (updates.nombre_completo) userUpdates.nombre_completo = updates.nombre_completo;
+    if (updates.email) userUpdates.email = updates.email;
+    if (updates.telefono !== undefined) userUpdates.telefono = updates.telefono;
+
+    if (Object.keys(userUpdates).length > 0) {
+      const { error } = await this.supabase
+        .from('usuarios')
+        .update(userUpdates)
+        .eq('id', usuarioId);
+      if (error) throw new Error('Error al actualizar usuario: ' + error.message);
+    }
+
+    // 3. Actualizar doctor
+    const doctorUpdates: any = {};
+    if (updates.especialidad) doctorUpdates.especialidad = updates.especialidad;
+    if (updates.horario !== undefined) doctorUpdates.horario = updates.horario;
+    if (updates.sede_id) doctorUpdates.sede_id = updates.sede_id;
+
+    if (Object.keys(doctorUpdates).length > 0) {
+      const { data, error } = await this.supabase
+        .from('doctores')
+        .update(doctorUpdates)
+        .eq('id', doctorId)
+        .select()
+        .single();
+      if (error) throw new Error('Error al actualizar doctor: ' + error.message);
+      return data;
+    }
+    return currentDoctor;
   }
 
-  async deleteDoctor(id: string) {
-    return this.supabase.from('doctores').delete().eq('id', id);
+  /*async getDoctorByUsuarioId(usuarioId: string): Promise<Doctor | null> {
+    const { data, error } = await this.supabase
+      .from('doctores')
+      .select('*')
+      .eq('usuario_id', usuarioId)
+      .maybeSingle();
+
+    if (error) {
+      console.error(`❌ Error al obtener doctor por usuario ${usuarioId}:`, error);
+      throw new Error(error.message);
+    }
+    return data;
+  }*/ 
+
+  async deleteDoctorWithUser(doctorId: string) {
+    const doctor = await this.getDoctorById(doctorId);
+    const usuarioId = doctor.usuarios.id;
+
+    // Eliminar doctor
+    const { error: doctorError } = await this.supabase
+      .from('doctores')
+      .delete()
+      .eq('id', doctorId);
+    if (doctorError) throw new Error('Error al eliminar doctor: ' + doctorError.message);
+
+    // Eliminar usuario (auth + usuarios)
+    const { error: userError } = await this.supabase.auth.admin.deleteUser(usuarioId);
+    if (userError) throw new Error('Error al eliminar usuario: ' + userError.message);
+  }
+
+  /*async createDoctor(data: Omit<Doctor, 'id' | 'created_at'>): Promise<Doctor | null> {
+    try {
+      // Validar que el usuario_id exista en usuarios
+      const { data: userExists, error: userError } = await this.supabase
+        .from('usuarios')
+        .select('id')
+        .eq('id', data.usuario_id)
+        .single();
+
+      if (userError || !userExists) {
+        throw new Error('El usuario asociado no existe');
+      }
+
+      const { data: newDoctor, error } = await this.supabase
+        .from('doctores')
+        .insert(data)
+        .select('*, usuarios(*)') // Devolver el doctor con la relación de usuario
+        .single();
+
+      if (error) throw error;
+      return newDoctor;
+    } catch (error) {
+      console.error('❌ Error al crear doctor:', error);
+      throw error; // Re-lanzar para que el componente maneje el error
+    }
+  }*/
+
+  private generateRandomPassword(): string {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+    let password = '';
+    for (let i = 0; i < 12; i++) {
+      password += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return password;
+  }
+  
+  async updateDoctor(id: string, updates: Partial<Doctor>): Promise<Doctor | null> {
+    try {
+      // Verificar que el doctor exista antes de actualizar
+      const { data: exists, error: existsError } = await this.supabase
+        .from('doctores')
+        .select('id')
+        .eq('id', id)
+        .single();
+
+      if (existsError || !exists) {
+        throw new Error('Doctor no encontrado');
+      }
+
+      const { data: updatedDoctor, error } = await this.supabase
+        .from('doctores')
+        .update(updates)
+        .eq('id', id)
+        .select('*, usuarios(*)')
+        .single();
+
+      if (error) throw error;
+      return updatedDoctor;
+    } catch (error) {
+      console.error('❌ Error al actualizar doctor:', error);
+      throw error;
+    }
+  }
+
+  async deleteDoctor(id: string): Promise<boolean> {
+    try {
+      // Verificar que el doctor exista
+      const { data: exists, error: existsError } = await this.supabase
+        .from('doctores')
+        .select('id')
+        .eq('id', id)
+        .single();
+
+      if (existsError || !exists) {
+        throw new Error('Doctor no encontrado');
+      }
+
+      // Opcional: Verificar si tiene citas asociadas para no eliminar si tiene dependencias
+      // Si quieres evitar eliminación en cascada, podrías agregar esta verificación
+
+      const { error } = await this.supabase
+        .from('doctores')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+      return true;
+    } catch (error) {
+      console.error('❌ Error al eliminar doctor:', error);
+      throw error;
+    }
   }
 
   // ==========================================================
